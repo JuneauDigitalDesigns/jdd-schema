@@ -117,3 +117,73 @@ export const zQueuedIntake = z.object({
   sessionId: z.string(),
   intake: zIntake,
 });
+
+// ─── v1.1.0 — brand-direction intake ─────────────────────────────────────────
+
+export const zBrandDirection = z.object({
+  differentiators: z.string().default(""),
+  targetCustomer: z.string().default(""),
+  vibe: z.array(z.string()).default([]),
+  tone: z.array(z.string()).default([]),
+  adjectives: z.array(z.string()).default([]),
+  references: z.string().default(""),
+  forbidden: z.string().default(""),
+});
+
+export const zPalettePick = z.object({
+  mode: z.enum(["preset", "custom"]),
+  presetId: z.string().optional(),
+  baseColor: z.string().optional(),
+  accentColor: z.string().optional(),
+});
+
+const zServiceEntry = z.object({ name: z.string(), tag: z.string().default("") });
+
+export const zBrandIntakeSubmission = z
+  .object({
+    selectedPlan: plan,
+    brandName: z.string().default(""),
+    brandShort: z.string().default(""),
+    email: z.string().default(""),
+    phone: z.string().default(""),
+    address: z.string().default(""),
+    license: z.string().default(""),
+    industry: z.string().default(""),
+    established: z.string().default(""),
+    notableClients: z.string().default(""),
+    certifications: z.string().default(""),
+    businessHours: z.string().default(""),
+    serviceArea: z.string().default(""),
+    agentName: z.string().default(""),
+    serviceList: z.array(zServiceEntry).default([]),
+    brandDirection: zBrandDirection,
+    palette: zPalettePick,
+    hasLogo: z.boolean().default(false),
+    images: z
+      .object({
+        logo: zImageMeta.optional(),
+        heroSlides: z.array(zImageMeta).default([]),
+        aboutFeature: zImageMeta.optional(),
+      })
+      .passthrough(),
+    existingWebsiteUrl: z.string().default(""),
+    announcement: z.string().default(""),
+    additionalSites: z
+      .array(
+        z
+          .object({
+            brandName: z.string(),
+            brandShort: z.string().default(""),
+            email: z.string().default(""),
+            phone: z.string().default(""),
+            address: z.string().default(""),
+            businessHours: z.string().default(""),
+            serviceList: z.array(zServiceEntry).default([]),
+            palette: zPalettePick,
+            brandDirection: zBrandDirection,
+          })
+          .passthrough(),
+      )
+      .optional(),
+  })
+  .passthrough();

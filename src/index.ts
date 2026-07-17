@@ -13,3 +13,8 @@ export * from "./intake.js";
 export * from "./map.js";
 export * from "./zod.js";
 export * from "./site-types-source.js";
+// v1.1.0 — brand-direction intake
+export * from "./brand-direction.js";
+export * from "./palette.js";
+export * from "./structure.js";
+export * from "./brand-intake.js";

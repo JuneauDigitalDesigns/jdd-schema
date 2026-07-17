@@ -230,6 +230,15 @@ export interface ContentMeta {
   formMode?: "basic" | "detailed";
   scrapeExistingWebsite?: boolean;
   scrapeWebsiteDomain?: string;
+  brandDirection?: {
+    differentiators: string;
+    targetCustomer: string;
+    vibe: string[];
+    tone: string[];
+    adjectives: string[];
+    references: string;
+    forbidden: string;
+  };
 }
 
 export interface SiteContent {

@@ -11,6 +11,8 @@
  * dependency-free (see that file). Keep the two in sync.
  */
 
+import type { BrandDirection } from "./brand-direction.js";
+
 export interface NavItem {
   label: string;
   href: string;
@@ -228,6 +230,7 @@ export interface ContentMeta {
   formMode?: "basic" | "detailed";   // onboarding mode the client selected
   scrapeExistingWebsite?: boolean;   // client asked to scrape an existing site (studio acts on this)
   scrapeWebsiteDomain?: string;      // domain to scrape, prefilled in the studio scrape panel
+  brandDirection?: BrandDirection;   // v1.1: client's brand guidance → copywriter `details`
 }
 
 export interface SiteContent {
