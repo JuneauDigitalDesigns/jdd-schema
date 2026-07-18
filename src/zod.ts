@@ -130,11 +130,26 @@ export const zBrandDirection = z.object({
   forbidden: z.string().default(""),
 });
 
+const zHex = z.string().regex(/^#[0-9a-fA-F]{6}$/);
+
 export const zPalettePick = z.object({
   mode: z.enum(["preset", "custom"]),
   presetId: z.string().optional(),
   baseColor: z.string().optional(),
   accentColor: z.string().optional(),
+  // v1.2 — absent bgMood means "white", so pre-1.2 picks validate unchanged.
+  bgMood: z.enum(["white", "warm", "cool", "soft-dark", "deep-dark"]).optional(),
+  overrides: z
+    .object({
+      accent: zHex.optional(),
+      accentFg: zHex.optional(),
+      bg: zHex.optional(),
+      bgSoft: zHex.optional(),
+      ink: zHex.optional(),
+      inkSoft: zHex.optional(),
+      rule: zHex.optional(),
+    })
+    .optional(),
 });
 
 const zServiceEntry = z.object({ name: z.string(), tag: z.string().default("") });

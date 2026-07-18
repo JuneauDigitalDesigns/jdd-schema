@@ -16,5 +16,7 @@ export * from "./site-types-source.js";
 // v1.1.0 — brand-direction intake
 export * from "./brand-direction.js";
 export * from "./palette.js";
+// v1.2.0 — OKLCH palette derivation (background moods, per-slot overrides, contrast audit)
+export * from "./color.js";
 export * from "./structure.js";
 export * from "./brand-intake.js";
