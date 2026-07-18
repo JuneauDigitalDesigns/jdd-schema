@@ -210,29 +210,75 @@ export function isDarkPalette(p: BrandPalette): boolean {
 
 // ─── named presets ───────────────────────────────────────────────────────────
 
+/** The inputs a preset was derived from. */
+export interface PaletteSource {
+  accent: string;
+  /** Omitted on dark moods, where ink is derived rather than chosen. */
+  ink?: string;
+  bgMood: BackgroundMood;
+}
+
 export interface PalettePreset {
   id: string;
   label: string;
   palette: BrandPalette;
+  /**
+   * The inputs that produced `palette`. The wizard seeds custom mode from these
+   * when a client opts to adjust a preset — seeding from the resolved colors
+   * instead would pin the accent without re-deriving bgSoft/rule.
+   */
+  source: PaletteSource;
 }
 
-export const PALETTE_PRESETS: PalettePreset[] = [
-  { id: "slate-amber", label: "Slate & Amber", palette: derivePalette("#D97706", "#0F172A") },
-  { id: "ocean-blue", label: "Ocean Blue", palette: derivePalette("#1E6FBF", "#0F1B2D") },
-  { id: "forest", label: "Forest", palette: derivePalette("#15803D", "#14261B") },
-  { id: "warm-sand", label: "Warm Sand", palette: derivePalette("#B45309", "#2A2118", "warm") },
-  { id: "classic-navy", label: "Classic Navy", palette: derivePalette("#1E3A8A", "#111827") },
-  { id: "crimson", label: "Crimson", palette: derivePalette("#B91C1C", "#1F1315") },
-  { id: "teal", label: "Teal", palette: derivePalette("#0F766E", "#0B2422", "cool") },
-  { id: "graphite", label: "Graphite", palette: derivePalette("#4B5563", "#111827") },
-  { id: "midnight", label: "Midnight", palette: derivePalette("#60A5FA", undefined, "deep-dark") },
-  { id: "carbon", label: "Carbon", palette: derivePalette("#F59E0B", undefined, "soft-dark") },
+/**
+ * Preset definitions. Each palette is derived from its own `source` below rather
+ * than written out separately, so the two can never drift apart.
+ */
+const PRESET_DEFS: { id: string; label: string; source: PaletteSource }[] = [
+  { id: "slate-amber", label: "Slate & Amber", source: { accent: "#D97706", ink: "#0F172A", bgMood: "white" } },
+  { id: "ocean-blue", label: "Ocean Blue", source: { accent: "#1E6FBF", ink: "#0F1B2D", bgMood: "white" } },
+  { id: "forest", label: "Forest", source: { accent: "#15803D", ink: "#14261B", bgMood: "white" } },
+  { id: "warm-sand", label: "Warm Sand", source: { accent: "#B45309", ink: "#2A2118", bgMood: "warm" } },
+  { id: "classic-navy", label: "Classic Navy", source: { accent: "#1E3A8A", ink: "#111827", bgMood: "white" } },
+  { id: "crimson", label: "Crimson", source: { accent: "#B91C1C", ink: "#1F1315", bgMood: "white" } },
+  { id: "teal", label: "Teal", source: { accent: "#0F766E", ink: "#0B2422", bgMood: "cool" } },
+  { id: "graphite", label: "Graphite", source: { accent: "#4B5563", ink: "#111827", bgMood: "white" } },
+  { id: "midnight", label: "Midnight", source: { accent: "#60A5FA", bgMood: "deep-dark" } },
+  { id: "carbon", label: "Carbon", source: { accent: "#F59E0B", bgMood: "soft-dark" } },
 ];
+
+export const PALETTE_PRESETS: PalettePreset[] = PRESET_DEFS.map(({ id, label, source }) => ({
+  id,
+  label,
+  source,
+  palette: derivePalette(source.accent, source.ink, source.bgMood),
+}));
 
 export const DEFAULT_PALETTE_PRESET_ID = "ocean-blue";
 
 export function presetById(id: string | undefined): PalettePreset | undefined {
   return PALETTE_PRESETS.find((p) => p.id === id);
+}
+
+/**
+ * Convert a preset into an editable custom pick, remembering which preset it came
+ * from. `resolvePalette(presetToPick(id))` is byte-identical to that preset's
+ * palette, so opening the wizard's adjust screen never shifts a client's colors
+ * before they've touched anything.
+ *
+ * `presetId` is carried through custom mode purely as provenance — resolvePalette
+ * ignores it once mode is "custom".
+ */
+export function presetToPick(id: string | undefined): PalettePick {
+  const preset = presetById(id) ?? presetById(DEFAULT_PALETTE_PRESET_ID);
+  if (!preset) return { mode: "custom", accentColor: DEFAULT_ACCENT, bgMood: "white" };
+  return {
+    mode: "custom",
+    presetId: preset.id,
+    accentColor: preset.source.accent,
+    baseColor: preset.source.ink,
+    bgMood: preset.source.bgMood,
+  };
 }
 
 const PALETTE_SLOTS: (keyof BrandPalette)[] = [

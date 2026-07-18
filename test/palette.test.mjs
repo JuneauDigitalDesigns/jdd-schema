@@ -10,6 +10,8 @@ import {
   nudgeToContrast,
   oklchToHex,
   PALETTE_PRESETS,
+  presetById,
+  presetToPick,
   resolvePalette,
 } from "../dist/index.js";
 
@@ -158,6 +160,52 @@ test("overrides win over derivation, on presets too", () => {
   const preset = resolvePalette({ mode: "preset", presetId: "forest", overrides: { bg: "#101010" } });
   assert.equal(preset.bg, "#101010");
   assert.equal(preset.accent, PALETTE_PRESETS.find((p) => p.id === "forest").palette.accent);
+});
+
+// ─── preset → editable pick round-trip ───────────────────────────────────────
+
+test("presetToPick round-trips every preset byte-identically", () => {
+  // This is what guarantees that clicking "Let me adjust" in the wizard doesn't
+  // shift a client's colors before they've changed anything.
+  for (const preset of PALETTE_PRESETS) {
+    assert.deepEqual(
+      resolvePalette(presetToPick(preset.id)),
+      preset.palette,
+      `${preset.id} did not survive the round-trip`,
+    );
+  }
+});
+
+test("presetToPick yields an editable custom pick that remembers its origin", () => {
+  const pick = presetToPick("forest");
+  assert.equal(pick.mode, "custom");
+  assert.equal(pick.presetId, "forest");
+  assert.equal(pick.accentColor, "#15803D");
+  assert.equal(pick.bgMood, "white");
+});
+
+test("presetToPick on a dark preset omits ink and still round-trips", () => {
+  const pick = presetToPick("midnight");
+  assert.equal(pick.bgMood, "deep-dark");
+  assert.equal(pick.baseColor, undefined, "dark presets derive ink, so none should be pinned");
+  assert.deepEqual(resolvePalette(pick), presetById("midnight").palette);
+});
+
+test("presetToPick falls back to the default preset for an unknown id", () => {
+  assert.deepEqual(
+    resolvePalette(presetToPick("no-such-preset")),
+    presetById("ocean-blue").palette,
+  );
+});
+
+test("every preset's palette matches a fresh derive from its own source", () => {
+  for (const p of PALETTE_PRESETS) {
+    assert.deepEqual(
+      p.palette,
+      derivePalette(p.source.accent, p.source.ink, p.source.bgMood),
+      `${p.id} palette has drifted from its source`,
+    );
+  }
 });
 
 test("accentFg is always set and always legible on the accent", () => {
