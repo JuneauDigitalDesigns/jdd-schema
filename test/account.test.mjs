@@ -11,6 +11,7 @@ import {
   accountFromLegacyMetadata,
   siteHasCallData,
   siteHasTraffic,
+  buildPortalSiteEntries,
   zPortalAccount,
 } from "../dist/index.js";
 
@@ -117,6 +118,116 @@ test("removeSite drops only the named slug", () => {
   const acct = accountWith([site("alpha"), site("beta")]);
   const next = removeSite(acct, "alpha", NOW + 1);
   assert.deepEqual(next.sites.map((s) => s.slug), ["beta"]);
+});
+
+// ── buildPortalSiteEntries: the rules both writers share ────────────────────
+
+test("starter sites never carry an Airtable base", () => {
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [{ slug: "solo", airtableBaseId: "appOWN" }],
+  });
+  assert.equal(entry.airtableBaseId, null);
+});
+
+test("enterprise sites all inherit the shared Airtable base", () => {
+  const entries = buildPortalSiteEntries({
+    plan: "enterprise",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [{ slug: "acme-1" }, { slug: "acme-2" }, { slug: "acme-3" }],
+  });
+  assert.deepEqual(
+    entries.map((e) => e.airtableBaseId),
+    ["appSHARED", "appSHARED", "appSHARED"],
+  );
+});
+
+test("a site's own Airtable base wins over the shared one", () => {
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [{ slug: "solo", airtableBaseId: "appOWN" }],
+  });
+  assert.equal(entry.airtableBaseId, "appOWN");
+});
+
+test("canonical falls back to the resolved Vercel host, then is omitted", () => {
+  const [own, fallback, neither] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [
+      { slug: "a", canonical: "https://acme.com", fallbackCanonical: "https://a.vercel.app" },
+      { slug: "b", canonical: "   ", fallbackCanonical: "https://b.vercel.app" },
+      { slug: "c", canonical: null, fallbackCanonical: null },
+    ],
+  });
+  assert.equal(own.canonical, "https://acme.com");
+  assert.equal(fallback.canonical, "https://b.vercel.app");
+  assert.ok(!("canonical" in neither), "canonical must be absent, not empty");
+});
+
+test("an omitted canonical does not blank one stored earlier", () => {
+  // The console can't resolve a Vercel host; its repair write must not undo onboard.js.
+  const acct = accountWith([site("alpha", { canonical: "https://acme.com" })]);
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "alpha" }],
+  });
+  const next = upsertSite(acct, entry, NOW + 1);
+  assert.equal(next.sites[0].canonical, "https://acme.com");
+});
+
+test("vercelProjectId: undefined is omitted, null is kept", () => {
+  const [absent, resolved] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "a" }, { slug: "b", vercelProjectId: null }],
+  });
+  assert.ok(!("vercelProjectId" in absent), "undefined must be omitted so upsert preserves");
+  assert.equal(resolved.vercelProjectId, null);
+});
+
+test("an omitted vercelProjectId preserves the stored one through upsertSite", () => {
+  const acct = accountWith([site("alpha", { vercelProjectId: "prj_a" })]);
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "alpha" }],
+  });
+  const next = upsertSite(acct, entry, NOW + 1);
+  assert.equal(next.sites[0].vercelProjectId, "prj_a");
+});
+
+test("plan and status apply uniformly to every site", () => {
+  const entries = buildPortalSiteEntries({
+    plan: "enterprise",
+    status: "building",
+    sites: [{ slug: "a" }, { slug: "b" }],
+  });
+  assert.deepEqual(entries.map((e) => e.plan), ["enterprise", "enterprise"]);
+  assert.deepEqual(entries.map((e) => e.status), ["building", "building"]);
+});
+
+test("entries round-trip through upsertSite into a valid account", () => {
+  const entries = buildPortalSiteEntries({
+    plan: "enterprise",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [
+      { slug: "acme-1", name: "Acme North", canonical: "https://north.acme.com", vercelProjectId: "prj_1" },
+      { slug: "acme-2", name: "Acme South", fallbackCanonical: "https://acme-2.vercel.app", vercelProjectId: "prj_2" },
+    ],
+  });
+  let acct = createAccount("owner@example.com", NOW);
+  for (const e of entries) acct = upsertSite(acct, e, NOW);
+  assert.equal(zPortalAccount.safeParse(acct).success, true);
+  assert.deepEqual(acct.sites.map((s) => s.slug), ["acme-1", "acme-2"]);
+  assert.equal(acct.sites[1].canonical, "https://acme-2.vercel.app");
 });
 
 // ── resolveSite ─────────────────────────────────────────────────────────────

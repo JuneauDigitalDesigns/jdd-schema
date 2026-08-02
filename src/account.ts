@@ -254,6 +254,79 @@ export function accountFromLegacyMetadata(
   return { ...account, sites: [single] };
 }
 
+// ── Entry building (shared by every writer) ─────────────────────────────────
+
+/**
+ * One site as its *writer* knows it, before the account-level rules are applied.
+ *
+ * Deliberately looser than PortalSite: `undefined` and `null` mean different things here.
+ * `undefined` = "I could not resolve this, preserve whatever is stored"; `null` = "I looked
+ * and there is nothing". That distinction is load-bearing for the console, which is not
+ * Vercel-credentialed and must not blank a `vercelProjectId` onboard.js resolved earlier.
+ */
+export interface PortalEntrySource {
+  slug: string;
+  name?: string;
+  /** From the site's `seo.canonical`. Empty/whitespace counts as absent. */
+  canonical?: string | null;
+  /** The site's own base. Enterprise sites leave this unset and inherit the shared one. */
+  airtableBaseId?: string | null;
+  /** Omit to preserve the stored value; `null` means "resolved, not found". */
+  vercelProjectId?: string | null;
+  /** Resolved `.vercel.app` host, used only when `canonical` is absent. Never a guess. */
+  fallbackCanonical?: string | null;
+}
+
+function firstNonEmpty(...values: Array<string | null | undefined>): string | undefined {
+  for (const v of values) {
+    if (typeof v === "string" && v.trim()) return v.trim();
+  }
+  return undefined;
+}
+
+/**
+ * Turn a writer's view of a client's sites into `upsertSite` inputs.
+ *
+ * This exists because onboard.js (provisioning) and the console's /manage repair tool both
+ * write the same account record, and had each grown their own version of these rules —
+ * onboard.js hardcoding `status: "live"` and taking `canonical` raw, the console deriving
+ * status from disk and applying its own base-sharing fallback. Same reasoning as `upsertSite`:
+ * one pure, tested implementation so the two writers cannot drift.
+ *
+ * The rules:
+ *  - **Airtable base** — starter sites get `null` (no call data exists for them). Everything
+ *    else takes the site's own base, falling back to the shared one enterprise sites inherit.
+ *  - **canonical** — the site's own, else the resolved Vercel host, else the key is *omitted*
+ *    so a partial upsert never blanks a canonical a different writer set earlier.
+ *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
+ *  - **plan / status** — applied uniformly; the caller decides them, since only the caller
+ *    knows whether it is looking at disk state or a live deploy result.
+ */
+export function buildPortalSiteEntries(input: {
+  plan: PortalPlan;
+  status: PortalSiteStatus;
+  sharedAirtableBaseId?: string | null;
+  sites: PortalEntrySource[];
+}): PortalSiteInput[] {
+  const { plan, status, sharedAirtableBaseId = null, sites } = input;
+
+  return sites.map((s) => {
+    const entry: PortalSiteInput = { slug: s.slug, plan, status };
+
+    if (s.name !== undefined) entry.name = s.name;
+
+    const canonical = firstNonEmpty(s.canonical, s.fallbackCanonical);
+    if (canonical !== undefined) entry.canonical = canonical;
+
+    entry.airtableBaseId =
+      plan === "starter" ? null : (s.airtableBaseId ?? sharedAirtableBaseId ?? null);
+
+    if (s.vercelProjectId !== undefined) entry.vercelProjectId = s.vercelProjectId;
+
+    return entry;
+  });
+}
+
 // ── Derived view helpers (shared by the portal UI + API routes) ─────────────
 
 /** Whether a site's plan + provisioning make the Call Log tab meaningful. */

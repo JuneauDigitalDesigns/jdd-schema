@@ -28,6 +28,7 @@ export interface Pillar {
   k: string; // icon key e.g. "shield" | "clock" | "tag" | "star", or legacy badge number "01"
   t: string; // title
   d: string; // one-sentence description
+  icon?: string; // v1.5.0: explicit icon-registry key; falls back to `k` when unset
 }
 
 export interface Stat {
@@ -40,6 +41,7 @@ export interface ServiceItem {
   t: string;    // service name
   d: string;    // description (≤ 120 chars)
   tag: string;  // category badge
+  icon?: string; // v1.5.0: explicit icon-registry key; falls back to `tag` lookup when unset
   image?: { url: string; alt: string } | null; // optional preview image
 }
 
