@@ -23,7 +23,7 @@
 import { z } from "zod";
 
 export type PortalPlan = "starter" | "growth" | "enterprise";
-export type PortalSiteStatus = "building" | "live";
+export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
 
 /** One site belonging to an account. */
 export interface PortalSite {
@@ -31,11 +31,26 @@ export interface PortalSite {
   name?: string;
   canonical?: string;
   plan: PortalPlan;
-  /** "building" = onboarded, not provisioned yet; "live" = provisioned. */
+  /**
+   * "pending-onboarding" = payment received, wizard not yet submitted;
+   * "building" = wizard submitted, not provisioned yet;
+   * "live" = provisioned.
+   */
   status: PortalSiteStatus;
   airtableBaseId?: string | null;
   vercelProjectId?: string | null;
   addedAt: number; // epoch ms
+  /** Stripe checkout session ID — set at payment time, used to link back to the wizard. */
+  sessionId?: string;
+  /** Agreement signer email — reminder target before onboarding is complete. */
+  signerEmail?: string;
+  /** Agreement signer name — for email personalization. */
+  signerName?: string;
+  /**
+   * Epoch ms when the wizard was submitted. Null means payment is captured but the
+   * wizard hasn't been filled. Undefined means this is a pre-feature record.
+   */
+  onboardingCompletedAt?: number | null;
 }
 
 /** Everything needed to add or update a site; only `slug` is required. */
@@ -56,10 +71,14 @@ export const zPortalSite = z.object({
   name: z.string().optional(),
   canonical: z.string().optional(),
   plan: z.enum(["starter", "growth", "enterprise"]),
-  status: z.enum(["building", "live"]),
+  status: z.enum(["pending-onboarding", "building", "live"]),
   airtableBaseId: z.string().nullable().optional(),
   vercelProjectId: z.string().nullable().optional(),
   addedAt: z.number(),
+  sessionId: z.string().optional(),
+  signerEmail: z.string().optional(),
+  signerName: z.string().optional(),
+  onboardingCompletedAt: z.number().nullable().optional(),
 });
 
 export const zPortalAccount = z.object({
@@ -145,6 +164,43 @@ export function upsertSite(
     );
   }
 
+  return { ...account, sites, updatedAt: now };
+}
+
+/** Whether a site's wizard has been submitted (payment captured + form filled). */
+export function isSiteOnboarded(site: PortalSite): boolean {
+  // Explicit null = payment captured, wizard not filled.
+  // Undefined = pre-feature record; treat as onboarded so old clients are unaffected.
+  return site.onboardingCompletedAt !== null && site.onboardingCompletedAt !== 0;
+}
+
+/**
+ * Locate and update a pending site by sessionId, merging only defined fields.
+ * Used by the portal submission route to convert a `pending-onboarding` site into
+ * `building` and fill in the real slug/name from the wizard. Falls back to
+ * slug-based upsert when no site has that sessionId (handles the old flow).
+ */
+export function upsertSiteBySessionId(
+  account: PortalAccount,
+  sessionId: string,
+  updates: PortalSiteInput,
+  now: number = Date.now(),
+): PortalAccount {
+  const idx = account.sites.findIndex((s) => s.sessionId === sessionId);
+  if (idx === -1) {
+    return upsertSite(account, updates, now);
+  }
+  const existing = account.sites[idx];
+  const merged: PortalSite = {
+    ...existing,
+    ...definedOnly(updates),
+    addedAt: existing.addedAt,
+  } as PortalSite;
+  const sites = [
+    ...account.sites.slice(0, idx),
+    merged,
+    ...account.sites.slice(idx + 1),
+  ];
   return { ...account, sites, updatedAt: now };
 }
 
