@@ -225,6 +225,7 @@ export interface ContentMeta {
   variation: "D";
   is_placeholder: boolean;
   missing_fields: string[];
+  placeholder_images?: string[];
   selectedPlan: "starter" | "growth" | "enterprise";
   siteIndex?: number;
   siteCount?: number;
