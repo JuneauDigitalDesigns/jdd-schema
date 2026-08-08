@@ -9,8 +9,8 @@ import {
   removeSite,
   resolveSite,
   accountFromLegacyMetadata,
-  siteHasCallData,
-  siteHasTraffic,
+  siteFeature,
+  siteFeatures,
   buildPortalSiteEntries,
   zPortalAccount,
 } from "../dist/index.js";
@@ -153,6 +153,45 @@ test("a site's own Airtable base wins over the shared one", () => {
     sites: [{ slug: "solo", airtableBaseId: "appOWN" }],
   });
   assert.equal(entry.airtableBaseId, "appOWN");
+});
+
+test("an unresolved Airtable base is omitted, not nulled", () => {
+  // The regression that motivated the guard. A writer with no view of the base — a console
+  // repair on a client whose clients/{slug}/.env.local is missing — passes neither an own
+  // nor a shared base. Writing `null` there would assert "I looked and there is none",
+  // which is a claim it has no standing to make.
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "solo" }],
+  });
+  assert.ok(!("airtableBaseId" in entry), "must be absent, not null");
+});
+
+test("an omitted Airtable base preserves the stored one through upsertSite", () => {
+  // End to end: this is the exact sequence that silently disconnected a client's Call Log.
+  const acct = accountWith([site("alpha", { airtableBaseId: "appSTORED" })]);
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "alpha" }],
+  });
+  const next = upsertSite(acct, entry, NOW + 1);
+  assert.equal(next.sites[0].airtableBaseId, "appSTORED");
+});
+
+test("downgrading to starter still blanks a stored Airtable base", () => {
+  // The counterpart: `null` from the starter branch IS a claim we can stand behind, so it
+  // must survive the merge rather than being preserved away.
+  const acct = accountWith([site("alpha", { airtableBaseId: "appSTORED" })]);
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [{ slug: "alpha" }],
+  });
+  const next = upsertSite(acct, entry, NOW + 1);
+  assert.equal(next.sites[0].airtableBaseId, null);
 });
 
 test("canonical falls back to the resolved Vercel host, then is omitted", () => {
@@ -337,17 +376,88 @@ test("accountFromLegacyMetadata returns null when there is nothing to migrate", 
   assert.equal(accountFromLegacyMetadata("o@e.com", { plan: "growth" }, NOW), null);
 });
 
-// ── Derived view helpers ────────────────────────────────────────────────────
+// ── Feature availability ────────────────────────────────────────────────────
 
-test("siteHasCallData requires a non-starter plan AND a base", () => {
-  assert.equal(siteHasCallData(site("a", { plan: "growth", airtableBaseId: "app1" })), true);
-  assert.equal(siteHasCallData(site("a", { plan: "starter", airtableBaseId: "app1" })), false);
-  assert.equal(siteHasCallData(site("a", { plan: "growth", airtableBaseId: null })), false);
+/** Shorthand: the state string for one feature on a site built from `overrides`. */
+function featureState(overrides, feature) {
+  return siteFeature(site("a", overrides), feature).state;
+}
+
+test("siteFeature: a fully provisioned growth site is ready across the board", () => {
+  const wired = {
+    plan: "growth",
+    status: "live",
+    airtableBaseId: "app1",
+    vercelProjectId: "prj1",
+    canonical: "https://example.com",
+  };
+  assert.deepEqual(siteFeatures(site("a", wired)), {
+    calls: { state: "ready" },
+    traffic: { state: "ready" },
+    performance: { state: "ready" },
+  });
 });
 
-test("siteHasTraffic requires a vercel project", () => {
-  assert.equal(siteHasTraffic(site("a", { vercelProjectId: "prj" })), true);
-  assert.equal(siteHasTraffic(site("a", { vercelProjectId: null })), false);
+test("siteFeature: plan exclusion outranks build status", () => {
+  // The precedence that makes this model worth having. A starter site mid-build must be
+  // told its plan excludes call data — NOT "pending-build", which promises a feature it
+  // will never receive no matter how long it waits.
+  assert.equal(featureState({ plan: "starter", status: "building" }, "calls"), "not-on-plan");
+  assert.equal(featureState({ plan: "starter", status: "live" }, "calls"), "not-on-plan");
+  assert.equal(
+    featureState({ plan: "starter", status: "live", airtableBaseId: "app1" }, "calls"),
+    "not-on-plan",
+    "even a stray stored base cannot grant a starter site call data",
+  );
+});
+
+test("siteFeature: only calls is plan-gated — traffic and performance ship on every tier", () => {
+  const starterLive = {
+    plan: "starter",
+    status: "live",
+    vercelProjectId: "prj1",
+    canonical: "https://example.com",
+  };
+  assert.equal(featureState(starterLive, "traffic"), "ready");
+  assert.equal(featureState(starterLive, "performance"), "ready");
+});
+
+test("siteFeature: an unbuilt site is pending-build regardless of stored ids", () => {
+  for (const status of ["pending-onboarding", "building"]) {
+    const s = { plan: "growth", status, airtableBaseId: "app1", vercelProjectId: "prj1", canonical: "https://x.com" };
+    assert.equal(featureState(s, "calls"), "pending-build", status);
+    assert.equal(featureState(s, "traffic"), "pending-build", status);
+    assert.equal(featureState(s, "performance"), "pending-build", status);
+  }
+});
+
+test("siteFeature: live but missing its id is 'connecting', not 'pending-build'", () => {
+  // This is our drift, and the copy the client sees differs — so the states must differ.
+  const live = { plan: "growth", status: "live" };
+  assert.equal(featureState({ ...live, airtableBaseId: null }, "calls"), "connecting");
+  assert.equal(featureState({ ...live, vercelProjectId: null }, "traffic"), "connecting");
+  assert.equal(featureState({ ...live, canonical: undefined }, "performance"), "connecting");
+});
+
+test("siteFeature: blank and whitespace-only ids count as missing", () => {
+  const live = { plan: "growth", status: "live" };
+  assert.equal(featureState({ ...live, airtableBaseId: "" }, "calls"), "connecting");
+  assert.equal(featureState({ ...live, vercelProjectId: "   " }, "traffic"), "connecting");
+  assert.equal(featureState({ ...live, canonical: "  " }, "performance"), "connecting");
+});
+
+test("siteFeature: each feature reads its own id and ignores the others", () => {
+  // A site can be partially connected; one missing id must not gate an unrelated tab.
+  const partial = {
+    plan: "growth",
+    status: "live",
+    airtableBaseId: "app1",
+    vercelProjectId: null,
+    canonical: "https://example.com",
+  };
+  assert.equal(featureState(partial, "calls"), "ready");
+  assert.equal(featureState(partial, "traffic"), "connecting");
+  assert.equal(featureState(partial, "performance"), "ready");
 });
 
 // ── Schema validation ───────────────────────────────────────────────────────

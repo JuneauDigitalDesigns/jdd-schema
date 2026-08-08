@@ -435,8 +435,13 @@ export interface PortalEntrySource {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — starter sites get `null` (no call data exists for them). Everything
- *    else takes the site's own base, falling back to the shared one enterprise sites inherit.
+ *  - **Airtable base** — starter sites get an explicit `null` (call data cannot exist for
+ *    them). Everything else takes the site's own base, falling back to the shared one
+ *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
+ *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
+ *    which meant a writer that simply couldn't see the base (a console repair on a client
+ *    with no `clients/{slug}/.env.local`) would blank a base id onboard.js had resolved
+ *    earlier. That is the `undefined` vs `null` distinction above, and it applies here too.
  *  - **canonical** — the site's own, else the resolved Vercel host, else the key is *omitted*
  *    so a partial upsert never blanks a canonical a different writer set earlier.
  *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
@@ -449,8 +454,42 @@ export declare function buildPortalSiteEntries(input: {
     sharedAirtableBaseId?: string | null;
     sites: PortalEntrySource[];
 }): PortalSiteInput[];
-/** Whether a site's plan + provisioning make the Call Log tab meaningful. */
-export declare function siteHasCallData(site: PortalSite): boolean;
-/** Whether a site has Vercel Web Analytics wired up. */
-export declare function siteHasTraffic(site: PortalSite): boolean;
+/** A portal feature whose availability depends on the client's lifecycle stage. */
+export type PortalFeature = "calls" | "traffic" | "performance";
+/**
+ * *Why* a feature is or isn't usable — not just whether it is.
+ *
+ * This replaced a pair of booleans (`siteHasCallData` / `siteHasTraffic`) that collapsed
+ * three unrelated situations into one `false`. The portal rendered that single `false`
+ * with the tooltip "Not available on this site's plan", which told Growth clients whose
+ * sites were still being built that they hadn't paid for a feature they had. Callers need
+ * the reason, so the reason is the return value.
+ */
+export type FeatureAvailability = 
+/** Wired up and safe to query. */
+{
+    state: "ready";
+}
+/** The plan genuinely excludes it. No amount of provisioning will turn it on. */
+ | {
+    state: "not-on-plan";
+}
+/** The site isn't provisioned yet, so there is nothing to connect to. */
+ | {
+    state: "pending-build";
+}
+/** The site is live but we haven't finished wiring this up. Our drift, not the client's. */
+ | {
+    state: "connecting";
+};
+/**
+ * Resolve one feature for one site.
+ *
+ * The order is load-bearing and deliberately **plan → build status → connection → ready**.
+ * Plan exclusion outranks build status so a Starter site mid-build hears the truth about
+ * its plan rather than a promise of call data it will never receive.
+ */
+export declare function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAvailability;
+/** Every feature for one site, for callers that need the whole picture at once. */
+export declare function siteFeatures(site: PortalSite): Record<PortalFeature, FeatureAvailability>;
 //# sourceMappingURL=account.d.ts.map

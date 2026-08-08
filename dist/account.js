@@ -236,8 +236,13 @@ function firstNonEmpty(...values) {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — starter sites get `null` (no call data exists for them). Everything
- *    else takes the site's own base, falling back to the shared one enterprise sites inherit.
+ *  - **Airtable base** — starter sites get an explicit `null` (call data cannot exist for
+ *    them). Everything else takes the site's own base, falling back to the shared one
+ *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
+ *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
+ *    which meant a writer that simply couldn't see the base (a console repair on a client
+ *    with no `clients/{slug}/.env.local`) would blank a base id onboard.js had resolved
+ *    earlier. That is the `undefined` vs `null` distinction above, and it applies here too.
  *  - **canonical** — the site's own, else the resolved Vercel host, else the key is *omitted*
  *    so a partial upsert never blanks a canonical a different writer set earlier.
  *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
@@ -253,20 +258,54 @@ export function buildPortalSiteEntries(input) {
         const canonical = firstNonEmpty(s.canonical, s.fallbackCanonical);
         if (canonical !== undefined)
             entry.canonical = canonical;
-        entry.airtableBaseId =
-            plan === "starter" ? null : (s.airtableBaseId ?? sharedAirtableBaseId ?? null);
+        if (plan === "starter") {
+            // Starter genuinely has no call data — assert that, don't preserve a stale base.
+            entry.airtableBaseId = null;
+        }
+        else {
+            const resolved = s.airtableBaseId ?? sharedAirtableBaseId;
+            // Omit when unresolved so `upsertSite` preserves whatever is already stored.
+            if (resolved !== undefined && resolved !== null)
+                entry.airtableBaseId = resolved;
+        }
         if (s.vercelProjectId !== undefined)
             entry.vercelProjectId = s.vercelProjectId;
         return entry;
     });
 }
-// ── Derived view helpers (shared by the portal UI + API routes) ─────────────
-/** Whether a site's plan + provisioning make the Call Log tab meaningful. */
-export function siteHasCallData(site) {
-    return site.plan !== "starter" && Boolean(site.airtableBaseId);
+/** Which stored id each feature needs before it can be queried. */
+const FEATURE_REQUIREMENT = {
+    calls: "airtableBaseId",
+    traffic: "vercelProjectId",
+    // PageSpeed measures a URL; without a canonical there is nothing to score.
+    performance: "canonical",
+};
+/**
+ * Resolve one feature for one site.
+ *
+ * The order is load-bearing and deliberately **plan → build status → connection → ready**.
+ * Plan exclusion outranks build status so a Starter site mid-build hears the truth about
+ * its plan rather than a promise of call data it will never receive.
+ */
+export function siteFeature(site, feature) {
+    // 1. Plan. Only call data is plan-gated today; traffic and performance ship on every tier.
+    if (feature === "calls" && site.plan === "starter")
+        return { state: "not-on-plan" };
+    // 2. Build status. Nothing is connectable before the site is provisioned.
+    if (site.status !== "live")
+        return { state: "pending-build" };
+    // 3. Connection. Live, but the id this feature needs was never recorded.
+    const required = site[FEATURE_REQUIREMENT[feature]];
+    if (typeof required !== "string" || !required.trim())
+        return { state: "connecting" };
+    return { state: "ready" };
 }
-/** Whether a site has Vercel Web Analytics wired up. */
-export function siteHasTraffic(site) {
-    return Boolean(site.vercelProjectId);
+/** Every feature for one site, for callers that need the whole picture at once. */
+export function siteFeatures(site) {
+    return {
+        calls: siteFeature(site, "calls"),
+        traffic: siteFeature(site, "traffic"),
+        performance: siteFeature(site, "performance"),
+    };
 }
 //# sourceMappingURL=account.js.map
