@@ -51,6 +51,25 @@ export interface PortalSite {
    * wizard hasn't been filled. Undefined means this is a pre-feature record.
    */
   onboardingCompletedAt?: number | null;
+  /** Stripe subscription ID — resolved lazily from the checkout session and persisted. */
+  stripeSubscriptionId?: string;
+  /** Stripe customer ID — resolved alongside stripeSubscriptionId. */
+  stripeCustomerId?: string;
+  /**
+   * Client's consent to appear in the FeaturedSites homepage section.
+   * Set when the client opts in via the portal. Nothing appears publicly until
+   * Xander captures a screenshot and publishes via the console.
+   */
+  featured?: {
+    optedInAt: number;
+    quote?: string;
+    showName: boolean;
+    showLink: boolean;
+  };
+  /** Epoch ms when the client submitted a cancellation request. */
+  cancelRequestedAt?: number;
+  /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
+  cancelEffectiveAt?: number;
 }
 
 /** Everything needed to add or update a site; only `slug` is required. */
@@ -64,6 +83,12 @@ export interface PortalAccount {
   sites: PortalSite[];
   createdAt: number;
   updatedAt: number;
+  /** Editable contact details. Account email is read-only (it is the KV key + Clerk link). */
+  profile?: {
+    contactName?: string;
+    contactPhone?: string;
+    updatedAt: number;
+  };
 }
 
 export const zPortalSite = z.object({
@@ -79,6 +104,16 @@ export const zPortalSite = z.object({
   signerEmail: z.string().optional(),
   signerName: z.string().optional(),
   onboardingCompletedAt: z.number().nullable().optional(),
+  stripeSubscriptionId: z.string().optional(),
+  stripeCustomerId: z.string().optional(),
+  featured: z.object({
+    optedInAt: z.number(),
+    quote: z.string().optional(),
+    showName: z.boolean(),
+    showLink: z.boolean(),
+  }).optional(),
+  cancelRequestedAt: z.number().optional(),
+  cancelEffectiveAt: z.number().optional(),
 });
 
 export const zPortalAccount = z.object({
@@ -87,6 +122,11 @@ export const zPortalAccount = z.object({
   sites: z.array(zPortalSite),
   createdAt: z.number(),
   updatedAt: z.number(),
+  profile: z.object({
+    contactName: z.string().optional(),
+    contactPhone: z.string().optional(),
+    updatedAt: z.number(),
+  }).optional(),
 });
 
 // ── Keys ────────────────────────────────────────────────────────────────────
