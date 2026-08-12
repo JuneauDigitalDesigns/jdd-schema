@@ -21,5 +21,6 @@ export * from "./structure.js";
 export * from "./brand-intake.js";
 // v1.4.0 — portal account record (client → site(s) source of truth)
 // v1.6.0 — buildPortalSiteEntries: shared entry rules for onboard.js + the console
+// v1.10.0 — PortalSite.retellAgentId: the join key minute accounting reads
 export * from "./account.js";
 //# sourceMappingURL=index.js.map

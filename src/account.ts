@@ -39,6 +39,17 @@ export interface PortalSite {
   status: PortalSiteStatus;
   airtableBaseId?: string | null;
   vercelProjectId?: string | null;
+  /**
+   * Retell agent backing this site's voice receptionist. Written by onboard.js at
+   * provisioning; absent on starter sites, which have no agent.
+   *
+   * This is the join key between an account and its call records. Retell is the
+   * authoritative source for usage — the Airtable call log is lossy (it depends on a
+   * post-call automation that can silently miss rows), so minute accounting reads
+   * Retell directly and needs the agent id here rather than in a client-local
+   * `.env.local` the portal cannot see.
+   */
+  retellAgentId?: string | null;
   addedAt: number; // epoch ms
   /** Stripe checkout session ID — set at payment time, used to link back to the wizard. */
   sessionId?: string;
@@ -99,6 +110,7 @@ export const zPortalSite = z.object({
   status: z.enum(["pending-onboarding", "building", "live"]),
   airtableBaseId: z.string().nullable().optional(),
   vercelProjectId: z.string().nullable().optional(),
+  retellAgentId: z.string().nullable().optional(),
   addedAt: z.number(),
   sessionId: z.string().optional(),
   signerEmail: z.string().optional(),
@@ -369,6 +381,8 @@ export interface PortalEntrySource {
   airtableBaseId?: string | null;
   /** Omit to preserve the stored value; `null` means "resolved, not found". */
   vercelProjectId?: string | null;
+  /** The site's Retell agent. Omit to preserve the stored value. */
+  retellAgentId?: string | null;
   /** Resolved `.vercel.app` host, used only when `canonical` is absent. Never a guess. */
   fallbackCanonical?: string | null;
 }
@@ -422,10 +436,17 @@ export function buildPortalSiteEntries(input: {
     if (plan === "starter") {
       // Starter genuinely has no call data — assert that, don't preserve a stale base.
       entry.airtableBaseId = null;
+      // Same reasoning: starter has no voice agent at all, so assert the absence
+      // rather than preserving an id left over from a downgrade.
+      entry.retellAgentId = null;
     } else {
       const resolved = s.airtableBaseId ?? sharedAirtableBaseId;
       // Omit when unresolved so `upsertSite` preserves whatever is already stored.
       if (resolved !== undefined && resolved !== null) entry.airtableBaseId = resolved;
+      // Unlike the base, an agent is never shared between sites — each has its own.
+      if (s.retellAgentId !== undefined && s.retellAgentId !== null) {
+        entry.retellAgentId = s.retellAgentId;
+      }
     }
 
     if (s.vercelProjectId !== undefined) entry.vercelProjectId = s.vercelProjectId;

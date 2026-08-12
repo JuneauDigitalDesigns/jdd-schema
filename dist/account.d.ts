@@ -36,6 +36,17 @@ export interface PortalSite {
     status: PortalSiteStatus;
     airtableBaseId?: string | null;
     vercelProjectId?: string | null;
+    /**
+     * Retell agent backing this site's voice receptionist. Written by onboard.js at
+     * provisioning; absent on starter sites, which have no agent.
+     *
+     * This is the join key between an account and its call records. Retell is the
+     * authoritative source for usage — the Airtable call log is lossy (it depends on a
+     * post-call automation that can silently miss rows), so minute accounting reads
+     * Retell directly and needs the agent id here rather than in a client-local
+     * `.env.local` the portal cannot see.
+     */
+    retellAgentId?: string | null;
     addedAt: number;
     /** Stripe checkout session ID — set at payment time, used to link back to the wizard. */
     sessionId?: string;
@@ -95,6 +106,7 @@ export declare const zPortalSite: z.ZodObject<{
     status: z.ZodEnum<["pending-onboarding", "building", "live"]>;
     airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    retellAgentId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     addedAt: z.ZodNumber;
     sessionId: z.ZodOptional<z.ZodString>;
     signerEmail: z.ZodOptional<z.ZodString>;
@@ -129,6 +141,7 @@ export declare const zPortalSite: z.ZodObject<{
     canonical?: string | undefined;
     airtableBaseId?: string | null | undefined;
     vercelProjectId?: string | null | undefined;
+    retellAgentId?: string | null | undefined;
     sessionId?: string | undefined;
     signerEmail?: string | undefined;
     signerName?: string | undefined;
@@ -152,6 +165,7 @@ export declare const zPortalSite: z.ZodObject<{
     canonical?: string | undefined;
     airtableBaseId?: string | null | undefined;
     vercelProjectId?: string | null | undefined;
+    retellAgentId?: string | null | undefined;
     sessionId?: string | undefined;
     signerEmail?: string | undefined;
     signerName?: string | undefined;
@@ -178,6 +192,7 @@ export declare const zPortalAccount: z.ZodObject<{
         status: z.ZodEnum<["pending-onboarding", "building", "live"]>;
         airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        retellAgentId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         addedAt: z.ZodNumber;
         sessionId: z.ZodOptional<z.ZodString>;
         signerEmail: z.ZodOptional<z.ZodString>;
@@ -212,6 +227,7 @@ export declare const zPortalAccount: z.ZodObject<{
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
+        retellAgentId?: string | null | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -235,6 +251,7 @@ export declare const zPortalAccount: z.ZodObject<{
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
+        retellAgentId?: string | null | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -276,6 +293,7 @@ export declare const zPortalAccount: z.ZodObject<{
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
+        retellAgentId?: string | null | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -310,6 +328,7 @@ export declare const zPortalAccount: z.ZodObject<{
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
+        retellAgentId?: string | null | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -422,6 +441,8 @@ export interface PortalEntrySource {
     airtableBaseId?: string | null;
     /** Omit to preserve the stored value; `null` means "resolved, not found". */
     vercelProjectId?: string | null;
+    /** The site's Retell agent. Omit to preserve the stored value. */
+    retellAgentId?: string | null;
     /** Resolved `.vercel.app` host, used only when `canonical` is absent. Never a guess. */
     fallbackCanonical?: string | null;
 }

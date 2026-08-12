@@ -180,6 +180,70 @@ test("an omitted Airtable base preserves the stored one through upsertSite", () 
   assert.equal(next.sites[0].airtableBaseId, "appSTORED");
 });
 
+// ── retellAgentId: the join key minute accounting reads ─────────────────────
+
+test("starter sites never carry a Retell agent", () => {
+  // Starter has no voice agent at all. Asserting null (rather than omitting) also
+  // clears an id left behind by a growth → starter downgrade.
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sites: [{ slug: "solo", retellAgentId: "agent_LEFTOVER" }],
+  });
+  assert.equal(entry.retellAgentId, null);
+});
+
+test("a voice site carries its own Retell agent", () => {
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "solo", retellAgentId: "agent_OWN" }],
+  });
+  assert.equal(entry.retellAgentId, "agent_OWN");
+});
+
+test("Retell agents are never shared between enterprise sites", () => {
+  // Unlike the Airtable base, which enterprise sites pool, each site has its own
+  // agent — so there is no shared fallback and one site's id must never leak to another.
+  const entries = buildPortalSiteEntries({
+    plan: "enterprise",
+    status: "live",
+    sharedAirtableBaseId: "appSHARED",
+    sites: [
+      { slug: "acme-1", retellAgentId: "agent_1" },
+      { slug: "acme-2", retellAgentId: "agent_2" },
+      { slug: "acme-3" },
+    ],
+  });
+  assert.equal(entries[0].retellAgentId, "agent_1");
+  assert.equal(entries[1].retellAgentId, "agent_2");
+  assert.ok(!("retellAgentId" in entries[2]), "unresolved must be absent, not inherited");
+});
+
+test("an unresolved Retell agent is omitted, not nulled", () => {
+  // Same standing argument as the Airtable base: a console repair that cannot read
+  // clients/{slug}/.env.local has no basis to assert "this site has no agent".
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "solo" }],
+  });
+  assert.ok(!("retellAgentId" in entry), "must be absent, not null");
+});
+
+test("an omitted Retell agent preserves the stored one through upsertSite", () => {
+  // If this regressed, usage accounting would lose the join key and silently
+  // under-bill the client to zero minutes.
+  const acct = accountWith([site("alpha", { retellAgentId: "agent_STORED" })]);
+  const [entry] = buildPortalSiteEntries({
+    plan: "growth",
+    status: "live",
+    sites: [{ slug: "alpha" }],
+  });
+  const next = upsertSite(acct, entry, NOW + 1);
+  assert.equal(next.sites[0].retellAgentId, "agent_STORED");
+});
+
 test("downgrading to starter still blanks a stored Airtable base", () => {
   // The counterpart: `null` from the starter branch IS a claim we can stand behind, so it
   // must survive the merge rather than being preserved away.
