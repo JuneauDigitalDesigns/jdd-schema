@@ -91,10 +91,20 @@ export const zSiteContent = z
     _meta: zSiteMeta,
 })
     .passthrough();
+/** v1.11.0 — SMS alert opt-in snapshot carried on the envelope. */
+export const zSmsAlerts = z.object({
+    consented: z.boolean(),
+    phone: z.string().nullable(),
+    consentedAt: z.string().nullable(),
+});
+// NOTE: zIntake has no .passthrough(), so a key absent from this object is silently
+// dropped on parse. smsAlerts has to be declared here or onboard.js would receive an
+// envelope that quietly lost it.
 export const zIntake = z.object({
     plan,
     siteCount: z.number().int().positive().optional(),
     sites: z.array(zSiteContent).min(1),
+    smsAlerts: zSmsAlerts.nullish(),
 });
 export const zQueuedIntake = z.object({
     id: z.string(),

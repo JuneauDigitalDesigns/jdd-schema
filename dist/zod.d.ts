@@ -1085,6 +1085,20 @@ export declare const zSiteContent: z.ZodObject<{
         selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">>;
 }, z.ZodTypeAny, "passthrough">>;
+/** v1.11.0 — SMS alert opt-in snapshot carried on the envelope. */
+export declare const zSmsAlerts: z.ZodObject<{
+    consented: z.ZodBoolean;
+    phone: z.ZodNullable<z.ZodString>;
+    consentedAt: z.ZodNullable<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    phone: string | null;
+    consented: boolean;
+    consentedAt: string | null;
+}, {
+    phone: string | null;
+    consented: boolean;
+    consentedAt: string | null;
+}>;
 export declare const zIntake: z.ZodObject<{
     plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
     siteCount: z.ZodOptional<z.ZodNumber>;
@@ -1152,6 +1166,19 @@ export declare const zIntake: z.ZodObject<{
             selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">>, "many">;
+    smsAlerts: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        consented: z.ZodBoolean;
+        phone: z.ZodNullable<z.ZodString>;
+        consentedAt: z.ZodNullable<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    }, {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    }>>>;
 }, "strip", z.ZodTypeAny, {
     plan: "starter" | "growth" | "enterprise";
     sites: z.objectOutputType<{
@@ -1177,6 +1204,11 @@ export declare const zIntake: z.ZodObject<{
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">[];
     siteCount?: number | undefined;
+    smsAlerts?: {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    } | null | undefined;
 }, {
     plan: "starter" | "growth" | "enterprise";
     sites: z.objectInputType<{
@@ -1202,6 +1234,11 @@ export declare const zIntake: z.ZodObject<{
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">[];
     siteCount?: number | undefined;
+    smsAlerts?: {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    } | null | undefined;
 }>;
 export declare const zQueuedIntake: z.ZodObject<{
     id: z.ZodString;
@@ -1278,6 +1315,19 @@ export declare const zQueuedIntake: z.ZodObject<{
                 selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">>, "many">;
+        smsAlerts: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+            consented: z.ZodBoolean;
+            phone: z.ZodNullable<z.ZodString>;
+            consentedAt: z.ZodNullable<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        }, {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        }>>>;
     }, "strip", z.ZodTypeAny, {
         plan: "starter" | "growth" | "enterprise";
         sites: z.objectOutputType<{
@@ -1303,6 +1353,11 @@ export declare const zQueuedIntake: z.ZodObject<{
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
         siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
     }, {
         plan: "starter" | "growth" | "enterprise";
         sites: z.objectInputType<{
@@ -1328,6 +1383,11 @@ export declare const zQueuedIntake: z.ZodObject<{
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
         siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
     plan: string;
@@ -1362,6 +1422,11 @@ export declare const zQueuedIntake: z.ZodObject<{
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
         siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
     };
 }, {
     plan: string;
@@ -1396,6 +1461,11 @@ export declare const zQueuedIntake: z.ZodObject<{
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
         siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
     };
 }>;
 export declare const zBrandDirection: z.ZodObject<{

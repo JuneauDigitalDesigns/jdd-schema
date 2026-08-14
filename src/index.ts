@@ -24,3 +24,4 @@ export * from "./brand-intake.js";
 // v1.6.0 — buildPortalSiteEntries: shared entry rules for onboard.js + the console
 // v1.10.0 — PortalSite.retellAgentId: the join key minute accounting reads
 export * from "./account.js";
+// v1.11.0 — Intake.smsAlerts: the owner's post-call SMS opt-in, carried to onboard.js
