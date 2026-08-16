@@ -31,3 +31,6 @@ export * from "./client-record.js";
 // v1.13.0 — Findings: the one shape every reconcile check produces, its severity ranking,
 //           and the sweep-diffing that turns repeated observations into open/close history.
 export * from "./findings.js";
+// v1.14.0 — Vercel project-name and hostname derivation, shared so the transform stops
+//           being copied (four inline copies, three of them wrong, caused a live bug).
+export * from "./vercel-host.js";
