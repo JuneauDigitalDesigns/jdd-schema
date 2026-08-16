@@ -24,4 +24,7 @@ export * from "./brand-intake.js";
 // v1.10.0 — PortalSite.retellAgentId: the join key minute accounting reads
 export * from "./account.js";
 // v1.11.0 — Intake.smsAlerts: the owner's post-call SMS opt-in, carried to onboard.js
+// v1.12.0 — ClientRecord: one durable record per relationship, lead → live → churn, plus
+//           the stage-precedence rules the console derives its lifecycle from.
+export * from "./client-record.js";
 //# sourceMappingURL=index.js.map
