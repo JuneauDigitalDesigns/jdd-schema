@@ -34,3 +34,5 @@ export * from "./findings.js";
 // v1.14.0 — Vercel project-name and hostname derivation, shared so the transform stops
 //           being copied (four inline copies, three of them wrong, caused a live bug).
 export * from "./vercel-host.js";
+// v1.15.0 — phone normalization + comparison, shared (five copies, already diverged).
+export * from "./phone.js";
