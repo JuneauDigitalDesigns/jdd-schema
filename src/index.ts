@@ -28,3 +28,6 @@ export * from "./account.js";
 // v1.12.0 — ClientRecord: one durable record per relationship, lead → live → churn, plus
 //           the stage-precedence rules the console derives its lifecycle from.
 export * from "./client-record.js";
+// v1.13.0 — Findings: the one shape every reconcile check produces, its severity ranking,
+//           and the sweep-diffing that turns repeated observations into open/close history.
+export * from "./findings.js";

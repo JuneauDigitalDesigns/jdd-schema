@@ -19,4 +19,5 @@ export * from "./structure.js";
 export * from "./brand-intake.js";
 export * from "./account.js";
 export * from "./client-record.js";
+export * from "./findings.js";
 //# sourceMappingURL=index.d.ts.map
