@@ -21,18 +21,24 @@ export interface ServiceEntry {
 export interface BrandIntakeSubmission {
     selectedPlan: "starter" | "growth" | "enterprise";
     brandName: string;
-    brandShort: string;
+    brandShort?: string;
     email: string;
     phone: string;
     address: string;
-    license: string;
+    license?: string;
     industry: string;
-    established: string;
-    notableClients: string;
-    certifications: string;
-    businessHours: string;
-    serviceArea: string;
-    agentName: string;
+    /**
+     * No longer asked. Recovered from the website scan when the client has an existing site,
+     * otherwise filled in the console — or genuinely absent, which is the honest outcome for
+     * a new business with no trust history yet. The copywriter is forbidden from inventing
+     * any of these.
+     */
+    established?: string;
+    notableClients?: string;
+    certifications?: string;
+    businessHours?: string;
+    serviceArea?: string;
+    agentName?: string;
     serviceList: ServiceEntry[];
     brandDirection: BrandDirection;
     palette: PalettePick;
@@ -43,7 +49,8 @@ export interface BrandIntakeSubmission {
         aboutFeature?: ImageMeta;
     };
     existingWebsiteUrl: string;
-    announcement: string;
+    /** No longer asked; it's a post-launch promo, editable in the console any time. */
+    announcement?: string;
     additionalSites?: AdditionalBrandSite[];
 }
 /** Enterprise additional site — facts + palette + direction; copy is generated. */

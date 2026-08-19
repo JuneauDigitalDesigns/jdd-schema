@@ -241,6 +241,7 @@ export interface ContentMeta {
     references: string;
     forbidden: string;
   };
+  industry?: string;
 }
 
 export interface SiteContent {

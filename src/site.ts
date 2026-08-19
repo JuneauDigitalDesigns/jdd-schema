@@ -237,6 +237,7 @@ export interface ContentMeta {
   scrapeExistingWebsite?: boolean;   // client asked to scrape an existing site (studio acts on this)
   scrapeWebsiteDomain?: string;      // domain to scrape, prefilled in the studio scrape panel
   brandDirection?: BrandDirection;   // v1.1: client's brand guidance → copywriter `details`
+  industry?: string;                 // v1.16: client's industry pick → console copywriter vertical
 }
 
 export interface SiteContent {

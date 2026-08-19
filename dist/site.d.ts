@@ -227,6 +227,7 @@ export interface ContentMeta {
     scrapeExistingWebsite?: boolean;
     scrapeWebsiteDomain?: string;
     brandDirection?: BrandDirection;
+    industry?: string;
 }
 export interface SiteContent {
     brand: BrandContent;

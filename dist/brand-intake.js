@@ -49,7 +49,10 @@ function buildScaffold(f, plan) {
     flag("brand.address", f.address && f.address.trim());
     flag("brand.license", f.license && f.license.trim());
     flag("brand.established", f.established && f.established.trim());
-    flag("business.industry", true); // industry lives on the submission, flagged there
+    // Flag on the real value. This was hardcoded `true`, so a client who never picked an
+    // industry was recorded as having answered — which mattered because the value was being
+    // dropped entirely a few lines below, and the flag was the only trace it had been asked.
+    flag("business.industry", f.industry && f.industry.trim());
     if (f.serviceList.length === 0)
         missing.push("services.items");
     if (!f.hasLogo)
@@ -191,6 +194,18 @@ function buildScaffold(f, plan) {
             missing_fields: missing,
             selectedPlan: plan,
             brandDirection: f.brandDirection,
+            // The client's own industry pick, carried through to the console.
+            //
+            // This type has always documented itself as "console maps this to a copywriter
+            // VerticalId", but the value was never emitted — so the console couldn't see it and
+            // the operator re-picked by hand what the client had already answered. That pick is
+            // not cosmetic: it selects BOTH the preset baseline AND the system prompt the model
+            // writes under.
+            //
+            // Emitted verbatim, including "other". Deciding what "other" means is the console's
+            // job (fall back to a manual pick); a mapper that silently dropped or normalised it
+            // would be making that call invisibly, which is how it got lost the first time.
+            ...(f.industry && f.industry.trim() ? { industry: f.industry.trim() } : {}),
             ...(f.existingWebsiteUrl && f.existingWebsiteUrl.trim()
                 ? { scrapeExistingWebsite: true, scrapeWebsiteDomain: f.existingWebsiteUrl.trim() }
                 : {}),
@@ -206,6 +221,7 @@ export function mapBrandIntakeToIntake(sub) {
     const primary = buildScaffold({
         brandName: sub.brandName,
         brandShort: sub.brandShort,
+        industry: sub.industry,
         email: sub.email,
         phone: sub.phone,
         address: sub.address,

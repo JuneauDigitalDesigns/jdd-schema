@@ -10,6 +10,7 @@
  * individual slots via `PalettePick.overrides`, which are applied last.
  */
 import type { BrandPalette } from "./site.js";
+import type { VerticalId } from "./verticals.js";
 /** Background character. Determines lightness/chroma of `bg`, and whether the palette is dark. */
 export type BackgroundMood = "white" | "warm" | "cool" | "soft-dark" | "deep-dark";
 /** How the client chose their palette. */
@@ -86,8 +87,18 @@ export interface PalettePreset {
      * instead would pin the accent without re-deriving bgSoft/rule.
      */
     source: PaletteSource;
+    /** Trades this palette suits. Absent = no opinion; still selectable by anyone. */
+    verticals?: VerticalId[];
 }
 export declare const PALETTE_PRESETS: PalettePreset[];
+/**
+ * Palettes worth showing first for a trade, or all of them when we have no opinion.
+ *
+ * Falls back to the full set for an unknown or "other" industry rather than returning
+ * nothing — a colour step that renders zero options reads as broken, and a client who
+ * doesn't fit our six trades still needs to pick a colour.
+ */
+export declare function palettesForVertical(vertical: string | undefined | null): PalettePreset[];
 export declare const DEFAULT_PALETTE_PRESET_ID = "ocean-blue";
 export declare function presetById(id: string | undefined): PalettePreset | undefined;
 /**

@@ -22,4 +22,6 @@ export * from "./client-record.js";
 export * from "./findings.js";
 export * from "./vercel-host.js";
 export * from "./phone.js";
+export * from "./verticals.js";
+export * from "./industry-menu.js";
 //# sourceMappingURL=index.d.ts.map

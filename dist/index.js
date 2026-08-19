@@ -35,4 +35,8 @@ export * from "./findings.js";
 export * from "./vercel-host.js";
 // v1.15.0 — phone normalization + comparison, shared (five copies, already diverged).
 export * from "./phone.js";
+// v1.16.0 — canonical vertical ids + the industry menu the wizard offers as chips, so the
+//           client picks instead of typing; plus palette tagging by trade.
+export * from "./verticals.js";
+export * from "./industry-menu.js";
 //# sourceMappingURL=index.js.map

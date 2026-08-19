@@ -133,24 +133,53 @@ export function isDarkPalette(p) {
  * Preset definitions. Each palette is derived from its own `source` below rather
  * than written out separately, so the two can never drift apart.
  */
+/**
+ * `verticals` is which trades a palette SUITS, and it lives here rather than as a list of
+ * palette ids on each industry menu. The relationship is "this colourway fits these trades",
+ * so it belongs with the colourway — and expressing one relationship in two places is the
+ * drift pattern that has already caused real bugs in this codebase (five copies of `toE164`,
+ * four of the Vercel host transform, each pair quietly disagreeing).
+ *
+ * A tag decides only what is shown FIRST. Every palette stays selectable for every industry
+ * behind "see all", so this narrows the opening choice without taking one away.
+ */
 const PRESET_DEFS = [
-    { id: "slate-amber", label: "Slate & Amber", source: { accent: "#D97706", ink: "#0F172A", bgMood: "white" } },
-    { id: "ocean-blue", label: "Ocean Blue", source: { accent: "#1E6FBF", ink: "#0F1B2D", bgMood: "white" } },
-    { id: "forest", label: "Forest", source: { accent: "#15803D", ink: "#14261B", bgMood: "white" } },
-    { id: "warm-sand", label: "Warm Sand", source: { accent: "#B45309", ink: "#2A2118", bgMood: "warm" } },
-    { id: "classic-navy", label: "Classic Navy", source: { accent: "#1E3A8A", ink: "#111827", bgMood: "white" } },
-    { id: "crimson", label: "Crimson", source: { accent: "#B91C1C", ink: "#1F1315", bgMood: "white" } },
-    { id: "teal", label: "Teal", source: { accent: "#0F766E", ink: "#0B2422", bgMood: "cool" } },
-    { id: "graphite", label: "Graphite", source: { accent: "#4B5563", ink: "#111827", bgMood: "white" } },
-    { id: "midnight", label: "Midnight", source: { accent: "#60A5FA", bgMood: "deep-dark" } },
-    { id: "carbon", label: "Carbon", source: { accent: "#F59E0B", bgMood: "soft-dark" } },
+    // Warm and high-energy — reads as urgency and physical trade work.
+    { id: "slate-amber", label: "Slate & Amber", source: { accent: "#D97706", ink: "#0F172A", bgMood: "white" }, verticals: ["hvac", "roofing", "lawn-care"] },
+    // The default for a reason: trustworthy and unobjectionable in any trade.
+    { id: "ocean-blue", label: "Ocean Blue", source: { accent: "#1E6FBF", ink: "#0F1B2D", bgMood: "white" }, verticals: ["plumbing", "hvac", "health", "roofing"] },
+    { id: "forest", label: "Forest", source: { accent: "#15803D", ink: "#14261B", bgMood: "white" }, verticals: ["lawn-care", "health"] },
+    { id: "warm-sand", label: "Warm Sand", source: { accent: "#B45309", ink: "#2A2118", bgMood: "warm" }, verticals: ["roofing", "lawn-care"] },
+    { id: "classic-navy", label: "Classic Navy", source: { accent: "#1E3A8A", ink: "#111827", bgMood: "white" }, verticals: ["plumbing", "roofing", "car-detailing"] },
+    // Emergency red — right for the trades people call in a crisis.
+    { id: "crimson", label: "Crimson", source: { accent: "#B91C1C", ink: "#1F1315", bgMood: "white" }, verticals: ["plumbing", "hvac"] },
+    { id: "teal", label: "Teal", source: { accent: "#0F766E", ink: "#0B2422", bgMood: "cool" }, verticals: ["health", "car-detailing"] },
+    { id: "graphite", label: "Graphite", source: { accent: "#4B5563", ink: "#111827", bgMood: "white" }, verticals: ["car-detailing"] },
+    // Dark themes flatter strong imagery and punish thin content, so they go to the trades
+    // that reliably have photography rather than to everyone.
+    { id: "midnight", label: "Midnight", source: { accent: "#60A5FA", bgMood: "deep-dark" }, verticals: ["car-detailing", "health"] },
+    { id: "carbon", label: "Carbon", source: { accent: "#F59E0B", bgMood: "soft-dark" }, verticals: ["car-detailing"] },
 ];
-export const PALETTE_PRESETS = PRESET_DEFS.map(({ id, label, source }) => ({
+export const PALETTE_PRESETS = PRESET_DEFS.map(({ id, label, source, verticals }) => ({
     id,
     label,
     source,
+    verticals,
     palette: derivePalette(source.accent, source.ink, source.bgMood),
 }));
+/**
+ * Palettes worth showing first for a trade, or all of them when we have no opinion.
+ *
+ * Falls back to the full set for an unknown or "other" industry rather than returning
+ * nothing — a colour step that renders zero options reads as broken, and a client who
+ * doesn't fit our six trades still needs to pick a colour.
+ */
+export function palettesForVertical(vertical) {
+    if (!vertical)
+        return PALETTE_PRESETS;
+    const matched = PALETTE_PRESETS.filter((p) => p.verticals?.includes(vertical));
+    return matched.length ? matched : PALETTE_PRESETS;
+}
 export const DEFAULT_PALETTE_PRESET_ID = "ocean-blue";
 export function presetById(id) {
     return PALETTE_PRESETS.find((p) => p.id === id);

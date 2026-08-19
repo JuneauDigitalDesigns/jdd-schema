@@ -32,21 +32,32 @@ export interface BrandIntakeSubmission {
   selectedPlan: "starter" | "growth" | "enterprise";
 
   // ── Contact facts ──
+  //
+  // The optional ones below are no longer ASKED by the wizard as of the chip-first rebuild.
+  // They stay on the type rather than being deleted for two reasons: a client who was
+  // mid-form when the new wizard deployed still submits the old shape, and the fields
+  // remain legitimate values for the console or a website scan to fill in later.
   brandName: string;
-  brandShort: string;
+  brandShort?: string; // derived from brandName when absent
   email: string;
   phone: string;
   address: string;
-  license: string;
+  license?: string;
 
   // ── Business facts ──
   industry: string; // console maps this to a copywriter VerticalId
-  established: string;
-  notableClients: string; // comma/newline list
-  certifications: string; // comma/newline list
-  businessHours: string;
-  serviceArea: string; // comma/newline list of towns
-  agentName: string; // optional AI phone-agent persona first name
+  /**
+   * No longer asked. Recovered from the website scan when the client has an existing site,
+   * otherwise filled in the console — or genuinely absent, which is the honest outcome for
+   * a new business with no trust history yet. The copywriter is forbidden from inventing
+   * any of these.
+   */
+  established?: string;
+  notableClients?: string; // comma/newline list
+  certifications?: string; // comma/newline list
+  businessHours?: string;
+  serviceArea?: string; // comma/newline list of towns
+  agentName?: string; // AI phone-agent persona first name; defaults in the console
   serviceList: ServiceEntry[];
 
   // ── Brand direction (compiled into the copywriter's `details`) ──
@@ -61,7 +72,8 @@ export interface BrandIntakeSubmission {
   existingWebsiteUrl: string;
 
   // ── Optional ──
-  announcement: string;
+  /** No longer asked; it's a post-launch promo, editable in the console any time. */
+  announcement?: string;
 
   // ── Enterprise only ──
   additionalSites?: AdditionalBrandSite[];
@@ -113,7 +125,13 @@ const DEFAULT_TYPOGRAPHY: BrandContent["typography"] = {
 
 interface SiteFacts {
   brandName: string;
-  brandShort: string;
+  /**
+   * Optional now the wizard no longer asks for it. `buildScaffold` falls back to
+   * `brandName`, which is what the old field defaulted to anyway.
+   */
+  brandShort?: string;
+  /** The client's industry pick. Carried onto `_meta` for the console's vertical. */
+  industry?: string;
   email: string;
   phone: string;
   address: string;
@@ -145,7 +163,10 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
   flag("brand.address", f.address && f.address.trim());
   flag("brand.license", f.license && f.license.trim());
   flag("brand.established", f.established && f.established.trim());
-  flag("business.industry", true); // industry lives on the submission, flagged there
+  // Flag on the real value. This was hardcoded `true`, so a client who never picked an
+  // industry was recorded as having answered — which mattered because the value was being
+  // dropped entirely a few lines below, and the flag was the only trace it had been asked.
+  flag("business.industry", f.industry && f.industry.trim());
   if (f.serviceList.length === 0) missing.push("services.items");
   if (!f.hasLogo) missing.push("branding.logo");
   if (!f.images || f.images.heroSlides.length === 0) missing.push("images.hero");
@@ -285,6 +306,18 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       missing_fields: missing,
       selectedPlan: plan,
       brandDirection: f.brandDirection,
+      // The client's own industry pick, carried through to the console.
+      //
+      // This type has always documented itself as "console maps this to a copywriter
+      // VerticalId", but the value was never emitted — so the console couldn't see it and
+      // the operator re-picked by hand what the client had already answered. That pick is
+      // not cosmetic: it selects BOTH the preset baseline AND the system prompt the model
+      // writes under.
+      //
+      // Emitted verbatim, including "other". Deciding what "other" means is the console's
+      // job (fall back to a manual pick); a mapper that silently dropped or normalised it
+      // would be making that call invisibly, which is how it got lost the first time.
+      ...(f.industry && f.industry.trim() ? { industry: f.industry.trim() } : {}),
       ...(f.existingWebsiteUrl && f.existingWebsiteUrl.trim()
         ? { scrapeExistingWebsite: true, scrapeWebsiteDomain: f.existingWebsiteUrl.trim() }
         : {}),
@@ -302,6 +335,7 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
     {
       brandName: sub.brandName,
       brandShort: sub.brandShort,
+      industry: sub.industry,
       email: sub.email,
       phone: sub.phone,
       address: sub.address,
