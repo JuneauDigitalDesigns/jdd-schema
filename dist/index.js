@@ -39,4 +39,11 @@ export * from "./phone.js";
 //           client picks instead of typing; plus palette tagging by trade.
 export * from "./verticals.js";
 export * from "./industry-menu.js";
+// v1.17.0 — the purchase gate moved in front of the agreement, so "what may this account buy
+//           next" became a real question with three callers (the gate, the upsell, the
+//           in-portal upgrade CTA). `entitlements` answers it once — starter unlimited,
+//           growth capped at two, enterprise as the ceiling — and `agreement` holds the
+//           master-vs-addendum rules that decide what they actually sign.
+export * from "./entitlements.js";
+export * from "./agreement.js";
 //# sourceMappingURL=index.js.map

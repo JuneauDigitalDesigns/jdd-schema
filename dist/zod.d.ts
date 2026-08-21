@@ -1390,8 +1390,8 @@ export declare const zQueuedIntake: z.ZodObject<{
         } | null | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
-    plan: string;
     status: "pending" | "imported";
+    plan: string;
     sessionId: string;
     id: string;
     brandName: string;
@@ -1429,8 +1429,8 @@ export declare const zQueuedIntake: z.ZodObject<{
         } | null | undefined;
     };
 }, {
-    plan: string;
     status: "pending" | "imported";
+    plan: string;
     sessionId: string;
     id: string;
     brandName: string;

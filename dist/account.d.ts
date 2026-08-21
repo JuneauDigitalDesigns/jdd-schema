@@ -20,6 +20,7 @@
  * tested without Clerk, Redis, or a network. The store wrappers live in the consumers.
  */
 import { z } from "zod";
+import { type MasterAgreementRef } from "./agreement.js";
 export type PortalPlan = "starter" | "growth" | "enterprise";
 export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
 /** One site belonging to an account. */
@@ -61,8 +62,30 @@ export interface PortalSite {
     onboardingCompletedAt?: number | null;
     /** Stripe subscription ID — resolved lazily from the checkout session and persisted. */
     stripeSubscriptionId?: string;
-    /** Stripe customer ID — resolved alongside stripeSubscriptionId. */
+    /**
+     * Stripe customer ID for this site.
+     *
+     * Historical and per-site: checkout used to pass `customer_email`, which mints a **new**
+     * Customer per purchase, so a multi-site client accumulated one of these per site.
+     * `PortalAccount.stripeCustomerId` is the going-forward home. This stays for records that
+     * predate it, and because consolidation has to know which Customer each existing
+     * subscription actually lives on.
+     */
     stripeCustomerId?: string;
+    /**
+     * The signed agreement authorising this specific site — the master for a client's first
+     * purchase, an addendum for every one after.
+     *
+     * Copied onto the site because `agreement:{id}` is written with a 30-day TTL, so after a
+     * month there was no way to answer "which terms authorised this site". The record itself is
+     * also persisted past its TTL once payment clears; these fields are what the portal and
+     * console read.
+     */
+    agreementId?: string;
+    agreementPdfUrl?: string;
+    agreementVersion?: string;
+    /** The `jdd:purchase:{id}` intent this site came from. Absent on pre-cutover sites. */
+    purchaseId?: string;
     /**
      * Client's consent to appear in the FeaturedSites homepage section.
      * Set when the client opts in via the portal. Nothing appears publicly until
@@ -88,6 +111,24 @@ export interface PortalAccount {
     email: string;
     /** Linked on the client's first authenticated portal load. */
     clerkUserId?: string | null;
+    /**
+     * The one Stripe Customer every purchase on this account bills to.
+     *
+     * Account-level rather than per-site because `customer_email` on a Checkout Session mints
+     * a fresh Customer each time: a client who bought three sites ended up with three
+     * Customers, three payment methods and three unrelated invoice streams, and no way to show
+     * them one bill. Resolved lazily — from an existing subscription for accounts that predate
+     * this, otherwise created at first checkout.
+     */
+    stripeCustomerId?: string;
+    /**
+     * The governing agreement every addendum on this account hangs off.
+     *
+     * Absent on accounts that predate the master/addendum split — `legacyMasterFrom(sites)`
+     * reconstructs one from what they are already being billed for rather than demanding a
+     * signature from a client who plainly already gave one.
+     */
+    masterAgreement?: MasterAgreementRef;
     sites: PortalSite[];
     createdAt: number;
     updatedAt: number;
@@ -114,6 +155,10 @@ export declare const zPortalSite: z.ZodObject<{
     onboardingCompletedAt: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
     stripeSubscriptionId: z.ZodOptional<z.ZodString>;
     stripeCustomerId: z.ZodOptional<z.ZodString>;
+    agreementId: z.ZodOptional<z.ZodString>;
+    agreementPdfUrl: z.ZodOptional<z.ZodString>;
+    agreementVersion: z.ZodOptional<z.ZodString>;
+    purchaseId: z.ZodOptional<z.ZodString>;
     featured: z.ZodOptional<z.ZodObject<{
         optedInAt: z.ZodNumber;
         quote: z.ZodOptional<z.ZodString>;
@@ -133,10 +178,11 @@ export declare const zPortalSite: z.ZodObject<{
     cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
     cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
+    status: "pending-onboarding" | "building" | "live";
     slug: string;
     plan: "starter" | "growth" | "enterprise";
-    status: "pending-onboarding" | "building" | "live";
     addedAt: number;
+    agreementId?: string | undefined;
     name?: string | undefined;
     canonical?: string | undefined;
     airtableBaseId?: string | null | undefined;
@@ -148,6 +194,9 @@ export declare const zPortalSite: z.ZodObject<{
     onboardingCompletedAt?: number | null | undefined;
     stripeSubscriptionId?: string | undefined;
     stripeCustomerId?: string | undefined;
+    agreementPdfUrl?: string | undefined;
+    agreementVersion?: string | undefined;
+    purchaseId?: string | undefined;
     featured?: {
         optedInAt: number;
         showName: boolean;
@@ -157,10 +206,11 @@ export declare const zPortalSite: z.ZodObject<{
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
 }, {
+    status: "pending-onboarding" | "building" | "live";
     slug: string;
     plan: "starter" | "growth" | "enterprise";
-    status: "pending-onboarding" | "building" | "live";
     addedAt: number;
+    agreementId?: string | undefined;
     name?: string | undefined;
     canonical?: string | undefined;
     airtableBaseId?: string | null | undefined;
@@ -172,6 +222,9 @@ export declare const zPortalSite: z.ZodObject<{
     onboardingCompletedAt?: number | null | undefined;
     stripeSubscriptionId?: string | undefined;
     stripeCustomerId?: string | undefined;
+    agreementPdfUrl?: string | undefined;
+    agreementVersion?: string | undefined;
+    purchaseId?: string | undefined;
     featured?: {
         optedInAt: number;
         showName: boolean;
@@ -184,6 +237,23 @@ export declare const zPortalSite: z.ZodObject<{
 export declare const zPortalAccount: z.ZodObject<{
     email: z.ZodString;
     clerkUserId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    stripeCustomerId: z.ZodOptional<z.ZodString>;
+    masterAgreement: z.ZodOptional<z.ZodObject<{
+        agreementId: z.ZodNullable<z.ZodString>;
+        version: z.ZodString;
+        tierCeiling: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        signedAt: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        agreementId: string | null;
+        version: string;
+        tierCeiling: "starter" | "growth" | "enterprise";
+        signedAt: number;
+    }, {
+        agreementId: string | null;
+        version: string;
+        tierCeiling: "starter" | "growth" | "enterprise";
+        signedAt: number;
+    }>>;
     sites: z.ZodArray<z.ZodObject<{
         slug: z.ZodString;
         name: z.ZodOptional<z.ZodString>;
@@ -200,6 +270,10 @@ export declare const zPortalAccount: z.ZodObject<{
         onboardingCompletedAt: z.ZodOptional<z.ZodNullable<z.ZodNumber>>;
         stripeSubscriptionId: z.ZodOptional<z.ZodString>;
         stripeCustomerId: z.ZodOptional<z.ZodString>;
+        agreementId: z.ZodOptional<z.ZodString>;
+        agreementPdfUrl: z.ZodOptional<z.ZodString>;
+        agreementVersion: z.ZodOptional<z.ZodString>;
+        purchaseId: z.ZodOptional<z.ZodString>;
         featured: z.ZodOptional<z.ZodObject<{
             optedInAt: z.ZodNumber;
             quote: z.ZodOptional<z.ZodString>;
@@ -219,10 +293,11 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
         cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
+        status: "pending-onboarding" | "building" | "live";
         slug: string;
         plan: "starter" | "growth" | "enterprise";
-        status: "pending-onboarding" | "building" | "live";
         addedAt: number;
+        agreementId?: string | undefined;
         name?: string | undefined;
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
@@ -234,6 +309,9 @@ export declare const zPortalAccount: z.ZodObject<{
         onboardingCompletedAt?: number | null | undefined;
         stripeSubscriptionId?: string | undefined;
         stripeCustomerId?: string | undefined;
+        agreementPdfUrl?: string | undefined;
+        agreementVersion?: string | undefined;
+        purchaseId?: string | undefined;
         featured?: {
             optedInAt: number;
             showName: boolean;
@@ -243,10 +321,11 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }, {
+        status: "pending-onboarding" | "building" | "live";
         slug: string;
         plan: "starter" | "growth" | "enterprise";
-        status: "pending-onboarding" | "building" | "live";
         addedAt: number;
+        agreementId?: string | undefined;
         name?: string | undefined;
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
@@ -258,6 +337,9 @@ export declare const zPortalAccount: z.ZodObject<{
         onboardingCompletedAt?: number | null | undefined;
         stripeSubscriptionId?: string | undefined;
         stripeCustomerId?: string | undefined;
+        agreementPdfUrl?: string | undefined;
+        agreementVersion?: string | undefined;
+        purchaseId?: string | undefined;
         featured?: {
             optedInAt: number;
             showName: boolean;
@@ -285,10 +367,11 @@ export declare const zPortalAccount: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     email: string;
     sites: {
+        status: "pending-onboarding" | "building" | "live";
         slug: string;
         plan: "starter" | "growth" | "enterprise";
-        status: "pending-onboarding" | "building" | "live";
         addedAt: number;
+        agreementId?: string | undefined;
         name?: string | undefined;
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
@@ -300,6 +383,9 @@ export declare const zPortalAccount: z.ZodObject<{
         onboardingCompletedAt?: number | null | undefined;
         stripeSubscriptionId?: string | undefined;
         stripeCustomerId?: string | undefined;
+        agreementPdfUrl?: string | undefined;
+        agreementVersion?: string | undefined;
+        purchaseId?: string | undefined;
         featured?: {
             optedInAt: number;
             showName: boolean;
@@ -311,7 +397,14 @@ export declare const zPortalAccount: z.ZodObject<{
     }[];
     createdAt: number;
     updatedAt: number;
+    stripeCustomerId?: string | undefined;
     clerkUserId?: string | null | undefined;
+    masterAgreement?: {
+        agreementId: string | null;
+        version: string;
+        tierCeiling: "starter" | "growth" | "enterprise";
+        signedAt: number;
+    } | undefined;
     profile?: {
         updatedAt: number;
         contactName?: string | undefined;
@@ -320,10 +413,11 @@ export declare const zPortalAccount: z.ZodObject<{
 }, {
     email: string;
     sites: {
+        status: "pending-onboarding" | "building" | "live";
         slug: string;
         plan: "starter" | "growth" | "enterprise";
-        status: "pending-onboarding" | "building" | "live";
         addedAt: number;
+        agreementId?: string | undefined;
         name?: string | undefined;
         canonical?: string | undefined;
         airtableBaseId?: string | null | undefined;
@@ -335,6 +429,9 @@ export declare const zPortalAccount: z.ZodObject<{
         onboardingCompletedAt?: number | null | undefined;
         stripeSubscriptionId?: string | undefined;
         stripeCustomerId?: string | undefined;
+        agreementPdfUrl?: string | undefined;
+        agreementVersion?: string | undefined;
+        purchaseId?: string | undefined;
         featured?: {
             optedInAt: number;
             showName: boolean;
@@ -346,7 +443,14 @@ export declare const zPortalAccount: z.ZodObject<{
     }[];
     createdAt: number;
     updatedAt: number;
+    stripeCustomerId?: string | undefined;
     clerkUserId?: string | null | undefined;
+    masterAgreement?: {
+        agreementId: string | null;
+        version: string;
+        tierCeiling: "starter" | "growth" | "enterprise";
+        signedAt: number;
+    } | undefined;
     profile?: {
         updatedAt: number;
         contactName?: string | undefined;

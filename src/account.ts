@@ -21,6 +21,7 @@
  */
 
 import { z } from "zod";
+import { zMasterAgreementRef, type MasterAgreementRef } from "./agreement.js";
 
 export type PortalPlan = "starter" | "growth" | "enterprise";
 export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
@@ -64,8 +65,30 @@ export interface PortalSite {
   onboardingCompletedAt?: number | null;
   /** Stripe subscription ID — resolved lazily from the checkout session and persisted. */
   stripeSubscriptionId?: string;
-  /** Stripe customer ID — resolved alongside stripeSubscriptionId. */
+  /**
+   * Stripe customer ID for this site.
+   *
+   * Historical and per-site: checkout used to pass `customer_email`, which mints a **new**
+   * Customer per purchase, so a multi-site client accumulated one of these per site.
+   * `PortalAccount.stripeCustomerId` is the going-forward home. This stays for records that
+   * predate it, and because consolidation has to know which Customer each existing
+   * subscription actually lives on.
+   */
   stripeCustomerId?: string;
+  /**
+   * The signed agreement authorising this specific site — the master for a client's first
+   * purchase, an addendum for every one after.
+   *
+   * Copied onto the site because `agreement:{id}` is written with a 30-day TTL, so after a
+   * month there was no way to answer "which terms authorised this site". The record itself is
+   * also persisted past its TTL once payment clears; these fields are what the portal and
+   * console read.
+   */
+  agreementId?: string;
+  agreementPdfUrl?: string;
+  agreementVersion?: string;
+  /** The `jdd:purchase:{id}` intent this site came from. Absent on pre-cutover sites. */
+  purchaseId?: string;
   /**
    * Client's consent to appear in the FeaturedSites homepage section.
    * Set when the client opts in via the portal. Nothing appears publicly until
@@ -91,6 +114,24 @@ export interface PortalAccount {
   email: string;
   /** Linked on the client's first authenticated portal load. */
   clerkUserId?: string | null;
+  /**
+   * The one Stripe Customer every purchase on this account bills to.
+   *
+   * Account-level rather than per-site because `customer_email` on a Checkout Session mints
+   * a fresh Customer each time: a client who bought three sites ended up with three
+   * Customers, three payment methods and three unrelated invoice streams, and no way to show
+   * them one bill. Resolved lazily — from an existing subscription for accounts that predate
+   * this, otherwise created at first checkout.
+   */
+  stripeCustomerId?: string;
+  /**
+   * The governing agreement every addendum on this account hangs off.
+   *
+   * Absent on accounts that predate the master/addendum split — `legacyMasterFrom(sites)`
+   * reconstructs one from what they are already being billed for rather than demanding a
+   * signature from a client who plainly already gave one.
+   */
+  masterAgreement?: MasterAgreementRef;
   sites: PortalSite[];
   createdAt: number;
   updatedAt: number;
@@ -118,6 +159,10 @@ export const zPortalSite = z.object({
   onboardingCompletedAt: z.number().nullable().optional(),
   stripeSubscriptionId: z.string().optional(),
   stripeCustomerId: z.string().optional(),
+  agreementId: z.string().optional(),
+  agreementPdfUrl: z.string().optional(),
+  agreementVersion: z.string().optional(),
+  purchaseId: z.string().optional(),
   featured: z.object({
     optedInAt: z.number(),
     quote: z.string().optional(),
@@ -131,6 +176,8 @@ export const zPortalSite = z.object({
 export const zPortalAccount = z.object({
   email: z.string().min(1),
   clerkUserId: z.string().nullable().optional(),
+  stripeCustomerId: z.string().optional(),
+  masterAgreement: zMasterAgreementRef.optional(),
   sites: z.array(zPortalSite),
   createdAt: z.number(),
   updatedAt: z.number(),

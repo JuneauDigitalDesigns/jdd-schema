@@ -20,6 +20,7 @@
  * tested without Clerk, Redis, or a network. The store wrappers live in the consumers.
  */
 import { z } from "zod";
+import { zMasterAgreementRef } from "./agreement.js";
 export const zPortalSite = z.object({
     slug: z.string().min(1),
     name: z.string().optional(),
@@ -36,6 +37,10 @@ export const zPortalSite = z.object({
     onboardingCompletedAt: z.number().nullable().optional(),
     stripeSubscriptionId: z.string().optional(),
     stripeCustomerId: z.string().optional(),
+    agreementId: z.string().optional(),
+    agreementPdfUrl: z.string().optional(),
+    agreementVersion: z.string().optional(),
+    purchaseId: z.string().optional(),
     featured: z.object({
         optedInAt: z.number(),
         quote: z.string().optional(),
@@ -48,6 +53,8 @@ export const zPortalSite = z.object({
 export const zPortalAccount = z.object({
     email: z.string().min(1),
     clerkUserId: z.string().nullable().optional(),
+    stripeCustomerId: z.string().optional(),
+    masterAgreement: zMasterAgreementRef.optional(),
     sites: z.array(zPortalSite),
     createdAt: z.number(),
     updatedAt: z.number(),
