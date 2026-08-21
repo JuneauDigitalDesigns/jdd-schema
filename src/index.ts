@@ -47,3 +47,7 @@ export * from "./industry-menu.js";
 //           master-vs-addendum rules that decide what they actually sign.
 export * from "./entitlements.js";
 export * from "./agreement.js";
+// v1.18.0 — metering groups. Growth minutes are per site, Enterprise minutes are pooled;
+//           treating an account as one allowance merged two Growth clients' pools, capped
+//           them at 350 between them, and dropped the second site's overage entirely.
+export * from "./metering.js";
