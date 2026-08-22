@@ -242,6 +242,7 @@ export interface ContentMeta {
     forbidden: string;
   };
   industry?: string;
+  copyBrief?: unknown;
 }
 
 export interface SiteContent {

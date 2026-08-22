@@ -11,6 +11,7 @@
  * dependency-free (see that file). Keep the two in sync.
  */
 import type { BrandDirection } from "./brand-direction.js";
+import type { CopyBrief } from "./copy-brief.js";
 export interface NavItem {
     label: string;
     href: string;
@@ -228,6 +229,7 @@ export interface ContentMeta {
     scrapeWebsiteDomain?: string;
     brandDirection?: BrandDirection;
     industry?: string;
+    copyBrief?: CopyBrief;
 }
 export interface SiteContent {
     brand: BrandContent;

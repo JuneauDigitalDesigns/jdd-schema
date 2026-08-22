@@ -51,3 +51,9 @@ export * from "./agreement.js";
 //           treating an account as one allowance merged two Growth clients' pools, capped
 //           them at 350 between them, and dropped the second site's overage entirely.
 export * from "./metering.js";
+// v1.19.0 — vertical-registry: the copywriter prompt (role/guardrails/forbidden) and
+//           structure counts per vertical, layered with INDUSTRY_MENUS' existing
+//           services/differentiators/customers; plus CopyBrief, the durable shape of the
+//           console's Brief-stage inputs, persisted at _meta.copyBrief.
+export * from "./vertical-registry.js";
+export * from "./copy-brief.js";

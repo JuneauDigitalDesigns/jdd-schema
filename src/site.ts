@@ -12,6 +12,7 @@
  */
 
 import type { BrandDirection } from "./brand-direction.js";
+import type { CopyBrief } from "./copy-brief.js";
 
 export interface NavItem {
   label: string;
@@ -238,6 +239,7 @@ export interface ContentMeta {
   scrapeWebsiteDomain?: string;      // domain to scrape, prefilled in the studio scrape panel
   brandDirection?: BrandDirection;   // v1.1: client's brand guidance → copywriter `details`
   industry?: string;                 // v1.16: client's industry pick → console copywriter vertical
+  copyBrief?: CopyBrief;              // v1.19: the console Brief stage's saved inputs, operator-only
 }
 
 export interface SiteContent {

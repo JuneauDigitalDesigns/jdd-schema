@@ -1477,21 +1477,21 @@ export declare const zBrandDirection: z.ZodObject<{
     references: z.ZodDefault<z.ZodString>;
     forbidden: z.ZodDefault<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
+    forbidden: string;
     differentiators: string;
     targetCustomer: string;
     vibe: string[];
     tone: string[];
     adjectives: string[];
     references: string;
-    forbidden: string;
 }, {
+    forbidden?: string | undefined;
     differentiators?: string | undefined;
     targetCustomer?: string | undefined;
     vibe?: string[] | undefined;
     tone?: string[] | undefined;
     adjectives?: string[] | undefined;
     references?: string | undefined;
-    forbidden?: string | undefined;
 }>;
 export declare const zPalettePick: z.ZodObject<{
     mode: z.ZodEnum<["preset", "custom"]>;
@@ -1589,21 +1589,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         references: z.ZodDefault<z.ZodString>;
         forbidden: z.ZodDefault<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        forbidden: string;
         differentiators: string;
         targetCustomer: string;
         vibe: string[];
         tone: string[];
         adjectives: string[];
         references: string;
-        forbidden: string;
     }, {
+        forbidden?: string | undefined;
         differentiators?: string | undefined;
         targetCustomer?: string | undefined;
         vibe?: string[] | undefined;
         tone?: string[] | undefined;
         adjectives?: string[] | undefined;
         references?: string | undefined;
-        forbidden?: string | undefined;
     }>;
     palette: z.ZodObject<{
         mode: z.ZodEnum<["preset", "custom"]>;
@@ -1879,21 +1879,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -1983,21 +1983,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -2087,21 +2087,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
@@ -2138,21 +2138,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         references: z.ZodDefault<z.ZodString>;
         forbidden: z.ZodDefault<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        forbidden: string;
         differentiators: string;
         targetCustomer: string;
         vibe: string[];
         tone: string[];
         adjectives: string[];
         references: string;
-        forbidden: string;
     }, {
+        forbidden?: string | undefined;
         differentiators?: string | undefined;
         targetCustomer?: string | undefined;
         vibe?: string[] | undefined;
         tone?: string[] | undefined;
         adjectives?: string[] | undefined;
         references?: string | undefined;
-        forbidden?: string | undefined;
     }>;
     palette: z.ZodObject<{
         mode: z.ZodEnum<["preset", "custom"]>;
@@ -2428,21 +2428,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -2532,21 +2532,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -2636,21 +2636,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
@@ -2687,21 +2687,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         references: z.ZodDefault<z.ZodString>;
         forbidden: z.ZodDefault<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
+        forbidden: string;
         differentiators: string;
         targetCustomer: string;
         vibe: string[];
         tone: string[];
         adjectives: string[];
         references: string;
-        forbidden: string;
     }, {
+        forbidden?: string | undefined;
         differentiators?: string | undefined;
         targetCustomer?: string | undefined;
         vibe?: string[] | undefined;
         tone?: string[] | undefined;
         adjectives?: string[] | undefined;
         references?: string | undefined;
-        forbidden?: string | undefined;
     }>;
     palette: z.ZodObject<{
         mode: z.ZodEnum<["preset", "custom"]>;
@@ -2977,21 +2977,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -3081,21 +3081,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -3185,21 +3185,21 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             references: z.ZodDefault<z.ZodString>;
             forbidden: z.ZodDefault<z.ZodString>;
         }, "strip", z.ZodTypeAny, {
+            forbidden: string;
             differentiators: string;
             targetCustomer: string;
             vibe: string[];
             tone: string[];
             adjectives: string[];
             references: string;
-            forbidden: string;
         }, {
+            forbidden?: string | undefined;
             differentiators?: string | undefined;
             targetCustomer?: string | undefined;
             vibe?: string[] | undefined;
             tone?: string[] | undefined;
             adjectives?: string[] | undefined;
             references?: string | undefined;
-            forbidden?: string | undefined;
         }>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, z.ZodTypeAny, "passthrough">>;

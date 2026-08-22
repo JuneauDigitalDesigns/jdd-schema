@@ -27,4 +27,6 @@ export * from "./industry-menu.js";
 export * from "./entitlements.js";
 export * from "./agreement.js";
 export * from "./metering.js";
+export * from "./vertical-registry.js";
+export * from "./copy-brief.js";
 //# sourceMappingURL=index.d.ts.map
