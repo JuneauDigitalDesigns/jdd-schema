@@ -13,10 +13,18 @@
 export type CopyBriefBlockId = "role" | "guardrails" | "facts" | "clientWords" | "website" | "positioning" | "offers" | "forbidden" | "structure" | "sections" | "custom";
 export interface CopyBriefBlock {
     enabled: boolean;
-    /** Operator override text, keyed by sub-part id for blocks with addressable parts (see
-     *  ResolvedBlock.parts on the console side). A block with no overrides uses its resolved
-     *  default entirely. */
-    overrides?: Record<string, string>;
+    /**
+     * Operator overrides, keyed by sub-part id for blocks with addressable parts (see
+     * ResolvedBlock on the console side). A block with no overrides uses its resolved default
+     * entirely.
+     *
+     * String values are prose overrides (role/guardrails text, a client-words line, scan
+     * notes, a per-section instruction). String-array values are chip selections (positioning's
+     * services/differentiators/customers, offers' proof points and service-area towns,
+     * forbidden's word list) — kept as the actual ticked set, not a joined string, so reopening
+     * the brief shows exactly which chips were checked rather than only their compiled text.
+     */
+    overrides?: Record<string, string | string[]>;
 }
 /**
  * An operator-added field beyond the standard blocks. `kind` decides which channel of the
@@ -40,6 +48,8 @@ export interface CopyBrief {
      *  keyed by the same names as DEFAULT_STRUCTURE (structure.ts). Absent = use the default
      *  or, when the intake already supplied real content at that count, the locked value. */
     structureOverrides?: Record<string, number>;
+    /** Section ids (console's Section type) ticked for the next generation run. */
+    tickedSections?: string[];
     lastRunAt?: string;
 }
 //# sourceMappingURL=copy-brief.d.ts.map
