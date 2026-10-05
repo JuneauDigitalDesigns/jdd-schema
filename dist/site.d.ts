@@ -41,6 +41,7 @@ export interface ServiceItem {
         url: string;
         alt: string;
     } | null;
+    detail?: string;
 }
 export interface Project {
     t: string;
@@ -90,6 +91,7 @@ export interface AboutContent {
     eyebrow: string;
     title: string;
     body: string;
+    story?: string[];
     pillars: Pillar[];
     stats: Stat[];
 }
@@ -168,6 +170,15 @@ export interface ElementStyle {
     fontSize?: number;
     fontWeight?: number;
 }
+/** Per-section visual override (an override LAYER on the global brand palette/typography).
+ *  Only the slots set here differ from global; text/ink stay global and are auto-derived. */
+export interface SectionStyle {
+    accent?: string;
+    bg?: string;
+    bgSoft?: string;
+    headingWeight?: number;
+    scale?: number;
+}
 export interface SeoContent {
     title: string;
     description: string;
@@ -231,6 +242,25 @@ export interface ContentMeta {
     industry?: string;
     copyBrief?: CopyBrief;
 }
+/** v2.2: the lightweight header that opens a non-home page (services, about, contact, …). */
+export interface PageHeaderContent {
+    eyebrow: string;
+    title: string;
+    sub: string;
+    cta: {
+        label: string;
+        href: string;
+    } | null;
+}
+/** v2.2: per-subpage content, keyed by route in SiteContent.subpages. Carries the page
+ *  header copy and that page's own SEO. Home has no entry (it uses `hero` + site-level `seo`). */
+export interface SubpageContent {
+    header: PageHeaderContent;
+    seo: {
+        title: string;
+        description: string;
+    };
+}
 export interface SiteContent {
     brand: BrandContent;
     nav: NavItem[];
@@ -248,12 +278,18 @@ export interface SiteContent {
     finalCta: FinalCtaContent;
     footer: FooterContent;
     seo: SeoContent;
+    /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
+     *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
+    subpages?: Record<string, SubpageContent>;
     extensions: ExtensionsContent;
     images: SiteImages;
     _meta: ContentMeta;
     /** Per-element visual overrides, keyed by the same dotted path <E p="…"> uses.
      *  Nested tree mirroring content paths; leaves are ElementStyle. */
     overrides?: Record<string, unknown>;
+    /** Per-section visual overrides, keyed by stable section id (body sections) or
+     *  'nav'/'footer' (chrome). Additive: absent = pre-v2.3 behavior (global palette only). */
+    sectionStyles?: Record<string, SectionStyle>;
 }
 /** @deprecated Use BrandContent */
 export type Brand = BrandContent;

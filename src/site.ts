@@ -44,6 +44,7 @@ export interface ServiceItem {
   tag: string;  // category badge
   icon?: string; // v1.5.0: explicit icon-registry key; falls back to `tag` lookup when unset
   image?: { url: string; alt: string } | null; // optional preview image
+  detail?: string; // v2.2: 2–3 sentence expansion shown when the card is opened on the Services page
 }
 
 export interface Project {
@@ -93,6 +94,7 @@ export interface AboutContent {
   eyebrow: string;
   title: string;
   body: string;
+  story?: string[]; // v2.2: multi-paragraph company story for the dedicated About page
   pillars: Pillar[];
   stats: Stat[];
 }
@@ -182,6 +184,16 @@ export interface ElementStyle {
   fontWeight?: number; // 300–800
 }
 
+/** Per-section visual override (an override LAYER on the global brand palette/typography).
+ *  Only the slots set here differ from global; text/ink stay global and are auto-derived. */
+export interface SectionStyle {
+  accent?:        string; // hex — per-section accent override
+  bg?:            string; // hex — per-section background override
+  bgSoft?:        string; // hex — per-section soft/alt background override
+  headingWeight?: number; // 300–800
+  scale?:         number; // section zoom, 0.85–1.2 (1 = unchanged)
+}
+
 export interface SeoContent {
   title: string;
   description: string;
@@ -242,6 +254,21 @@ export interface ContentMeta {
   copyBrief?: CopyBrief;              // v1.19: the console Brief stage's saved inputs, operator-only
 }
 
+/** v2.2: the lightweight header that opens a non-home page (services, about, contact, …). */
+export interface PageHeaderContent {
+  eyebrow: string;
+  title: string;
+  sub: string;
+  cta: { label: string; href: string } | null; // null → omit the button
+}
+
+/** v2.2: per-subpage content, keyed by route in SiteContent.subpages. Carries the page
+ *  header copy and that page's own SEO. Home has no entry (it uses `hero` + site-level `seo`). */
+export interface SubpageContent {
+  header: PageHeaderContent;
+  seo:    { title: string; description: string };
+}
+
 export interface SiteContent {
   brand:        BrandContent;
   nav:          NavItem[];
@@ -256,12 +283,18 @@ export interface SiteContent {
   finalCta:     FinalCtaContent;
   footer:       FooterContent;
   seo:          SeoContent;
+  /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
+   *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
+  subpages?:    Record<string, SubpageContent>;
   extensions:   ExtensionsContent;
   images:       SiteImages;
   _meta:        ContentMeta;
   /** Per-element visual overrides, keyed by the same dotted path <E p="…"> uses.
    *  Nested tree mirroring content paths; leaves are ElementStyle. */
   overrides?:   Record<string, unknown>;
+  /** Per-section visual overrides, keyed by stable section id (body sections) or
+   *  'nav'/'footer' (chrome). Additive: absent = pre-v2.3 behavior (global palette only). */
+  sectionStyles?: Record<string, SectionStyle>;
 }
 
 /** @deprecated Use BrandContent */
