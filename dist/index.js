@@ -56,4 +56,8 @@ export * from "./metering.js";
 //           console's Brief-stage inputs, persisted at _meta.copyBrief.
 export * from "./vertical-registry.js";
 export * from "./copy-brief.js";
+// v1.21.0 — support tickets. The durable record + pure ops behind the portal's Support tab
+//           and the console's /tickets board, bridged by KV like the lead funnel. Standalone:
+//           its own `jdd:ticket:*` keys, no change to any existing schema or record.
+export * from "./ticket.js";
 //# sourceMappingURL=index.js.map

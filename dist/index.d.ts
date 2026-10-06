@@ -29,4 +29,5 @@ export * from "./agreement.js";
 export * from "./metering.js";
 export * from "./vertical-registry.js";
 export * from "./copy-brief.js";
+export * from "./ticket.js";
 //# sourceMappingURL=index.d.ts.map
