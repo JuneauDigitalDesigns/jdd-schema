@@ -242,6 +242,12 @@ export interface ContentMeta {
    *  "images.about.feature". Lets a re-export re-evaluate its own output, and lets
    *  downstream tooling tell a placeholder photo from a real client one. */
   placeholder_images?: string[];
+  /** v2.4: original image URL -> localized "/img/<hash>" base, written by the export image
+   *  pipeline when it fetches and re-emits an image into the client repo's /public. The hash
+   *  carries no provenance, so this map is the only thing that can tell a localized placeholder
+   *  (one whose original URL was curated stock) from a localized real client photo on re-export.
+   *  Merged (never replaced) across exports so a slot localized earlier keeps its entry. */
+  local_images?: Record<string, string>;
   selectedPlan: "starter" | "growth" | "enterprise";
   siteIndex?: number;       // 1-based; set for Enterprise sites only
   siteCount?: number;       // total cluster size; set for Enterprise sites only
