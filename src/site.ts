@@ -223,6 +223,11 @@ export interface ExtensionsContent {
   // service-area section. When absent, it falls back to the city from `address`
   // plus "the surrounding area".
   serviceArea?: string[] | null;
+  // v2.5 (decision 29): the specifics that keep a site from reading as AI-made, collected from
+  // intake and never invented (a blank is flagged in _meta.missing_fields, not filled).
+  ownerName?: string | null;        // About page + owner-photo caption
+  brandsCarried?: string[] | null;  // equipment brands installed/serviced; also fed to trust.logos
+  responseTime?: string | null;     // client's own words, e.g. "under 60 minutes"
 }
 
 export interface SiteImages {

@@ -47,12 +47,16 @@ export interface BrandIntakeSubmission {
   // ── Business facts ──
   industry: string; // console maps this to a copywriter VerticalId
   /**
-   * No longer asked. Recovered from the website scan when the client has an existing site,
-   * otherwise filled in the console — or genuinely absent, which is the honest outcome for
-   * a new business with no trust history yet. The copywriter is forbidden from inventing
-   * any of these.
+   * decision 29: `established` and `serviceArea` (and `license` above), plus the three new fields
+   * below, are ASKED again by the wizard — they are the specifics that stop a site reading as
+   * AI-made. The copywriter is still forbidden from inventing any of them; an unsupplied one is
+   * flagged in `_meta.missing_fields`, never filled. `notableClients`, `certifications` and
+   * `businessHours` remain recovered-or-optional (website scan / console).
    */
   established?: string;
+  ownerName?: string;     // owner first or full name (About page + owner-photo caption)
+  brandsCarried?: string; // comma/newline list of equipment brands installed/serviced
+  responseTime?: string;  // the client's own words, e.g. "under 60 minutes"
   notableClients?: string; // comma/newline list
   certifications?: string; // comma/newline list
   businessHours?: string;
@@ -137,6 +141,9 @@ interface SiteFacts {
   address: string;
   license?: string;
   established?: string;
+  ownerName?: string;
+  brandsCarried?: string;
+  responseTime?: string;
   businessHours?: string;
   serviceArea?: string;
   agentName?: string;
@@ -163,6 +170,12 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
   flag("brand.address", f.address && f.address.trim());
   flag("brand.license", f.license && f.license.trim());
   flag("brand.established", f.established && f.established.trim());
+  // decision 29: the specificity fields. Flagged when blank so the no-inventing rule is visible
+  // in the console's Intake checklist rather than silently producing a generic site.
+  flag("extensions.serviceArea", f.serviceArea && f.serviceArea.trim());
+  flag("extensions.ownerName", f.ownerName && f.ownerName.trim());
+  flag("trust.logos", f.brandsCarried && f.brandsCarried.trim());
+  flag("extensions.responseTime", f.responseTime && f.responseTime.trim());
   // Flag on the real value. This was hardcoded `true`, so a client who never picked an
   // industry was recorded as having answered — which mattered because the value was being
   // dropped entirely a few lines below, and the flag was the only trace it had been asked.
@@ -205,7 +218,10 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       { label: "Book", href: "#cta" },
     ],
     announcement: orNull(f.announcement ?? ""),
-    trust: { label: "Trusted by", logos: splitList(f.notableClients ?? "") },
+    // Brands carried (decision 29) join notable clients in trust.logos, which is where TrustBadges
+    // reads them; the HVAC preset relabels this to "Brands we install". Certifications stay in
+    // extensions.trustBadges, as before.
+    trust: { label: "Trusted by", logos: splitList([f.notableClients, f.brandsCarried].filter((x) => x && x.trim()).join("\n")) },
     hero: {
       eyebrow: "",
       headline: "",
@@ -288,6 +304,9 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       portalUrl: null,
       agentName: orNull(f.agentName ?? ""),
       serviceArea: f.serviceArea && f.serviceArea.trim() ? splitList(f.serviceArea) : null,
+      ownerName: orNull(f.ownerName ?? ""),
+      brandsCarried: f.brandsCarried && f.brandsCarried.trim() ? splitList(f.brandsCarried) : null,
+      responseTime: orNull(f.responseTime ?? ""),
     },
     images: {
       hero: {
@@ -341,6 +360,9 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
       address: sub.address,
       license: sub.license,
       established: sub.established,
+      ownerName: sub.ownerName,
+      brandsCarried: sub.brandsCarried,
+      responseTime: sub.responseTime,
       businessHours: sub.businessHours,
       serviceArea: sub.serviceArea,
       agentName: sub.agentName,
@@ -388,6 +410,9 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
           palette: entry.palette,
           // Additional sites inherit fact defaults not collected per-site.
           established: sub.established,
+          ownerName: sub.ownerName,
+          brandsCarried: sub.brandsCarried,
+          responseTime: sub.responseTime,
           serviceArea: sub.serviceArea,
           agentName: sub.agentName,
           certifications: sub.certifications,

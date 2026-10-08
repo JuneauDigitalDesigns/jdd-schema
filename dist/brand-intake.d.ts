@@ -28,12 +28,16 @@ export interface BrandIntakeSubmission {
     license?: string;
     industry: string;
     /**
-     * No longer asked. Recovered from the website scan when the client has an existing site,
-     * otherwise filled in the console — or genuinely absent, which is the honest outcome for
-     * a new business with no trust history yet. The copywriter is forbidden from inventing
-     * any of these.
+     * decision 29: `established` and `serviceArea` (and `license` above), plus the three new fields
+     * below, are ASKED again by the wizard — they are the specifics that stop a site reading as
+     * AI-made. The copywriter is still forbidden from inventing any of them; an unsupplied one is
+     * flagged in `_meta.missing_fields`, never filled. `notableClients`, `certifications` and
+     * `businessHours` remain recovered-or-optional (website scan / console).
      */
     established?: string;
+    ownerName?: string;
+    brandsCarried?: string;
+    responseTime?: string;
     notableClients?: string;
     certifications?: string;
     businessHours?: string;

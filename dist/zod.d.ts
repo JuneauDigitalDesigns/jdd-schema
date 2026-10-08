@@ -1565,6 +1565,9 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     license: z.ZodDefault<z.ZodString>;
     industry: z.ZodDefault<z.ZodString>;
     established: z.ZodDefault<z.ZodString>;
+    ownerName: z.ZodDefault<z.ZodString>;
+    brandsCarried: z.ZodDefault<z.ZodString>;
+    responseTime: z.ZodDefault<z.ZodString>;
     notableClients: z.ZodDefault<z.ZodString>;
     certifications: z.ZodDefault<z.ZodString>;
     businessHours: z.ZodDefault<z.ZodString>;
@@ -2114,6 +2117,9 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     license: z.ZodDefault<z.ZodString>;
     industry: z.ZodDefault<z.ZodString>;
     established: z.ZodDefault<z.ZodString>;
+    ownerName: z.ZodDefault<z.ZodString>;
+    brandsCarried: z.ZodDefault<z.ZodString>;
+    responseTime: z.ZodDefault<z.ZodString>;
     notableClients: z.ZodDefault<z.ZodString>;
     certifications: z.ZodDefault<z.ZodString>;
     businessHours: z.ZodDefault<z.ZodString>;
@@ -2663,6 +2669,9 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     license: z.ZodDefault<z.ZodString>;
     industry: z.ZodDefault<z.ZodString>;
     established: z.ZodDefault<z.ZodString>;
+    ownerName: z.ZodDefault<z.ZodString>;
+    brandsCarried: z.ZodDefault<z.ZodString>;
+    responseTime: z.ZodDefault<z.ZodString>;
     notableClients: z.ZodDefault<z.ZodString>;
     certifications: z.ZodDefault<z.ZodString>;
     businessHours: z.ZodDefault<z.ZodString>;

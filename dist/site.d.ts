@@ -202,6 +202,9 @@ export interface ExtensionsContent {
     portalUrl: string | null;
     agentName?: string | null;
     serviceArea?: string[] | null;
+    ownerName?: string | null;
+    brandsCarried?: string[] | null;
+    responseTime?: string | null;
 }
 export interface SiteImages {
     hero: {
