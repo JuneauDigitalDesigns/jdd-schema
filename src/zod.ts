@@ -12,6 +12,16 @@ import { z } from "zod";
 
 const plan = z.enum(["starter", "growth", "enterprise"]);
 
+/**
+ * The onboarding activation choice. `declined` is the web-only variant.
+ *
+ * Optional rather than required, deliberately: a client who was mid-form when the activation
+ * step deployed submits the old shape, and rejecting their submission outright would lose the
+ * whole intake. An absent value means "not yet asked" and is resolved before provisioning,
+ * which refuses to guess. It must never be defaulted to a choice the client did not make.
+ */
+const receptionistMode = z.enum(["forwarded", "published", "declined"]);
+
 export const zImageMeta = z.object({
   url: z.string(),
   filename: z.string(),
@@ -168,6 +178,7 @@ const zServiceEntry = z.object({ name: z.string(), tag: z.string().default("") }
 export const zBrandIntakeSubmission = z
   .object({
     selectedPlan: plan,
+    receptionistMode: receptionistMode.optional(),
     brandName: z.string().default(""),
     brandShort: z.string().default(""),
     email: z.string().default(""),

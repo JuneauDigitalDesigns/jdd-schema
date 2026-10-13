@@ -11,7 +11,9 @@
  * re-deriving anything.
  *
  * The rules:
- *   - **Starter** — unlimited. Cheap to build and run; more of them is good news.
+ *   - **Starter** — unlimited per account. Still the cheapest tier to stand up, though since
+ *     the 2026-10-12 reprice it carries a phone number, an agent and real per-minute cost, so
+ *     it is no longer close to free to run.
  *   - **Growth** — at most two per account. A third is the moment Enterprise becomes the
  *     better deal for both sides, so it is refused and upsold rather than sold.
  *   - **Enterprise** — the ceiling. One bundle per account, covering `enterpriseSites` sites.
@@ -58,8 +60,11 @@ export type AddPlanBlock =
  *
  * A cancellation that has not taken effect yet still counts: the client is still being billed
  * and the site is still serving, so letting them buy a replacement now would put them over
- * the cap for the remainder of the notice period (60 days on Enterprise). Once
- * `cancelEffectiveAt` has passed, the slot is free.
+ * the cap for the remainder of the paid period. Once `cancelEffectiveAt` has passed, the slot
+ * is free.
+ *
+ * There are no notice periods as of 2026-10-12 (month to month, no minimum term), so that
+ * window is now just the rest of the month the client already paid for.
  */
 export function isActiveSite(site: PortalSite, now: number = Date.now()): boolean {
   return !(typeof site.cancelEffectiveAt === "number" && site.cancelEffectiveAt <= now);

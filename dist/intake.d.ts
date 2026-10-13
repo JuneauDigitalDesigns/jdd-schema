@@ -3,6 +3,7 @@
  * site (producer) and the jdd-ops console (consumer).
  */
 import type { SiteContent } from "./site.js";
+import type { ReceptionistMode } from "./account.js";
 /**
  * The owner's opt-in to post-call summary texts, as it stood when onboarding was
  * submitted. Consumed by jdd-ops/onboard.js to decide whether to wire the Twilio module in
@@ -26,6 +27,20 @@ export interface SmsAlerts {
 /** Mapper output: siteCount is always populated. */
 export interface Intake {
     plan: "starter" | "growth" | "enterprise";
+    /**
+     * Whether this client's receptionist is active, and how the business line reaches it.
+     *
+     * Stated, never inferred. The wrong inference spends money: assuming a receptionist buys a
+     * Twilio number and stands up a Retell agent for a client who refused one, and assuming the
+     * opposite silently delivers a website to a client who paid for a receptionist.
+     *
+     * Envelope-level rather than per-site, matching `smsAlerts`: it is a decision about the
+     * client's phone line. An Enterprise client who wants a receptionist on some sites but not
+     * others is a conversation, not a code path.
+     *
+     * Absent on intakes that predate the activation step. Provisioning refuses to guess.
+     */
+    receptionistMode?: ReceptionistMode;
     siteCount: number;
     sites: SiteContent[];
     smsAlerts?: SmsAlerts | null;
@@ -33,6 +48,7 @@ export interface Intake {
 /** Loader input (console export.ts): siteCount may be inferred from sites.length. */
 export interface IntakeEnvelope {
     plan: "starter" | "growth" | "enterprise";
+    receptionistMode?: ReceptionistMode;
     siteCount?: number;
     sites: SiteContent[];
     smsAlerts?: SmsAlerts | null;

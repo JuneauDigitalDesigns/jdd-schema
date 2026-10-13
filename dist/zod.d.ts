@@ -1557,6 +1557,7 @@ export declare const zPalettePick: z.ZodObject<{
 }>;
 export declare const zBrandIntakeSubmission: z.ZodObject<{
     selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;
     email: z.ZodDefault<z.ZodString>;
@@ -2109,6 +2110,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
     selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;
     email: z.ZodDefault<z.ZodString>;
@@ -2661,6 +2663,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
     selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;
     email: z.ZodDefault<z.ZodString>;

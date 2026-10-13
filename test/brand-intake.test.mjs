@@ -143,3 +143,43 @@ test("enterprise builds an N-site cluster with per-site palettes", () => {
 test("zBrandIntakeSubmission validates a well-formed payload", () => {
   assert.equal(zBrandIntakeSubmission.safeParse(sampleIntake()).success, true);
 });
+
+// ── receptionistMode: the activation choice, carried to provisioning ─────────
+
+test("receptionistMode survives the zod round trip", () => {
+  // The failure this guards is silent: zod strips unknown keys, so a field the wizard sends
+  // but the schema does not declare simply vanishes, with no error anywhere. Provisioning
+  // would then refuse to run for want of a choice the client actually made.
+  for (const mode of ["forwarded", "published", "declined"]) {
+    const parsed = zBrandIntakeSubmission.parse(sampleIntake({ receptionistMode: mode }));
+    assert.equal(parsed.receptionistMode, mode, mode);
+  }
+});
+
+test("an unrecognised receptionistMode is rejected, not coerced", () => {
+  const res = zBrandIntakeSubmission.safeParse(sampleIntake({ receptionistMode: "maybe" }));
+  assert.equal(res.success, false);
+});
+
+test("receptionistMode is optional, so a pre-activation-step draft still parses", () => {
+  // A client mid-form when the step deployed submits the old shape. Rejecting it would lose
+  // the entire intake over a field we can resolve at provisioning time.
+  const res = zBrandIntakeSubmission.safeParse(sampleIntake());
+  assert.equal(res.success, true);
+  assert.equal(res.data.receptionistMode, undefined);
+});
+
+test("the mapper carries receptionistMode onto the envelope, not onto any site", () => {
+  // Envelope-level on purpose: every field of SiteContent is serialized into the generated
+  // client repo on public GitHub.
+  const intake = mapBrandIntakeToIntake(sampleIntake({ receptionistMode: "forwarded" }));
+  assert.equal(intake.receptionistMode, "forwarded");
+  assert.equal("receptionistMode" in intake.sites[0], false);
+});
+
+test("an absent receptionistMode stays absent rather than becoming undefined", () => {
+  // `{}` and `{ receptionistMode: undefined }` differ to a consumer checking `in`, and the
+  // latter trips exactOptionalPropertyTypes.
+  const intake = mapBrandIntakeToIntake(sampleIntake());
+  assert.equal("receptionistMode" in intake, false);
+});

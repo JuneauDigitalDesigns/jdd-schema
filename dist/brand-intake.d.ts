@@ -20,6 +20,16 @@ export interface ServiceEntry {
 }
 export interface BrandIntakeSubmission {
     selectedPlan: "starter" | "growth" | "enterprise";
+    /**
+     * The activation choice from the wizard's activation step.
+     *
+     * Stated, never inferred. The receptionist only answers once the business line points at
+     * the JDD number, so this decides whether provisioning buys a number at all, and
+     * `declined` is the web-only variant. Optional on the type because a client who was
+     * mid-form when the activation step deployed still submits the old shape; an absent value
+     * means "not yet asked" and must never be read as `declined`.
+     */
+    receptionistMode?: "forwarded" | "published" | "declined";
     brandName: string;
     brandShort?: string;
     email: string;

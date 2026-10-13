@@ -30,6 +30,16 @@ export interface ServiceEntry {
 
 export interface BrandIntakeSubmission {
   selectedPlan: "starter" | "growth" | "enterprise";
+  /**
+   * The activation choice from the wizard's activation step.
+   *
+   * Stated, never inferred. The receptionist only answers once the business line points at
+   * the JDD number, so this decides whether provisioning buys a number at all, and
+   * `declined` is the web-only variant. Optional on the type because a client who was
+   * mid-form when the activation step deployed still submits the old shape; an absent value
+   * means "not yet asked" and must never be read as `declined`.
+   */
+  receptionistMode?: "forwarded" | "published" | "declined";
 
   // ── Contact facts ──
   //
@@ -380,9 +390,19 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
   );
 
   const extras = (sub.additionalSites ?? []).filter((a) => a && a.brandName && a.brandName.trim());
+
+  // Carried onto the envelope, not onto any site. Every field of SiteContent is serialized
+  // into the generated client repo on public GitHub, and this one is both an operational
+  // instruction and a commercial fact, so it belongs beside `smsAlerts` rather than in
+  // `_meta`. Spread conditionally so an intake from a pre-activation-step draft stays
+  // genuinely absent rather than becoming an explicit `undefined`, which `exactOptionalPropertyTypes`
+  // and the console's zod round trip treat differently.
+  const receptionist = sub.receptionistMode ? { receptionistMode: sub.receptionistMode } : {};
+
   if (sub.selectedPlan !== "enterprise" || extras.length === 0) {
     return {
       plan: sub.selectedPlan,
+      ...receptionist,
       siteCount: 1,
       sites: [{ ...primary, _meta: { ...primary._meta, siteIndex: 1, siteCount: 1, siblingSlugs: [] } }],
     };
@@ -435,5 +455,5 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
     }),
   ];
 
-  return { plan: "enterprise", siteCount, sites };
+  return { plan: "enterprise", ...receptionist, siteCount, sites };
 }

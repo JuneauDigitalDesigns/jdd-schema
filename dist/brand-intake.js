@@ -256,9 +256,17 @@ export function mapBrandIntakeToIntake(sub) {
         existingWebsiteUrl: sub.existingWebsiteUrl,
     }, sub.selectedPlan);
     const extras = (sub.additionalSites ?? []).filter((a) => a && a.brandName && a.brandName.trim());
+    // Carried onto the envelope, not onto any site. Every field of SiteContent is serialized
+    // into the generated client repo on public GitHub, and this one is both an operational
+    // instruction and a commercial fact, so it belongs beside `smsAlerts` rather than in
+    // `_meta`. Spread conditionally so an intake from a pre-activation-step draft stays
+    // genuinely absent rather than becoming an explicit `undefined`, which `exactOptionalPropertyTypes`
+    // and the console's zod round trip treat differently.
+    const receptionist = sub.receptionistMode ? { receptionistMode: sub.receptionistMode } : {};
     if (sub.selectedPlan !== "enterprise" || extras.length === 0) {
         return {
             plan: sub.selectedPlan,
+            ...receptionist,
             siteCount: 1,
             sites: [{ ...primary, _meta: { ...primary._meta, siteIndex: 1, siteCount: 1, siblingSlugs: [] } }],
         };
@@ -304,6 +312,6 @@ export function mapBrandIntakeToIntake(sub) {
             };
         }),
     ];
-    return { plan: "enterprise", siteCount, sites };
+    return { plan: "enterprise", ...receptionist, siteCount, sites };
 }
 //# sourceMappingURL=brand-intake.js.map

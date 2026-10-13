@@ -23,6 +23,21 @@ import { z } from "zod";
 import { type MasterAgreementRef } from "./agreement.js";
 export type PortalPlan = "starter" | "growth" | "enterprise";
 export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
+/**
+ * How the client activated, or refused, the AI receptionist.
+ *
+ * Captured as an explicit step in onboarding rather than inferred, because the receptionist
+ * only answers once the business line actually points at the JDD number, and "nobody
+ * forwarded the line" and "the client declined a receptionist" are different facts with
+ * different remedies. The first is a nudge; the second is a web-only client who must never be
+ * billed for minutes or promised a call log.
+ *
+ * `declined` is the web-only variant. It is deliberately **not** a fourth `PortalPlan`: the
+ * price is identical to Starter, so it is a property of a Starter site rather than a product
+ * of its own, and widening the plan union would ripple into every exhaustive switch,
+ * `canAddPlan`, `meteringGroups` and the account record.
+ */
+export type ReceptionistMode = "forwarded" | "published" | "declined";
 /** One site belonging to an account. */
 export interface PortalSite {
     slug: string;
@@ -39,7 +54,10 @@ export interface PortalSite {
     vercelProjectId?: string | null;
     /**
      * Retell agent backing this site's voice receptionist. Written by onboard.js at
-     * provisioning; absent on starter sites, which have no agent.
+     * provisioning; absent only on web-only sites, which have no agent.
+     *
+     * Every plan tier includes a receptionist as of the 2026-10-12 reprice, so an absent agent
+     * on a non-web-only site is drift to investigate, not an expected state for a tier.
      *
      * This is the join key between an account and its call records. Retell is the
      * authoritative source for usage — the Airtable call log is lossy (it depends on a
@@ -48,6 +66,14 @@ export interface PortalSite {
      * `.env.local` the portal cannot see.
      */
     retellAgentId?: string | null;
+    /**
+     * The activation choice from onboarding. Undefined on records that predate the step;
+     * treat undefined as "not yet asked", **never** as "declined" — defaulting to declined
+     * would silently strip a paid-for receptionist from every pre-feature client.
+     */
+    receptionistMode?: ReceptionistMode;
+    /** Epoch ms the choice was recorded. */
+    receptionistChoiceAt?: number;
     addedAt: number;
     /** Stripe checkout session ID — set at payment time, used to link back to the wizard. */
     sessionId?: string;
@@ -148,6 +174,8 @@ export declare const zPortalSite: z.ZodObject<{
     airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     retellAgentId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
+    receptionistChoiceAt: z.ZodOptional<z.ZodNumber>;
     addedAt: z.ZodNumber;
     sessionId: z.ZodOptional<z.ZodString>;
     signerEmail: z.ZodOptional<z.ZodString>;
@@ -188,6 +216,8 @@ export declare const zPortalSite: z.ZodObject<{
     airtableBaseId?: string | null | undefined;
     vercelProjectId?: string | null | undefined;
     retellAgentId?: string | null | undefined;
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    receptionistChoiceAt?: number | undefined;
     sessionId?: string | undefined;
     signerEmail?: string | undefined;
     signerName?: string | undefined;
@@ -216,6 +246,8 @@ export declare const zPortalSite: z.ZodObject<{
     airtableBaseId?: string | null | undefined;
     vercelProjectId?: string | null | undefined;
     retellAgentId?: string | null | undefined;
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    receptionistChoiceAt?: number | undefined;
     sessionId?: string | undefined;
     signerEmail?: string | undefined;
     signerName?: string | undefined;
@@ -263,6 +295,8 @@ export declare const zPortalAccount: z.ZodObject<{
         airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         retellAgentId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
+        receptionistChoiceAt: z.ZodOptional<z.ZodNumber>;
         addedAt: z.ZodNumber;
         sessionId: z.ZodOptional<z.ZodString>;
         signerEmail: z.ZodOptional<z.ZodString>;
@@ -303,6 +337,8 @@ export declare const zPortalAccount: z.ZodObject<{
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
         retellAgentId?: string | null | undefined;
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        receptionistChoiceAt?: number | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -331,6 +367,8 @@ export declare const zPortalAccount: z.ZodObject<{
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
         retellAgentId?: string | null | undefined;
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        receptionistChoiceAt?: number | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -377,6 +415,8 @@ export declare const zPortalAccount: z.ZodObject<{
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
         retellAgentId?: string | null | undefined;
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        receptionistChoiceAt?: number | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -423,6 +463,8 @@ export declare const zPortalAccount: z.ZodObject<{
         airtableBaseId?: string | null | undefined;
         vercelProjectId?: string | null | undefined;
         retellAgentId?: string | null | undefined;
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        receptionistChoiceAt?: number | undefined;
         sessionId?: string | undefined;
         signerEmail?: string | undefined;
         signerName?: string | undefined;
@@ -478,6 +520,15 @@ export declare function createAccount(email: string, now?: number): PortalAccoun
  * On insert, `plan` defaults to "starter" and `status` to "building".
  */
 export declare function upsertSite(account: PortalAccount, site: PortalSiteInput, now?: number): PortalAccount;
+/**
+ * A web-only site: Starter, with the receptionist explicitly refused.
+ *
+ * One predicate, because three separate places need this answer and a fourth copy of
+ * `plan === "starter" && mode === "declined"` would eventually disagree: feature gating,
+ * minute metering, and provisioning. Undefined mode is **not** web-only, so a client who has
+ * not reached the activation step yet keeps the full entitlement they paid for.
+ */
+export declare function isWebOnly(site: PortalSite): boolean;
 /** Whether a site's wizard has been submitted (payment captured + form filled). */
 export declare function isSiteOnboarded(site: PortalSite): boolean;
 /**
@@ -549,6 +600,20 @@ export interface PortalEntrySource {
     retellAgentId?: string | null;
     /** Resolved `.vercel.app` host, used only when `canonical` is absent. Never a guess. */
     fallbackCanonical?: string | null;
+    /**
+     * Whether this client refused the receptionist. **Required: state it, never infer it.**
+     *
+     * Not optional on purpose. An optional flag with a `false` default is exactly the inference
+     * this is meant to prevent, and the wrong value costs money in both directions: `false` on a
+     * web-only site preserves an agent id that should not exist, and `true` on a real Starter
+     * site blanks an agent that was paid for and provisioned. Both writers (onboard.js and the
+     * console repair tool) know the answer, so both must say it.
+     *
+     * This was previously derived from `plan === "starter"`, which was correct only while
+     * Starter had no receptionist. After the 2026-10-12 reprice every tier has one, so deriving
+     * it from the plan would wipe a Starter agent on every console repair.
+     */
+    receptionistDeclined: boolean;
 }
 /**
  * Turn a writer's view of a client's sites into `upsertSite` inputs.
@@ -560,7 +625,7 @@ export interface PortalEntrySource {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — starter sites get an explicit `null` (call data cannot exist for
+ *  - **Airtable base** — web-only sites get an explicit `null` (call data cannot exist for
  *    them). Everything else takes the site's own base, falling back to the shared one
  *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
  *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
@@ -610,9 +675,9 @@ export type FeatureAvailability =
 /**
  * Resolve one feature for one site.
  *
- * The order is load-bearing and deliberately **plan → build status → connection → ready**.
- * Plan exclusion outranks build status so a Starter site mid-build hears the truth about
- * its plan rather than a promise of call data it will never receive.
+ * The order is load-bearing and deliberately **entitlement → build status → connection →
+ * ready**. Entitlement exclusion outranks build status so a web-only site mid-build hears the
+ * truth about what it bought rather than a promise of call data it will never receive.
  */
 export declare function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAvailability;
 /** Every feature for one site, for callers that need the whole picture at once. */

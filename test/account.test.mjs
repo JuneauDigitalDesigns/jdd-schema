@@ -12,6 +12,7 @@ import {
   siteFeature,
   siteFeatures,
   buildPortalSiteEntries,
+  isWebOnly,
   zPortalAccount,
 } from "../dist/index.js";
 
@@ -122,14 +123,27 @@ test("removeSite drops only the named slug", () => {
 
 // ── buildPortalSiteEntries: the rules both writers share ────────────────────
 
-test("starter sites never carry an Airtable base", () => {
+test("web-only sites never carry an Airtable base", () => {
   const [entry] = buildPortalSiteEntries({
     plan: "starter",
     status: "live",
     sharedAirtableBaseId: "appSHARED",
-    sites: [{ slug: "solo", airtableBaseId: "appOWN" }],
+    sites: [{ slug: "solo", airtableBaseId: "appOWN", receptionistDeclined: true }],
   });
   assert.equal(entry.airtableBaseId, null);
+});
+
+test("a Starter site WITH a receptionist keeps its Airtable base", () => {
+  // The 2026-10-12 reprice gave every tier a receptionist, so the blanking rule moved from
+  // the plan to the declined flag. If this regresses, every console repair silently
+  // disconnects a paying Starter client's call log — which is exactly the failure the
+  // undefined-vs-null discipline in this module exists to prevent.
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sites: [{ slug: "solo", airtableBaseId: "appOWN", receptionistDeclined: false }],
+  });
+  assert.equal(entry.airtableBaseId, "appOWN");
 });
 
 test("enterprise sites all inherit the shared Airtable base", () => {
@@ -182,15 +196,37 @@ test("an omitted Airtable base preserves the stored one through upsertSite", () 
 
 // ── retellAgentId: the join key minute accounting reads ─────────────────────
 
-test("starter sites never carry a Retell agent", () => {
-  // Starter has no voice agent at all. Asserting null (rather than omitting) also
-  // clears an id left behind by a growth → starter downgrade.
+test("web-only sites never carry a Retell agent", () => {
+  // A web-only site has no voice agent at all. Asserting null (rather than omitting) also
+  // clears an id left behind by an earlier activation choice.
   const [entry] = buildPortalSiteEntries({
     plan: "starter",
     status: "live",
-    sites: [{ slug: "solo", retellAgentId: "agent_LEFTOVER" }],
+    sites: [{ slug: "solo", retellAgentId: "agent_LEFTOVER", receptionistDeclined: true }],
   });
   assert.equal(entry.retellAgentId, null);
+});
+
+test("a declined entry also records the mode, so isWebOnly stays true on re-read", () => {
+  // Writing null ids without the mode would make the NEXT read see a Starter site with no
+  // agent, which `isWebOnly` reports as false — re-opening the call-log tab and putting the
+  // site back into minute metering. The flag and the stored mode have to agree.
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sites: [{ slug: "solo", receptionistDeclined: true }],
+  });
+  assert.equal(entry.receptionistMode, "declined");
+  assert.equal(isWebOnly({ ...entry, addedAt: NOW }), true);
+});
+
+test("a Starter site WITH a receptionist keeps its Retell agent", () => {
+  const [entry] = buildPortalSiteEntries({
+    plan: "starter",
+    status: "live",
+    sites: [{ slug: "solo", retellAgentId: "agent_OWN", receptionistDeclined: false }],
+  });
+  assert.equal(entry.retellAgentId, "agent_OWN");
 });
 
 test("a voice site carries its own Retell agent", () => {
@@ -244,15 +280,15 @@ test("an omitted Retell agent preserves the stored one through upsertSite", () =
   assert.equal(next.sites[0].retellAgentId, "agent_STORED");
 });
 
-test("downgrading to starter still blanks a stored Airtable base", () => {
-  // The counterpart: `null` from the starter branch IS a claim we can stand behind, so it
+test("declining the receptionist still blanks a stored Airtable base", () => {
+  // The counterpart: `null` from the declined branch IS a claim we can stand behind, so it
   // must survive the merge rather than being preserved away.
   const acct = accountWith([site("alpha", { airtableBaseId: "appSTORED" })]);
   const [entry] = buildPortalSiteEntries({
     plan: "starter",
     status: "live",
     sharedAirtableBaseId: "appSHARED",
-    sites: [{ slug: "alpha" }],
+    sites: [{ slug: "alpha", receptionistDeclined: true }],
   });
   const next = upsertSite(acct, entry, NOW + 1);
   assert.equal(next.sites[0].airtableBaseId, null);
@@ -462,28 +498,51 @@ test("siteFeature: a fully provisioned growth site is ready across the board", (
   });
 });
 
-test("siteFeature: plan exclusion outranks build status", () => {
-  // The precedence that makes this model worth having. A starter site mid-build must be
-  // told its plan excludes call data — NOT "pending-build", which promises a feature it
-  // will never receive no matter how long it waits.
-  assert.equal(featureState({ plan: "starter", status: "building" }, "calls"), "not-on-plan");
-  assert.equal(featureState({ plan: "starter", status: "live" }, "calls"), "not-on-plan");
+test("siteFeature: entitlement exclusion outranks build status", () => {
+  // The precedence that makes this model worth having. A web-only site mid-build must be
+  // told it has no call data — NOT "pending-build", which promises a feature it will never
+  // receive no matter how long it waits.
+  const webOnly = { plan: "starter", receptionistMode: "declined" };
+  assert.equal(featureState({ ...webOnly, status: "building" }, "calls"), "not-on-plan");
+  assert.equal(featureState({ ...webOnly, status: "live" }, "calls"), "not-on-plan");
   assert.equal(
-    featureState({ plan: "starter", status: "live", airtableBaseId: "app1" }, "calls"),
+    featureState({ ...webOnly, status: "live", airtableBaseId: "app1" }, "calls"),
     "not-on-plan",
-    "even a stray stored base cannot grant a starter site call data",
+    "even a stray stored base cannot grant a web-only site call data",
   );
 });
 
-test("siteFeature: only calls is plan-gated — traffic and performance ship on every tier", () => {
-  const starterLive = {
+test("siteFeature: a Starter site is no longer excluded from calls", () => {
+  // The reprice gave every tier a receptionist. A Starter site mid-build is pending, not
+  // excluded, and once live with a base it is ready — same as Growth.
+  assert.equal(featureState({ plan: "starter", status: "building" }, "calls"), "pending-build");
+  assert.equal(featureState({ plan: "starter", status: "live" }, "calls"), "connecting");
+  assert.equal(
+    featureState({ plan: "starter", status: "live", airtableBaseId: "app1" }, "calls"),
+    "ready",
+  );
+});
+
+test("siteFeature: an unasked activation choice does not strip call data", () => {
+  // Pre-activation-step records have no `receptionistMode`. Reading undefined as "declined"
+  // would retroactively remove the call log from every client who onboarded before the step
+  // existed, so absent must mean "not yet asked".
+  assert.equal(
+    featureState({ plan: "starter", status: "live", airtableBaseId: "app1" }, "calls"),
+    "ready",
+  );
+});
+
+test("siteFeature: traffic and performance ship on every tier, web-only included", () => {
+  const webOnlyLive = {
     plan: "starter",
+    receptionistMode: "declined",
     status: "live",
     vercelProjectId: "prj1",
     canonical: "https://example.com",
   };
-  assert.equal(featureState(starterLive, "traffic"), "ready");
-  assert.equal(featureState(starterLive, "performance"), "ready");
+  assert.equal(featureState(webOnlyLive, "traffic"), "ready");
+  assert.equal(featureState(webOnlyLive, "performance"), "ready");
 });
 
 test("siteFeature: an unbuilt site is pending-build regardless of stored ids", () => {

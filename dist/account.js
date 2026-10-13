@@ -30,6 +30,8 @@ export const zPortalSite = z.object({
     airtableBaseId: z.string().nullable().optional(),
     vercelProjectId: z.string().nullable().optional(),
     retellAgentId: z.string().nullable().optional(),
+    receptionistMode: z.enum(["forwarded", "published", "declined"]).optional(),
+    receptionistChoiceAt: z.number().optional(),
     addedAt: z.number(),
     sessionId: z.string().optional(),
     signerEmail: z.string().optional(),
@@ -126,6 +128,17 @@ export function upsertSite(account, site, now = Date.now()) {
         sites = account.sites.map((s, i) => i === idx ? { ...s, ...definedOnly(site), addedAt: s.addedAt } : s);
     }
     return { ...account, sites, updatedAt: now };
+}
+/**
+ * A web-only site: Starter, with the receptionist explicitly refused.
+ *
+ * One predicate, because three separate places need this answer and a fourth copy of
+ * `plan === "starter" && mode === "declined"` would eventually disagree: feature gating,
+ * minute metering, and provisioning. Undefined mode is **not** web-only, so a client who has
+ * not reached the activation step yet keeps the full entitlement they paid for.
+ */
+export function isWebOnly(site) {
+    return site.plan === "starter" && site.receptionistMode === "declined";
 }
 /** Whether a site's wizard has been submitted (payment captured + form filled). */
 export function isSiteOnboarded(site) {
@@ -244,7 +257,7 @@ function firstNonEmpty(...values) {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — starter sites get an explicit `null` (call data cannot exist for
+ *  - **Airtable base** — web-only sites get an explicit `null` (call data cannot exist for
  *    them). Everything else takes the site's own base, falling back to the shared one
  *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
  *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
@@ -266,12 +279,13 @@ export function buildPortalSiteEntries(input) {
         const canonical = firstNonEmpty(s.canonical, s.fallbackCanonical);
         if (canonical !== undefined)
             entry.canonical = canonical;
-        if (plan === "starter") {
-            // Starter genuinely has no call data — assert that, don't preserve a stale base.
+        if (s.receptionistDeclined) {
+            // A web-only site genuinely has no call data — assert that, don't preserve a stale base.
             entry.airtableBaseId = null;
-            // Same reasoning: starter has no voice agent at all, so assert the absence
-            // rather than preserving an id left over from a downgrade.
+            // Same reasoning: a web-only site has no voice agent at all, so assert the absence
+            // rather than preserving an id left over from a downgrade or an earlier choice.
             entry.retellAgentId = null;
+            entry.receptionistMode = "declined";
         }
         else {
             const resolved = s.airtableBaseId ?? sharedAirtableBaseId;
@@ -298,13 +312,14 @@ const FEATURE_REQUIREMENT = {
 /**
  * Resolve one feature for one site.
  *
- * The order is load-bearing and deliberately **plan → build status → connection → ready**.
- * Plan exclusion outranks build status so a Starter site mid-build hears the truth about
- * its plan rather than a promise of call data it will never receive.
+ * The order is load-bearing and deliberately **entitlement → build status → connection →
+ * ready**. Entitlement exclusion outranks build status so a web-only site mid-build hears the
+ * truth about what it bought rather than a promise of call data it will never receive.
  */
 export function siteFeature(site, feature) {
-    // 1. Plan. Only call data is plan-gated today; traffic and performance ship on every tier.
-    if (feature === "calls" && site.plan === "starter")
+    // 1. Entitlement. Every tier now includes the receptionist, so the plan alone no longer
+    // decides this: only a client who refused one has no call data, and never will.
+    if (feature === "calls" && isWebOnly(site))
         return { state: "not-on-plan" };
     // 2. Build status. Nothing is connectable before the site is provisioned.
     if (site.status !== "live")

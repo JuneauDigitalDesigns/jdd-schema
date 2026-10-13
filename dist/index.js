@@ -60,4 +60,13 @@ export * from "./copy-brief.js";
 //           and the console's /tickets board, bridged by KV like the lead funnel. Standalone:
 //           its own `jdd:ticket:*` keys, no change to any existing schema or record.
 export * from "./ticket.js";
+// v1.24.0 — the 2026-10-12 reprice gave EVERY tier the AI receptionist, so "does this site
+//           have a voice agent" stopped being answerable from the plan. `ReceptionistMode`
+//           + `isWebOnly` replace `plan === "starter"` as the gate in three places that each
+//           had their own copy of it: `buildPortalSiteEntries` (which actively nulled a
+//           Starter agent, so a console repair wiped one that had been provisioned),
+//           `siteFeature`, and `voiceSitesOf`. Starter also became meterable: `MinuteCaps`
+//           and `VoicePlan` carry it, metered per site like Growth, never pooled.
+//           Web-only ($197, no receptionist) is `plan: "starter"` + mode `declined`, NOT a
+//           fourth plan slug — the price is identical to Starter on purpose.
 //# sourceMappingURL=index.js.map

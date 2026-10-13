@@ -1,15 +1,19 @@
 /**
  * Which minutes belong to whom.
  *
- * **Growth minutes are per site. Enterprise minutes are pooled.** That one distinction is
- * what this module exists to encode, and getting it wrong costs real money in both
- * directions:
+ * **Starter and Growth minutes are per site. Enterprise minutes are pooled.** That one
+ * distinction is what this module exists to encode, and getting it wrong costs real money in
+ * both directions:
  *
- *   - Growth is sold as one receptionist for one business, with 350 included minutes. Two
- *     Growth sites are two separate purchases with two separate allowances that never see
- *     each other: a quiet site cannot subsidise a busy one, and each overruns on its own.
+ *   - Starter and Growth are each sold as one receptionist for one business, with 100 and 350
+ *     included minutes respectively. Two such sites are two separate purchases with two
+ *     separate allowances that never see each other: a quiet site cannot subsidise a busy one,
+ *     and each overruns on its own.
  *   - Enterprise is sold as one bundle whose minutes are explicitly "pooled across all sites"
  *     (Schedule A), so every site in the bundle draws on a single allowance.
+ *
+ * Starter joined this module in the 2026-10-12 reprice, which gave every tier a receptionist.
+ * Before that it had no agent and could not consume a minute, so it was not representable here.
  *
  * Both the billing cron and the portal usage tile run on these groups. They must never
  * disagree: a client shown one figure and invoiced another is a refund and a lost customer.
@@ -19,9 +23,14 @@
  * does this plan include" is Schedule A of the agreement the client signed, which lives with
  * the terms in the agency app.
  */
-import type { PortalSite } from "./account.js";
-/** A site that can actually consume minutes. */
-export type VoicePlan = "growth" | "enterprise";
+import { type PortalSite } from "./account.js";
+/**
+ * A site that can actually consume minutes.
+ *
+ * Every plan tier qualifies since the 2026-10-12 reprice. What disqualifies a site is not its
+ * tier but a declined receptionist, which `voiceSitesOf` filters on.
+ */
+export type VoicePlan = "starter" | "growth" | "enterprise";
 /**
  * Group ref for the pooled Enterprise allowance.
  *
@@ -33,6 +42,7 @@ export type VoicePlan = "growth" | "enterprise";
 export declare const ENTERPRISE_GROUP_REF = "enterprise";
 /** Included minutes per plan, from Schedule A. */
 export interface MinuteCaps {
+    starter: number;
     growth: number;
     enterprise: number;
 }
@@ -54,6 +64,11 @@ export interface MeteringGroup {
  * would bill a client for a receptionist they do not have. Everything else with a
  * provisioned agent counts, including `building` — the agent is live on the phone number
  * from the moment onboard.js creates it, whether or not the website has finished deploying.
+ *
+ * The plan check that used to live here is gone: every tier can consume minutes now, so the
+ * tier tells you nothing. `isWebOnly` replaces it, and `Boolean(s.retellAgentId)` still
+ * carries the "actually provisioned" requirement, which is what keeps the two externally
+ * managed Starter sites (no agent, billed off-platform) out of minute accounting.
  */
 export declare function voiceSitesOf(sites: PortalSite[]): PortalSite[];
 /**
@@ -66,7 +81,7 @@ export declare function voiceSitesOf(sites: PortalSite[]): PortalSite[];
  * collided on a single account-scoped idempotency key, which meant the second site's overage
  * was never invoiced at all.
  *
- * Growth groups come out in `sites` order so the result is stable across runs.
+ * Per-site groups come out in `sites` order so the result is stable across runs.
  */
 export declare function meteringGroups(sites: PortalSite[], caps: MinuteCaps): MeteringGroup[];
 /** The allowance a given site draws on, or null when it has no voice agent. */
