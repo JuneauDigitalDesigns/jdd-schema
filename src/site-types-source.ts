@@ -222,6 +222,11 @@ export interface ExtensionsContent {
   portalUrl: string | null;
   agentName?: string | null;
   serviceArea?: string[] | null;
+  // v2.5 (decision 29): the specifics that keep a site from reading as AI-made. Collected from
+  // intake and never invented — a blank is flagged in _meta.missing_fields, not filled.
+  ownerName?: string | null;        // About page + owner-photo caption
+  brandsCarried?: string[] | null;  // equipment brands installed/serviced; also feeds trust.logos
+  responseTime?: string | null;     // client's own words, e.g. "under 60 minutes"
 }
 
 export interface SiteImages {
@@ -238,6 +243,9 @@ export interface ContentMeta {
   is_placeholder: boolean;
   missing_fields: string[];
   placeholder_images?: string[];
+  // v2.4: original image URL -> localized "/img/<hash>" base, written by the export image
+  // pipeline. Merged across exports, never replaced.
+  local_images?: Record<string, string>;
   selectedPlan: "starter" | "growth" | "enterprise";
   siteIndex?: number;
   siteCount?: number;
