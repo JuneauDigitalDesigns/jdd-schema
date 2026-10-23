@@ -142,6 +142,18 @@ export function derivePalette(
     h: A.h,
   });
 
+  // The secondary/structural accent: a cool steel/navy mid-tone used for accent bars,
+  // dividers and depth (the two-tone premium model — a warm action accent against a cool
+  // structural one). Derived from the INK hue, not the accent, so it stays cool/structural
+  // and harmonises with the page's deepest tone rather than echoing the button colour. A
+  // client can pin it via overrides.accent2 (it is in PALETTE_SLOTS). On dark moods it sits
+  // lighter so it reads against the dark ground.
+  const accent2 = oklchToHex({
+    l: mood.dark ? 0.70 : 0.45,
+    c: 0.07,
+    h: K.h,
+  });
+
   // Set explicitly rather than left undefined — the wizard preview and the
   // deployed site used to resolve this independently and could disagree.
   //
@@ -150,7 +162,7 @@ export function derivePalette(
   // label at all. If nothing clears AA outright, nudge the best candidate.
   const accentFg = pickForeground(accentHex, [WHITE, inkHex, bg]);
 
-  return { accent: accentHex, accentFg, bg, bgSoft, ink: inkHex, inkSoft, rule };
+  return { accent: accentHex, accentFg, accent2, bg, bgSoft, ink: inkHex, inkSoft, rule };
 }
 
 // ─── contrast audit ──────────────────────────────────────────────────────────
@@ -316,6 +328,7 @@ export function presetToPick(id: string | undefined): PalettePick {
 const PALETTE_SLOTS: (keyof BrandPalette)[] = [
   "accent",
   "accentFg",
+  "accent2",
   "bg",
   "bgSoft",
   "ink",

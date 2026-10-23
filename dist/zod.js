@@ -147,6 +147,7 @@ export const zPalettePick = z.object({
         .object({
         accent: zHex.optional(),
         accentFg: zHex.optional(),
+        accent2: zHex.optional(),
         bg: zHex.optional(),
         bgSoft: zHex.optional(),
         ink: zHex.optional(),

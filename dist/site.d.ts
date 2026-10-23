@@ -137,6 +137,7 @@ export interface FooterContent {
 export interface BrandPalette {
     accent: string;
     accentFg?: string;
+    accent2?: string;
     bg: string;
     bgSoft: string;
     ink: string;
@@ -174,6 +175,7 @@ export interface ElementStyle {
  *  Only the slots set here differ from global; text/ink stay global and are auto-derived. */
 export interface SectionStyle {
     accent?: string;
+    accent2?: string;
     bg?: string;
     bgSoft?: string;
     headingWeight?: number;

@@ -1502,6 +1502,7 @@ export declare const zPalettePick: z.ZodObject<{
     overrides: z.ZodOptional<z.ZodObject<{
         accent: z.ZodOptional<z.ZodString>;
         accentFg: z.ZodOptional<z.ZodString>;
+        accent2: z.ZodOptional<z.ZodString>;
         bg: z.ZodOptional<z.ZodString>;
         bgSoft: z.ZodOptional<z.ZodString>;
         ink: z.ZodOptional<z.ZodString>;
@@ -1510,6 +1511,7 @@ export declare const zPalettePick: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         accent?: string | undefined;
         accentFg?: string | undefined;
+        accent2?: string | undefined;
         bg?: string | undefined;
         bgSoft?: string | undefined;
         ink?: string | undefined;
@@ -1518,6 +1520,7 @@ export declare const zPalettePick: z.ZodObject<{
     }, {
         accent?: string | undefined;
         accentFg?: string | undefined;
+        accent2?: string | undefined;
         bg?: string | undefined;
         bgSoft?: string | undefined;
         ink?: string | undefined;
@@ -1533,6 +1536,7 @@ export declare const zPalettePick: z.ZodObject<{
     overrides?: {
         accent?: string | undefined;
         accentFg?: string | undefined;
+        accent2?: string | undefined;
         bg?: string | undefined;
         bgSoft?: string | undefined;
         ink?: string | undefined;
@@ -1548,6 +1552,7 @@ export declare const zPalettePick: z.ZodObject<{
     overrides?: {
         accent?: string | undefined;
         accentFg?: string | undefined;
+        accent2?: string | undefined;
         bg?: string | undefined;
         bgSoft?: string | undefined;
         ink?: string | undefined;
@@ -1618,6 +1623,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides: z.ZodOptional<z.ZodObject<{
             accent: z.ZodOptional<z.ZodString>;
             accentFg: z.ZodOptional<z.ZodString>;
+            accent2: z.ZodOptional<z.ZodString>;
             bg: z.ZodOptional<z.ZodString>;
             bgSoft: z.ZodOptional<z.ZodString>;
             ink: z.ZodOptional<z.ZodString>;
@@ -1626,6 +1632,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -1634,6 +1641,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -1649,6 +1657,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -1664,6 +1673,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -1821,6 +1831,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -1829,6 +1840,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1837,6 +1849,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1852,6 +1865,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1867,6 +1881,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1925,6 +1940,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -1933,6 +1949,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1941,6 +1958,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1956,6 +1974,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -1971,6 +1990,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2029,6 +2049,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -2037,6 +2058,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2045,6 +2067,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2060,6 +2083,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2075,6 +2099,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2171,6 +2196,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides: z.ZodOptional<z.ZodObject<{
             accent: z.ZodOptional<z.ZodString>;
             accentFg: z.ZodOptional<z.ZodString>;
+            accent2: z.ZodOptional<z.ZodString>;
             bg: z.ZodOptional<z.ZodString>;
             bgSoft: z.ZodOptional<z.ZodString>;
             ink: z.ZodOptional<z.ZodString>;
@@ -2179,6 +2205,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2187,6 +2214,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2202,6 +2230,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2217,6 +2246,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2374,6 +2404,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -2382,6 +2413,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2390,6 +2422,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2405,6 +2438,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2420,6 +2454,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2478,6 +2513,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -2486,6 +2522,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2494,6 +2531,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2509,6 +2547,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2524,6 +2563,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2582,6 +2622,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -2590,6 +2631,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2598,6 +2640,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2613,6 +2656,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2628,6 +2672,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2724,6 +2769,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides: z.ZodOptional<z.ZodObject<{
             accent: z.ZodOptional<z.ZodString>;
             accentFg: z.ZodOptional<z.ZodString>;
+            accent2: z.ZodOptional<z.ZodString>;
             bg: z.ZodOptional<z.ZodString>;
             bgSoft: z.ZodOptional<z.ZodString>;
             ink: z.ZodOptional<z.ZodString>;
@@ -2732,6 +2778,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, "strip", z.ZodTypeAny, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2740,6 +2787,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }, {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2755,6 +2803,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2770,6 +2819,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         overrides?: {
             accent?: string | undefined;
             accentFg?: string | undefined;
+            accent2?: string | undefined;
             bg?: string | undefined;
             bgSoft?: string | undefined;
             ink?: string | undefined;
@@ -2927,6 +2977,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -2935,6 +2986,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2943,6 +2995,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2958,6 +3011,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -2973,6 +3027,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3031,6 +3086,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -3039,6 +3095,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3047,6 +3104,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3062,6 +3120,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3077,6 +3136,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3135,6 +3195,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides: z.ZodOptional<z.ZodObject<{
                 accent: z.ZodOptional<z.ZodString>;
                 accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
                 bg: z.ZodOptional<z.ZodString>;
                 bgSoft: z.ZodOptional<z.ZodString>;
                 ink: z.ZodOptional<z.ZodString>;
@@ -3143,6 +3204,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, "strip", z.ZodTypeAny, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3151,6 +3213,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             }, {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3166,6 +3229,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;
@@ -3181,6 +3245,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             overrides?: {
                 accent?: string | undefined;
                 accentFg?: string | undefined;
+                accent2?: string | undefined;
                 bg?: string | undefined;
                 bgSoft?: string | undefined;
                 ink?: string | undefined;

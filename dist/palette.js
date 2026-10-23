@@ -84,6 +84,17 @@ export function derivePalette(accent, ink = DEFAULT_INK, bgMood = "white") {
         c: 0.02,
         h: A.h,
     });
+    // The secondary/structural accent: a cool steel/navy mid-tone used for accent bars,
+    // dividers and depth (the two-tone premium model — a warm action accent against a cool
+    // structural one). Derived from the INK hue, not the accent, so it stays cool/structural
+    // and harmonises with the page's deepest tone rather than echoing the button colour. A
+    // client can pin it via overrides.accent2 (it is in PALETTE_SLOTS). On dark moods it sits
+    // lighter so it reads against the dark ground.
+    const accent2 = oklchToHex({
+        l: mood.dark ? 0.70 : 0.45,
+        c: 0.07,
+        h: K.h,
+    });
     // Set explicitly rather than left undefined — the wizard preview and the
     // deployed site used to resolve this independently and could disagree.
     //
@@ -91,7 +102,7 @@ export function derivePalette(accent, ink = DEFAULT_INK, bgMood = "white") {
     // and a light accent (e.g. a pale blue) would leave a button with no legible
     // label at all. If nothing clears AA outright, nudge the best candidate.
     const accentFg = pickForeground(accentHex, [WHITE, inkHex, bg]);
-    return { accent: accentHex, accentFg, bg, bgSoft, ink: inkHex, inkSoft, rule };
+    return { accent: accentHex, accentFg, accent2, bg, bgSoft, ink: inkHex, inkSoft, rule };
 }
 const CONTRAST_RULES = [
     { slot: "ink", against: "bg", required: 4.5, label: "Body text on background" },
@@ -208,6 +219,7 @@ export function presetToPick(id) {
 const PALETTE_SLOTS = [
     "accent",
     "accentFg",
+    "accent2",
     "bg",
     "bgSoft",
     "ink",

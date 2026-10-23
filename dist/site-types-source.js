@@ -150,6 +150,7 @@ export interface FooterContent {
 export interface BrandPalette {
   accent:    string;
   accentFg?: string;   // text drawn on accent bg — defaults to "#ffffff"
+  accent2?:  string;   // secondary/structural accent (cool steel/navy): accent bars, dividers, depth. Derived from the ink hue when unset.
   bg:        string;
   bgSoft:    string;
   ink:       string;
@@ -191,6 +192,7 @@ export interface ElementStyle {
  *  Only the slots set here differ from global; text/ink stay global and are auto-derived. */
 export interface SectionStyle {
   accent?:        string; // hex — per-section accent override
+  accent2?:       string; // hex — per-section secondary-accent override
   bg?:            string; // hex — per-section background override
   bgSoft?:        string; // hex — per-section soft/alt background override
   headingWeight?: number; // 300–800
