@@ -209,6 +209,22 @@ export const zBrandIntakeSubmission = z
       .passthrough(),
     existingWebsiteUrl: z.string().default(""),
     announcement: z.string().default(""),
+    // vertical-templates-v1 (PLAN §3.2, 2026-10-28). Structural, same level of rigor as
+    // serviceList above — not deep copy-field validation (the mapper owns that), but real
+    // shape checks rather than the passthrough a plain copy blob would get.
+    stats: z
+      .array(z.object({ key: z.string(), value: z.string(), label: z.string() }))
+      .optional(),
+    reviewAggregate: z
+      .object({ score: z.string(), count: z.string(), url: z.string().optional() })
+      .nullable()
+      .optional(),
+    servicePrices: z.record(z.string()).optional(),
+    seasons: z
+      .array(z.object({ key: z.string(), label: z.string(), body: z.string() }))
+      .optional(),
+    serviceRadiusMiles: z.string().optional(),
+    offerBadge: z.string().optional(),
     additionalSites: z
       .array(
         z

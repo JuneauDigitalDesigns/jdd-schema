@@ -65,6 +65,39 @@ export interface BrandIntakeSubmission {
     existingWebsiteUrl: string;
     /** No longer asked; it's a post-launch promo, editable in the console any time. */
     announcement?: string;
+    /** Each entry's `label` travels with the submission rather than being re-derived from
+     *  TemplateSlots by key, so this module stays independent of industry-menu.ts. */
+    stats?: {
+        key: string;
+        value: string;
+        label: string;
+    }[];
+    /**
+     * Adapted from the PLAN's sketch to the REAL `ExtensionsContent.reviewBadge` shape
+     * (`{rating: number, count: number, url: string} | null`) rather than the richer
+     * `{score, count, sources[]}` the plan illustrated — `reviewBadge` has no field for a
+     * per-source breakdown, so a submission can't carry one yet. `score`/`count` arrive as
+     * strings off the form; the mapper parses them.
+     */
+    reviewAggregate?: {
+        score: string;
+        count: string;
+        url?: string;
+    } | null;
+    /** Keyed by the service's own `name` in `serviceList`, so the mapper can match a price to
+     *  the right ServiceItem without a second id scheme. */
+    servicePrices?: Record<string, string>;
+    /** `{key, label, body}` mirrors AboutContent.seasons almost exactly — the wizard already has
+     *  each season's label from TemplateSlots when it renders the step, so it can submit it
+     *  directly rather than the mapper re-deriving it. A blank/absent `body` means the client
+     *  doesn't run that season's programme; it is dropped, not carried through empty. */
+    seasons?: {
+        key: string;
+        label: string;
+        body: string;
+    }[];
+    serviceRadiusMiles?: string;
+    offerBadge?: string;
     additionalSites?: AdditionalBrandSite[];
 }
 /** Enterprise additional site — facts + palette + direction; copy is generated. */

@@ -28,6 +28,37 @@ function orNull(value) {
 function repeat(n, make) {
     return Array.from({ length: n }, make);
 }
+/**
+ * Non-blank stats, mapped to the Stat shape (`{n, l}`). PLAN D4: a statistic is never
+ * generated — this only ever passes through what the client supplied, and an entry with a
+ * blank value is dropped rather than carried through as `{n: "", l: "..."}`, which would
+ * render as an empty-looking tile instead of no tile at all.
+ */
+function statsFrom(stats) {
+    return (stats ?? [])
+        .filter((s) => s.value && s.value.trim())
+        .map((s) => ({ n: s.value.trim(), l: (s.label ?? "").trim() }));
+}
+/**
+ * The review aggregate, or null when the client supplied neither a score nor a count.
+ * `ExtensionsContent.reviewBadge` wants numbers; the form posts strings, so this parses them
+ * and treats an unparseable value the same as absent rather than shipping NaN into a client site.
+ */
+function reviewBadgeFrom(agg) {
+    if (!agg)
+        return null;
+    const rating = parseFloat(agg.score);
+    const count = parseInt(agg.count, 10);
+    if (!Number.isFinite(rating) || !Number.isFinite(count))
+        return null;
+    return { rating, count, url: agg.url ?? "" };
+}
+/** Non-blank seasons only — PLAN D5/D14: we do not describe a season's service the client
+ *  doesn't actually offer, so a season with no body is dropped, not carried through empty. */
+function seasonsFrom(seasons) {
+    const filled = (seasons ?? []).filter((s) => s.body && s.body.trim());
+    return filled.length ? filled.map((s) => ({ key: s.key, label: s.label, body: s.body.trim() })) : null;
+}
 const DEFAULT_TYPOGRAPHY = {
     fontSans: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
     fontHeading: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -67,6 +98,18 @@ function buildScaffold(f, plan) {
         missing.push("images.hero");
     if (!f.existingWebsiteUrl || !f.existingWebsiteUrl.trim())
         missing.push("existingWebsiteUrl");
+    // vertical-templates-v1 (PLAN §3.3): flagged on the same "collected from intake, never
+    // invented" footing as the decision-29 facts above — an unsupplied slot is a go-live
+    // checklist item, not a silent gap, same reasoning as extensions.serviceArea.
+    const resolvedStats = statsFrom(f.stats);
+    const resolvedReviewBadge = reviewBadgeFrom(f.reviewAggregate);
+    const resolvedSeasons = seasonsFrom(f.seasons);
+    flag("about.stats", resolvedStats.length > 0);
+    flag("extensions.reviewBadge", resolvedReviewBadge !== null);
+    flag("about.seasons", resolvedSeasons !== null);
+    flag("extensions.offerBadge", f.offerBadge && f.offerBadge.trim());
+    flag("extensions.serviceRadiusMiles", f.serviceRadiusMiles && f.serviceRadiusMiles.trim());
+    flag("services.priceFrom", f.servicePrices && Object.values(f.servicePrices).some((p) => p && p.trim()));
     const serviceLinks = f.serviceList.map((s) => ({ label: s.name, href: "#services" }));
     const seo = {
         title: "",
@@ -122,7 +165,11 @@ function buildScaffold(f, plan) {
             title: "",
             body: "",
             pillars: repeat(S.pillars, () => ({ k: "", t: "", d: "" })),
-            stats: repeat(S.stats, () => ({ n: "", l: "" })),
+            // vertical-templates-v1 (PLAN D4): client-supplied only, never the DEFAULT_STRUCTURE-sized
+            // blank repeat the other copy arrays use — a statistic cannot be "written in place" by the
+            // copywriter the way an empty FAQ or pillar can.
+            stats: resolvedStats,
+            seasons: resolvedSeasons,
         },
         services: {
             eyebrow: "",
@@ -134,6 +181,7 @@ function buildScaffold(f, plan) {
                 d: "",
                 tag: s.tag,
                 image: null,
+                priceFrom: orNull(f.servicePrices?.[s.name] ?? ""),
             })),
         },
         work: { eyebrow: "", title: "", sub: "", projects: [], hidden: true },
@@ -179,7 +227,7 @@ function buildScaffold(f, plan) {
         seo,
         extensions: {
             trustBadges: f.certifications && f.certifications.trim() ? splitList(f.certifications) : null,
-            reviewBadge: null,
+            reviewBadge: resolvedReviewBadge,
             contactDetails: f.address && f.address.trim() ? { address: f.address, mapsUrl: null } : null,
             hours: f.businessHours && f.businessHours.trim() ? { all: f.businessHours } : null,
             bookingUrl: null,
@@ -189,6 +237,8 @@ function buildScaffold(f, plan) {
             ownerName: orNull(f.ownerName ?? ""),
             brandsCarried: f.brandsCarried && f.brandsCarried.trim() ? splitList(f.brandsCarried) : null,
             responseTime: orNull(f.responseTime ?? ""),
+            offerBadge: orNull(f.offerBadge ?? ""),
+            serviceRadiusMiles: orNull(f.serviceRadiusMiles ?? ""),
         },
         images: {
             hero: {
@@ -255,6 +305,12 @@ export function mapBrandIntakeToIntake(sub) {
         hasLogo: sub.hasLogo,
         images: sub.images,
         existingWebsiteUrl: sub.existingWebsiteUrl,
+        stats: sub.stats,
+        reviewAggregate: sub.reviewAggregate,
+        servicePrices: sub.servicePrices,
+        seasons: sub.seasons,
+        serviceRadiusMiles: sub.serviceRadiusMiles,
+        offerBadge: sub.offerBadge,
     }, sub.selectedPlan);
     const extras = (sub.additionalSites ?? []).filter((a) => a && a.brandName && a.brandName.trim());
     // Carried onto the envelope, not onto any site. Every field of SiteContent is serialized
@@ -301,6 +357,12 @@ export function mapBrandIntakeToIntake(sub) {
                 hasLogo: sub.hasLogo,
                 images: { heroSlides: [] },
                 existingWebsiteUrl: "",
+                stats: sub.stats,
+                reviewAggregate: sub.reviewAggregate,
+                servicePrices: sub.servicePrices,
+                seasons: sub.seasons,
+                serviceRadiusMiles: sub.serviceRadiusMiles,
+                offerBadge: sub.offerBadge,
             }, "enterprise");
             return {
                 ...site,

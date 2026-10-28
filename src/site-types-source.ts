@@ -49,6 +49,7 @@ export interface ServiceItem {
   icon?: string; // v1.5.0: explicit icon-registry key; falls back to tag lookup when unset
   image?: { url: string; alt: string } | null; // optional preview image
   detail?: string; // v2.2: 2–3 sentence expansion shown when the card is opened on the Services page
+  priceFrom?: string | null;
 }
 
 export interface Project {
@@ -101,6 +102,7 @@ export interface AboutContent {
   story?: string[]; // v2.2: multi-paragraph company story for the dedicated About page
   pillars: Pillar[];
   stats: Stat[];
+  seasons?: { key: string; label: string; body: string }[] | null;
 }
 
 export interface ServicesContent {
@@ -134,6 +136,7 @@ export interface FaqContent {
 export interface FinalCtaContent {
   eyebrow: string;
   headline: string;
+  headlineEmphasis: string | null; // substring of headline to render in accent/gold; null → no highlight
   sub: string;
   cta: string;
   secondary: string | null; // null → omit "Or call…" line
@@ -229,6 +232,8 @@ export interface ExtensionsContent {
   ownerName?: string | null;        // About page + owner-photo caption
   brandsCarried?: string[] | null;  // equipment brands installed/serviced; also feeds trust.logos
   responseTime?: string | null;     // client's own words, e.g. "under 60 minutes"
+  offerBadge?: string | null;          // promotional ribbon text, e.g. "First mow free" (lawn-care)
+  serviceRadiusMiles?: string | null;  // mobile-service radius, e.g. "25" (car-detailing)
 }
 
 export interface SiteImages {

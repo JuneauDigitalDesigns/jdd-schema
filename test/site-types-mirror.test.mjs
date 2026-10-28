@@ -107,3 +107,19 @@ test("the fields that actually broke client builds are mirrored", () => {
     "ContentMeta.local_images missing from SITE_TYPES_SOURCE",
   );
 });
+
+test("the vertical-templates-v1 fields are mirrored (PLAN §3.4 / EXEC T4.4)", () => {
+  // headlineEmphasis was ALREADY drifted when this field was added (FinalCtaContent.
+  // headlineEmphasis shipped in v1.27.0 and was never mirrored) — fixed alongside this test,
+  // which is itself the regression guard the EXEC plan calls for. Named explicitly, same as
+  // the test above, so a future drift on these specific fields reads clearly in test output.
+  for (const field of ["offerBadge", "serviceRadiusMiles"]) {
+    assert.ok(mirror.get("ExtensionsContent")?.has(field), `ExtensionsContent.${field} missing from SITE_TYPES_SOURCE`);
+  }
+  assert.ok(mirror.get("ServiceItem")?.has("priceFrom"), "ServiceItem.priceFrom missing from SITE_TYPES_SOURCE");
+  assert.ok(mirror.get("AboutContent")?.has("seasons"), "AboutContent.seasons missing from SITE_TYPES_SOURCE");
+  assert.ok(
+    mirror.get("FinalCtaContent")?.has("headlineEmphasis"),
+    "FinalCtaContent.headlineEmphasis missing from SITE_TYPES_SOURCE",
+  );
+});

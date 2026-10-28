@@ -45,6 +45,10 @@ export interface ServiceItem {
   icon?: string; // v1.5.0: explicit icon-registry key; falls back to `tag` lookup when unset
   image?: { url: string; alt: string } | null; // optional preview image
   detail?: string; // v2.2: 2–3 sentence expansion shown when the card is opened on the Services page
+  // vertical-templates-v1 (2026-10-28, car-detailing): a client-supplied "starting at" price.
+  // Price is a fact about the business (PLAN D4/D15), never generated. Absent → the card's
+  // footer shows the tag only, never "$0" or "Call for pricing" (PLAN D5).
+  priceFrom?: string | null;
 }
 
 export interface Project {
@@ -97,6 +101,11 @@ export interface AboutContent {
   story?: string[]; // v2.2: multi-paragraph company story for the dedicated About page
   pillars: Pillar[];
   stats: Stat[];
+  // vertical-templates-v1 (2026-10-28, lawn-care's season rail): a seasonal service programme,
+  // sibling to `stats` because the two can render in the same template slot (PLAN D14). Client-
+  // supplied only — we do not describe a season's service the client doesn't actually offer.
+  // null/empty → the rail is not rendered (PLAN D5), never an invented programme.
+  seasons?: { key: string; label: string; body: string }[] | null;
 }
 
 export interface ServicesContent {
@@ -231,6 +240,11 @@ export interface ExtensionsContent {
   ownerName?: string | null;        // About page + owner-photo caption
   brandsCarried?: string[] | null;  // equipment brands installed/serviced; also fed to trust.logos
   responseTime?: string | null;     // client's own words, e.g. "under 60 minutes"
+  // vertical-templates-v1 (2026-10-28): client-supplied only, never generated — a promise to the
+  // client's own customers (offerBadge) or a fact about the business (serviceRadiusMiles), not
+  // copy we originate. Absent → the template hides the slot (PLAN D5), never a default.
+  offerBadge?: string | null;          // promotional ribbon text, e.g. "First mow free" (lawn-care)
+  serviceRadiusMiles?: string | null;  // mobile-service radius, e.g. "25" (car-detailing)
 }
 
 export interface SiteImages {

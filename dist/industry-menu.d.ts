@@ -33,6 +33,55 @@ export interface MenuService {
     label: string;
     tag: string;
 }
+/**
+ * What a vertical's bespoke whole-site template (console VERTICAL_TEMPLATES) needs from the
+ * client that generic intake doesn't collect — and ONLY what it needs: a vertical whose
+ * template has no stat band is not asked for stats, one with no seasonal programme is not
+ * asked about seasons.
+ *
+ * Every field here feeds a slot that is either a plain fact (hours, radius) or something we are
+ * expressly forbidden from inventing (CLAUDE.md: never invent values; PLAN D4: a statistic is
+ * never generated). `stats` and `seasons` are therefore prompts shown to the CLIENT, not text we
+ * generate — `example` is placeholder copy only, never a submitted value, and the console's
+ * copywriter must never originate a stats/reviewAggregate entry absent from the submission.
+ *
+ * Added 2026-10-28 for the vertical-templates-v1 programme (design/EXEC-vertical-templates-v1.md,
+ * PLAN §3.1). Health is excluded from that programme (see
+ * design/HANDOFF-health-vertical-research.md) and carries no templateSlots — optional, not a
+ * required empty object, so a vertical with no bespoke template yet (health today) simply omits
+ * it rather than lying about having zero slots.
+ */
+export interface TemplateSlots {
+    /** The stat band, if the template has one. `example` is placeholder text shown to the client,
+     *  never a submitted value — see the file header. Absent/empty on a vertical with no stat
+     *  band (none currently; lawn-care carries both stats AND seasons, PLAN D14). */
+    stats: {
+        key: string;
+        prompt: string;
+        example: string;
+    }[];
+    /** Whether the template renders a review aggregate (score + count + sources), distinct from
+     *  any single stat tile that happens to show a rating. */
+    reviewAggregate: boolean;
+    /** Per-day hours rather than one free-text line. No in-scope vertical uses this yet — it is
+     *  here for the health research cycle to adopt, not for this programme to populate. */
+    hoursPerDay: boolean;
+    /** Whether service items carry a client-supplied "starting at" price (car-detailing). */
+    priceFrom: boolean;
+    /** A seasonal programme (lawn-care's season rail), or null when the template has none. Each
+     *  entry's `prompt` must make clear that leaving it blank is fine — we do not describe a
+     *  season's service the client doesn't actually offer. */
+    seasons: {
+        key: string;
+        label: string;
+        prompt: string;
+    }[] | null;
+    /** Whether the template states a mobile-service radius in miles (car-detailing). */
+    serviceRadius: boolean;
+    /** Whether the template has a client-supplied promotional ribbon slot (lawn-care's "First mow
+     *  free"). A promise to the client's own customers, so it is never ours to write — see PLAN D10. */
+    offerBadge: boolean;
+}
 export interface IndustryMenu {
     id: VerticalId;
     label: string;
@@ -42,6 +91,9 @@ export interface IndustryMenu {
     differentiators: string[];
     /** "Who you serve" chips. */
     customers: string[];
+    /** What this vertical's bespoke template needs beyond the fields above. Optional: absent for
+     *  any vertical with no bespoke template (see TemplateSlots header). */
+    templateSlots?: TemplateSlots;
 }
 /**
  * Tone options, shared across every industry.

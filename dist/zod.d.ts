@@ -1805,6 +1805,48 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
     announcement: z.ZodDefault<z.ZodString>;
+    stats: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        value: z.ZodString;
+        label: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+        key: string;
+    }, {
+        value: string;
+        label: string;
+        key: string;
+    }>, "many">>;
+    reviewAggregate: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        score: z.ZodString;
+        count: z.ZodString;
+        url: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }>>>;
+    servicePrices: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    seasons: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        label: z.ZodString;
+        body: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        label: string;
+        body: string;
+        key: string;
+    }, {
+        label: string;
+        body: string;
+        key: string;
+    }>, "many">>;
+    serviceRadiusMiles: z.ZodOptional<z.ZodString>;
+    offerBadge: z.ZodOptional<z.ZodString>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;
@@ -2378,6 +2420,48 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
     announcement: z.ZodDefault<z.ZodString>;
+    stats: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        value: z.ZodString;
+        label: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+        key: string;
+    }, {
+        value: string;
+        label: string;
+        key: string;
+    }>, "many">>;
+    reviewAggregate: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        score: z.ZodString;
+        count: z.ZodString;
+        url: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }>>>;
+    servicePrices: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    seasons: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        label: z.ZodString;
+        body: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        label: string;
+        body: string;
+        key: string;
+    }, {
+        label: string;
+        body: string;
+        key: string;
+    }>, "many">>;
+    serviceRadiusMiles: z.ZodOptional<z.ZodString>;
+    offerBadge: z.ZodOptional<z.ZodString>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;
@@ -2951,6 +3035,48 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
     announcement: z.ZodDefault<z.ZodString>;
+    stats: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        value: z.ZodString;
+        label: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+        key: string;
+    }, {
+        value: string;
+        label: string;
+        key: string;
+    }>, "many">>;
+    reviewAggregate: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        score: z.ZodString;
+        count: z.ZodString;
+        url: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }>>>;
+    servicePrices: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    seasons: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        label: z.ZodString;
+        body: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        label: string;
+        body: string;
+        key: string;
+    }, {
+        label: string;
+        body: string;
+        key: string;
+    }>, "many">>;
+    serviceRadiusMiles: z.ZodOptional<z.ZodString>;
+    offerBadge: z.ZodOptional<z.ZodString>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;

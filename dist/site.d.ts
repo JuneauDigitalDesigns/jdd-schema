@@ -42,6 +42,7 @@ export interface ServiceItem {
         alt: string;
     } | null;
     detail?: string;
+    priceFrom?: string | null;
 }
 export interface Project {
     t: string;
@@ -94,6 +95,11 @@ export interface AboutContent {
     story?: string[];
     pillars: Pillar[];
     stats: Stat[];
+    seasons?: {
+        key: string;
+        label: string;
+        body: string;
+    }[] | null;
 }
 export interface ServicesContent {
     eyebrow: string;
@@ -208,6 +214,8 @@ export interface ExtensionsContent {
     ownerName?: string | null;
     brandsCarried?: string[] | null;
     responseTime?: string | null;
+    offerBadge?: string | null;
+    serviceRadiusMiles?: string | null;
 }
 export interface SiteImages {
     hero: {

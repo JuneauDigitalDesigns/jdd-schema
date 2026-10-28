@@ -36,6 +36,48 @@ export interface MenuService {
   tag: string;
 }
 
+/**
+ * What a vertical's bespoke whole-site template (console VERTICAL_TEMPLATES) needs from the
+ * client that generic intake doesn't collect — and ONLY what it needs: a vertical whose
+ * template has no stat band is not asked for stats, one with no seasonal programme is not
+ * asked about seasons.
+ *
+ * Every field here feeds a slot that is either a plain fact (hours, radius) or something we are
+ * expressly forbidden from inventing (CLAUDE.md: never invent values; PLAN D4: a statistic is
+ * never generated). `stats` and `seasons` are therefore prompts shown to the CLIENT, not text we
+ * generate — `example` is placeholder copy only, never a submitted value, and the console's
+ * copywriter must never originate a stats/reviewAggregate entry absent from the submission.
+ *
+ * Added 2026-10-28 for the vertical-templates-v1 programme (design/EXEC-vertical-templates-v1.md,
+ * PLAN §3.1). Health is excluded from that programme (see
+ * design/HANDOFF-health-vertical-research.md) and carries no templateSlots — optional, not a
+ * required empty object, so a vertical with no bespoke template yet (health today) simply omits
+ * it rather than lying about having zero slots.
+ */
+export interface TemplateSlots {
+  /** The stat band, if the template has one. `example` is placeholder text shown to the client,
+   *  never a submitted value — see the file header. Absent/empty on a vertical with no stat
+   *  band (none currently; lawn-care carries both stats AND seasons, PLAN D14). */
+  stats: { key: string; prompt: string; example: string }[];
+  /** Whether the template renders a review aggregate (score + count + sources), distinct from
+   *  any single stat tile that happens to show a rating. */
+  reviewAggregate: boolean;
+  /** Per-day hours rather than one free-text line. No in-scope vertical uses this yet — it is
+   *  here for the health research cycle to adopt, not for this programme to populate. */
+  hoursPerDay: boolean;
+  /** Whether service items carry a client-supplied "starting at" price (car-detailing). */
+  priceFrom: boolean;
+  /** A seasonal programme (lawn-care's season rail), or null when the template has none. Each
+   *  entry's `prompt` must make clear that leaving it blank is fine — we do not describe a
+   *  season's service the client doesn't actually offer. */
+  seasons: { key: string; label: string; prompt: string }[] | null;
+  /** Whether the template states a mobile-service radius in miles (car-detailing). */
+  serviceRadius: boolean;
+  /** Whether the template has a client-supplied promotional ribbon slot (lawn-care's "First mow
+   *  free"). A promise to the client's own customers, so it is never ours to write — see PLAN D10. */
+  offerBadge: boolean;
+}
+
 export interface IndustryMenu {
   id: VerticalId;
   label: string;
@@ -45,6 +87,9 @@ export interface IndustryMenu {
   differentiators: string[];
   /** "Who you serve" chips. */
   customers: string[];
+  /** What this vertical's bespoke template needs beyond the fields above. Optional: absent for
+   *  any vertical with no bespoke template (see TemplateSlots header). */
+  templateSlots?: TemplateSlots;
 }
 
 /**
@@ -122,6 +167,20 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
       "Financing on new systems",
     ],
     customers: ["Homeowners with aging systems", "Landlords and property managers"],
+    templateSlots: {
+      stats: [
+        { key: "emergencyAvailability", prompt: "What's your emergency availability?", example: "24/7" },
+        { key: "yearsTrading", prompt: "How many years have you been in business?", example: "18+" },
+        { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 180+ reviews" },
+        { key: "coverageTowns", prompt: "How many towns or cities do you cover?", example: "12" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      priceFrom: false,
+      seasons: null,
+      serviceRadius: false,
+      offerBadge: false,
+    },
   },
   {
     id: "roofing",
@@ -146,6 +205,20 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
       "Storm response within 24 hours",
     ],
     customers: ["Homeowners after a storm", "Commercial property owners"],
+    templateSlots: {
+      stats: [
+        { key: "roofsReplaced", prompt: "How many roofs have you replaced?", example: "500+" },
+        { key: "warrantyYears", prompt: "How many years is your workmanship warranty?", example: "30 yr" },
+        { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 211 reviews" },
+        { key: "typicalJobDays", prompt: "How many days does a typical job take?", example: "1–2" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      priceFrom: false,
+      seasons: null,
+      serviceRadius: false,
+      offerBadge: false,
+    },
   },
   {
     id: "plumbing",
@@ -171,6 +244,20 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
       "No overtime charges",
     ],
     customers: ["Homeowners", "Restaurants and food service"],
+    templateSlots: {
+      stats: [
+        { key: "availability", prompt: "What's your availability?", example: "24/7" },
+        { key: "avgArrivalTime", prompt: "Average emergency arrival time", example: "60 min" },
+        { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 240+ reviews" },
+        { key: "yearsLicensed", prompt: "How many years have you been licensed in your area?", example: "15+" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      priceFrom: false,
+      seasons: null,
+      serviceRadius: false,
+      offerBadge: false,
+    },
   },
   {
     id: "lawn-care",
@@ -196,6 +283,30 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
       "Text-ahead arrival notice",
     ],
     customers: ["Homeowners", "HOAs and communities"],
+    // Carries BOTH stats and seasons (PLAN D14, 2026-10-28 resolution): the template's under-hero
+    // slot renders a conventional trust stat band, and a separate, slimmer season rail beneath it
+    // — demoted from an earlier four-card treatment that was too loud for that slot. Each prompt
+    // below must make clear that a blank answer is fine; a client with no seasonal programme
+    // gets no rail at all (D5), never an invented one.
+    templateSlots: {
+      stats: [
+        { key: "lawnsServicedWeekly", prompt: "How many lawns do you service in a typical week?", example: "1,400+" },
+        { key: "yearsTrading", prompt: "How many years have you been in business?", example: "12 yr" },
+        { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 164 reviews" },
+        { key: "neighbourhoods", prompt: "How many neighbourhoods or routes do you cover?", example: "10" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      priceFrom: true,
+      seasons: [
+        { key: "spring", label: "Spring", prompt: "What do you include in your spring service? Leave blank if you don't offer one." },
+        { key: "summer", label: "Summer", prompt: "What do you include in your summer service? Leave blank if you don't offer one." },
+        { key: "fall", label: "Fall", prompt: "What do you include in your fall service? Leave blank if you don't offer one." },
+        { key: "winter", label: "Winter", prompt: "What do you include in your winter service? Leave blank if you don't offer one." },
+      ],
+      serviceRadius: false,
+      offerBadge: true,
+    },
   },
   {
     id: "car-detailing",
@@ -220,6 +331,23 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
       "Satisfaction guaranteed or we redo it",
     ],
     customers: ["Car enthusiasts", "Dealerships and fleets", "Everyday drivers"],
+    templateSlots: {
+      stats: [
+        { key: "vehiclesDetailed", prompt: "How many vehicles have you detailed?", example: "2,400+" },
+        { key: "coatingDurability", prompt: "How many years does your ceramic coating last?", example: "5 yr" },
+        { key: "rating", prompt: "Your average review rating and count", example: "5.0★ from 190 reviews" },
+        { key: "mobileCoverage", prompt: "What share of jobs can you do mobile, on-site?", example: "100%" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      // Price-from figures and a mobile radius are both facts about the business (PLAN D15):
+      // never invented, and a client who leaves one blank gets that package's tag with no price,
+      // or the radius statement with no distance, rather than a placeholder like "Call" or "$0".
+      priceFrom: true,
+      seasons: null,
+      serviceRadius: true,
+      offerBadge: false,
+    },
   },
   {
     id: "health",
