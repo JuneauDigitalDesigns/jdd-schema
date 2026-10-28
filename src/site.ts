@@ -130,6 +130,7 @@ export interface FaqContent {
 export interface FinalCtaContent {
   eyebrow: string;
   headline: string;
+  headlineEmphasis: string | null; // substring of headline to render in accent/gold; null → no highlight
   sub: string;
   cta: string;
   secondary: string | null; // null → omit "Or call…" line

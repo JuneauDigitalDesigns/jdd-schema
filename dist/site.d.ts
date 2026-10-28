@@ -122,6 +122,7 @@ export interface FaqContent {
 export interface FinalCtaContent {
     eyebrow: string;
     headline: string;
+    headlineEmphasis: string | null;
     sub: string;
     cta: string;
     secondary: string | null;

@@ -151,6 +151,7 @@ function buildScaffold(f, plan) {
         finalCta: {
             eyebrow: "",
             headline: "",
+            headlineEmphasis: null,
             sub: "",
             cta: "",
             secondary: null,

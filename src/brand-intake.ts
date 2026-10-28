@@ -280,6 +280,7 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
     finalCta: {
       eyebrow: "",
       headline: "",
+      headlineEmphasis: null,
       sub: "",
       cta: "",
       secondary: null,

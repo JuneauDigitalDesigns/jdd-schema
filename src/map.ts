@@ -187,6 +187,7 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
     finalCta: {
       eyebrow: p.finalCta.finalCtaEyebrow,
       headline: p.finalCta.finalCtaHeadline,
+      headlineEmphasis: null, // set by copy generator, not intake
       sub: p.finalCta.finalCtaSub,
       cta: p.finalCta.finalCtaCta,
       secondary: orNull(p.finalCta.finalCtaSecondary),
