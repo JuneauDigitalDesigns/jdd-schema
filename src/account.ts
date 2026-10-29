@@ -127,6 +127,15 @@ export interface PortalSite {
     showName: boolean;
     showLink: boolean;
   };
+  /**
+   * The business's Google review link, used by the portal's review-request SMS.
+   *
+   * Admin-managed — set at onboarding or via the console's manage route, never editable in the
+   * client portal — so the link a client's customers receive is one we vetted. The portal reads
+   * it read-only to compose the review text; when it's absent the composer tells the client to
+   * contact us rather than offering an edit field.
+   */
+  googleReviewUrl?: string;
   /** Epoch ms when the client submitted a cancellation request. */
   cancelRequestedAt?: number;
   /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
@@ -198,6 +207,7 @@ export const zPortalSite = z.object({
     showName: z.boolean(),
     showLink: z.boolean(),
   }).optional(),
+  googleReviewUrl: z.string().optional(),
   cancelRequestedAt: z.number().optional(),
   cancelEffectiveAt: z.number().optional(),
 });

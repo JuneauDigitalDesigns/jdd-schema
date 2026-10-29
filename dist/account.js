@@ -49,6 +49,7 @@ export const zPortalSite = z.object({
         showName: z.boolean(),
         showLink: z.boolean(),
     }).optional(),
+    googleReviewUrl: z.string().optional(),
     cancelRequestedAt: z.number().optional(),
     cancelEffectiveAt: z.number().optional(),
 });

@@ -123,6 +123,15 @@ export interface PortalSite {
         showName: boolean;
         showLink: boolean;
     };
+    /**
+     * The business's Google review link, used by the portal's review-request SMS.
+     *
+     * Admin-managed — set at onboarding or via the console's manage route, never editable in the
+     * client portal — so the link a client's customers receive is one we vetted. The portal reads
+     * it read-only to compose the review text; when it's absent the composer tells the client to
+     * contact us rather than offering an edit field.
+     */
+    googleReviewUrl?: string;
     /** Epoch ms when the client submitted a cancellation request. */
     cancelRequestedAt?: number;
     /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
@@ -203,6 +212,7 @@ export declare const zPortalSite: z.ZodObject<{
         showLink: boolean;
         quote?: string | undefined;
     }>>;
+    googleReviewUrl: z.ZodOptional<z.ZodString>;
     cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
     cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
@@ -233,6 +243,7 @@ export declare const zPortalSite: z.ZodObject<{
         showLink: boolean;
         quote?: string | undefined;
     } | undefined;
+    googleReviewUrl?: string | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
 }, {
@@ -263,6 +274,7 @@ export declare const zPortalSite: z.ZodObject<{
         showLink: boolean;
         quote?: string | undefined;
     } | undefined;
+    googleReviewUrl?: string | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
 }>;
@@ -324,6 +336,7 @@ export declare const zPortalAccount: z.ZodObject<{
             showLink: boolean;
             quote?: string | undefined;
         }>>;
+        googleReviewUrl: z.ZodOptional<z.ZodString>;
         cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
         cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
@@ -354,6 +367,7 @@ export declare const zPortalAccount: z.ZodObject<{
             showLink: boolean;
             quote?: string | undefined;
         } | undefined;
+        googleReviewUrl?: string | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }, {
@@ -384,6 +398,7 @@ export declare const zPortalAccount: z.ZodObject<{
             showLink: boolean;
             quote?: string | undefined;
         } | undefined;
+        googleReviewUrl?: string | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }>, "many">;
@@ -432,6 +447,7 @@ export declare const zPortalAccount: z.ZodObject<{
             showLink: boolean;
             quote?: string | undefined;
         } | undefined;
+        googleReviewUrl?: string | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }[];
@@ -480,6 +496,7 @@ export declare const zPortalAccount: z.ZodObject<{
             showLink: boolean;
             quote?: string | undefined;
         } | undefined;
+        googleReviewUrl?: string | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }[];
