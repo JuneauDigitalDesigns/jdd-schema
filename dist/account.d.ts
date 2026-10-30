@@ -38,6 +38,14 @@ export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
  * `canAddPlan`, `meteringGroups` and the account record.
  */
 export type ReceptionistMode = "forwarded" | "published" | "declined";
+/**
+ * A2P 10DLC registration progress for one site.
+ *
+ * Linear except for `failed`, which is reachable from any pending state and needs a human.
+ * `not-applicable` is terminal for tiers that never register — see `PortalSite.a2pStatus`.
+ */
+export type A2pStatus = "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed";
+export declare const A2P_STATUSES: readonly ["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"];
 /** One site belonging to an account. */
 export interface PortalSite {
     slug: string;
@@ -132,6 +140,34 @@ export interface PortalSite {
      * contact us rather than offering an edit field.
      */
     googleReviewUrl?: string;
+    /**
+     * The client's provisioned Twilio number, E.164. Written by onboard.js at provisioning.
+     *
+     * The portal needs it to send customer-facing SMS *from the client's own number*; it cannot
+     * read `clients/{slug}/.env.local`, so the value has to live here too.
+     */
+    twilioNumber?: string | null;
+    /**
+     * The client's **own** Messaging Service, carrying their `CUSTOMER_CARE` campaign.
+     *
+     * Deliberately not named `TWILIO_MESSAGING_SERVICE_SID`: that env var stays JDD's shared
+     * Account-lane service (owner alerts). Mixing the two would let environment resolution order
+     * decide which campaign a message sends under — a silent compliance bug that only surfaces as
+     * carrier filtering weeks later. Mirrors `CLIENT_MESSAGING_SERVICE_SID` in the client env.
+     */
+    messagingServiceSid?: string | null;
+    /**
+     * Where this client is in A2P 10DLC registration.
+     *
+     * `not-applicable` is a real terminal state, not a null: Starter and web-only never register
+     * because they send no customer-facing messages. Without it they sit in `none` forever and any
+     * "is registration done?" check reads them as perpetually pending — the same trap as
+     * `receptionistMode` being absent versus explicitly `declined`. State it, never infer it.
+     *
+     * Written by the A2P workstream (onboard.js advances it, the poller updates it). The portal
+     * only reads it, to gate customer-facing messaging and to render the ~3-week wait as progress.
+     */
+    a2pStatus?: A2pStatus;
     /** Epoch ms when the client submitted a cancellation request. */
     cancelRequestedAt?: number;
     /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
@@ -213,6 +249,9 @@ export declare const zPortalSite: z.ZodObject<{
         quote?: string | undefined;
     }>>;
     googleReviewUrl: z.ZodOptional<z.ZodString>;
+    twilioNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    messagingServiceSid: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+    a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
     cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
     cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
 }, "strip", z.ZodTypeAny, {
@@ -244,6 +283,9 @@ export declare const zPortalSite: z.ZodObject<{
         quote?: string | undefined;
     } | undefined;
     googleReviewUrl?: string | undefined;
+    twilioNumber?: string | null | undefined;
+    messagingServiceSid?: string | null | undefined;
+    a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
 }, {
@@ -275,6 +317,9 @@ export declare const zPortalSite: z.ZodObject<{
         quote?: string | undefined;
     } | undefined;
     googleReviewUrl?: string | undefined;
+    twilioNumber?: string | null | undefined;
+    messagingServiceSid?: string | null | undefined;
+    a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
 }>;
@@ -337,6 +382,9 @@ export declare const zPortalAccount: z.ZodObject<{
             quote?: string | undefined;
         }>>;
         googleReviewUrl: z.ZodOptional<z.ZodString>;
+        twilioNumber: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        messagingServiceSid: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
         cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
         cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
@@ -368,6 +416,9 @@ export declare const zPortalAccount: z.ZodObject<{
             quote?: string | undefined;
         } | undefined;
         googleReviewUrl?: string | undefined;
+        twilioNumber?: string | null | undefined;
+        messagingServiceSid?: string | null | undefined;
+        a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }, {
@@ -399,6 +450,9 @@ export declare const zPortalAccount: z.ZodObject<{
             quote?: string | undefined;
         } | undefined;
         googleReviewUrl?: string | undefined;
+        twilioNumber?: string | null | undefined;
+        messagingServiceSid?: string | null | undefined;
+        a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }>, "many">;
@@ -448,6 +502,9 @@ export declare const zPortalAccount: z.ZodObject<{
             quote?: string | undefined;
         } | undefined;
         googleReviewUrl?: string | undefined;
+        twilioNumber?: string | null | undefined;
+        messagingServiceSid?: string | null | undefined;
+        a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }[];
@@ -497,6 +554,9 @@ export declare const zPortalAccount: z.ZodObject<{
             quote?: string | undefined;
         } | undefined;
         googleReviewUrl?: string | undefined;
+        twilioNumber?: string | null | undefined;
+        messagingServiceSid?: string | null | undefined;
+        a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
     }[];
@@ -662,7 +722,13 @@ export declare function buildPortalSiteEntries(input: {
     sites: PortalEntrySource[];
 }): PortalSiteInput[];
 /** A portal feature whose availability depends on the client's lifecycle stage. */
-export type PortalFeature = "calls" | "traffic" | "performance";
+export type PortalFeature = "calls" | "traffic" | "performance"
+/** The Inbox — raw inbound (calls + web-form leads). Every tier, including web-only. */
+ | "leads"
+/** The customer CRM. Growth and Enterprise only. */
+ | "crm"
+/** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
+ | "messaging";
 /**
  * *Why* a feature is or isn't usable — not just whether it is.
  *

@@ -490,11 +490,38 @@ test("siteFeature: a fully provisioned growth site is ready across the board", (
     airtableBaseId: "app1",
     vercelProjectId: "prj1",
     canonical: "https://example.com",
+    // Provisioning alone does not unlock customer-facing SMS — the client's own A2P campaign
+    // has to verify first, which takes 13–20 business days after launch.
+    a2pStatus: "verified",
   };
   assert.deepEqual(siteFeatures(site("a", wired)), {
     calls: { state: "ready" },
     traffic: { state: "ready" },
     performance: { state: "ready" },
+    leads: { state: "ready" },
+    crm: { state: "ready" },
+    messaging: { state: "ready" },
+  });
+});
+
+test("siteFeature: a day-one growth site has everything but messaging", () => {
+  // The realistic launch state: fully provisioned, A2P registration still pending. This is what
+  // a Growth client actually sees for their first ~3 weeks, and it must read as progress.
+  const dayOne = {
+    plan: "growth",
+    status: "live",
+    airtableBaseId: "app1",
+    vercelProjectId: "prj1",
+    canonical: "https://example.com",
+    a2pStatus: "brand-pending",
+  };
+  assert.deepEqual(siteFeatures(site("a", dayOne)), {
+    calls: { state: "ready" },
+    traffic: { state: "ready" },
+    performance: { state: "ready" },
+    leads: { state: "ready" },
+    crm: { state: "ready" },
+    messaging: { state: "connecting" },
   });
 });
 

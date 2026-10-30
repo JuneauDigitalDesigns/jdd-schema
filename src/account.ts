@@ -42,6 +42,35 @@ export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
  */
 export type ReceptionistMode = "forwarded" | "published" | "declined";
 
+/**
+ * A2P 10DLC registration progress for one site.
+ *
+ * Linear except for `failed`, which is reachable from any pending state and needs a human.
+ * `not-applicable` is terminal for tiers that never register — see `PortalSite.a2pStatus`.
+ */
+export type A2pStatus =
+  | "not-applicable"
+  | "none"
+  | "profile-pending"
+  | "profile-approved"
+  | "brand-pending"
+  | "brand-approved"
+  | "campaign-pending"
+  | "verified"
+  | "failed";
+
+export const A2P_STATUSES = [
+  "not-applicable",
+  "none",
+  "profile-pending",
+  "profile-approved",
+  "brand-pending",
+  "brand-approved",
+  "campaign-pending",
+  "verified",
+  "failed",
+] as const satisfies ReadonlyArray<A2pStatus>;
+
 /** One site belonging to an account. */
 export interface PortalSite {
   slug: string;
@@ -136,6 +165,34 @@ export interface PortalSite {
    * contact us rather than offering an edit field.
    */
   googleReviewUrl?: string;
+  /**
+   * The client's provisioned Twilio number, E.164. Written by onboard.js at provisioning.
+   *
+   * The portal needs it to send customer-facing SMS *from the client's own number*; it cannot
+   * read `clients/{slug}/.env.local`, so the value has to live here too.
+   */
+  twilioNumber?: string | null;
+  /**
+   * The client's **own** Messaging Service, carrying their `CUSTOMER_CARE` campaign.
+   *
+   * Deliberately not named `TWILIO_MESSAGING_SERVICE_SID`: that env var stays JDD's shared
+   * Account-lane service (owner alerts). Mixing the two would let environment resolution order
+   * decide which campaign a message sends under — a silent compliance bug that only surfaces as
+   * carrier filtering weeks later. Mirrors `CLIENT_MESSAGING_SERVICE_SID` in the client env.
+   */
+  messagingServiceSid?: string | null;
+  /**
+   * Where this client is in A2P 10DLC registration.
+   *
+   * `not-applicable` is a real terminal state, not a null: Starter and web-only never register
+   * because they send no customer-facing messages. Without it they sit in `none` forever and any
+   * "is registration done?" check reads them as perpetually pending — the same trap as
+   * `receptionistMode` being absent versus explicitly `declined`. State it, never infer it.
+   *
+   * Written by the A2P workstream (onboard.js advances it, the poller updates it). The portal
+   * only reads it, to gate customer-facing messaging and to render the ~3-week wait as progress.
+   */
+  a2pStatus?: A2pStatus;
   /** Epoch ms when the client submitted a cancellation request. */
   cancelRequestedAt?: number;
   /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
@@ -208,6 +265,9 @@ export const zPortalSite = z.object({
     showLink: z.boolean(),
   }).optional(),
   googleReviewUrl: z.string().optional(),
+  twilioNumber: z.string().nullable().optional(),
+  messagingServiceSid: z.string().nullable().optional(),
+  a2pStatus: z.enum(A2P_STATUSES).optional(),
   cancelRequestedAt: z.number().optional(),
   cancelEffectiveAt: z.number().optional(),
 });
@@ -571,7 +631,16 @@ export function buildPortalSiteEntries(input: {
 // ── Feature availability (shared by the portal UI + API routes + ops tooling) ─
 
 /** A portal feature whose availability depends on the client's lifecycle stage. */
-export type PortalFeature = "calls" | "traffic" | "performance";
+export type PortalFeature =
+  | "calls"
+  | "traffic"
+  | "performance"
+  /** The Inbox — raw inbound (calls + web-form leads). Every tier, including web-only. */
+  | "leads"
+  /** The customer CRM. Growth and Enterprise only. */
+  | "crm"
+  /** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
+  | "messaging";
 
 /**
  * *Why* a feature is or isn't usable — not just whether it is.
@@ -592,13 +661,26 @@ export type FeatureAvailability =
   /** The site is live but we haven't finished wiring this up. Our drift, not the client's. */
   | { state: "connecting" };
 
-/** Which stored id each feature needs before it can be queried. */
-const FEATURE_REQUIREMENT: Record<PortalFeature, keyof PortalSite> = {
+/**
+ * Which stored id each feature needs before it can be queried.
+ *
+ * **Partial on purpose.** `leads` and `crm` have no required id: the Inbox reads web-form leads
+ * from KV (web-only sites have no Airtable base and never will), and the CRM holds those same
+ * leads alongside calls. Inventing a requirement to satisfy a total `Record` is exactly how
+ * `calls` ended up gated on an Airtable id. A missing entry means "nothing to connect" and the
+ * check at step 3 is skipped.
+ */
+const FEATURE_REQUIREMENT: Partial<Record<PortalFeature, keyof PortalSite>> = {
   calls: "airtableBaseId",
   traffic: "vercelProjectId",
   // PageSpeed measures a URL; without a canonical there is nothing to score.
   performance: "canonical",
 };
+
+/** Tiers that include the customer CRM and customer-facing messaging. */
+function hasCrmPlan(site: PortalSite): boolean {
+  return site.plan === "growth" || site.plan === "enterprise";
+}
 
 /**
  * Resolve one feature for one site.
@@ -612,12 +694,31 @@ export function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAv
   // decides this: only a client who refused one has no call data, and never will.
   if (feature === "calls" && isWebOnly(site)) return { state: "not-on-plan" };
 
+  // The CRM and customer messaging are the one genuine tier split. Deliberately NOT gated on
+  // `airtableBaseId`: the CRM holds web-form leads too, so a live Growth site whose call base
+  // isn't wired yet would otherwise hide a board the client can already use.
+  if ((feature === "crm" || feature === "messaging") && !hasCrmPlan(site)) {
+    return { state: "not-on-plan" };
+  }
+
   // 2. Build status. Nothing is connectable before the site is provisioned.
   if (site.status !== "live") return { state: "pending-build" };
 
-  // 3. Connection. Live, but the id this feature needs was never recorded.
-  const required = site[FEATURE_REQUIREMENT[feature]];
-  if (typeof required !== "string" || !required.trim()) return { state: "connecting" };
+  // 3. Customer-facing SMS additionally waits on the client's own A2P campaign — 13–20 business
+  // days. `failed` maps to `connecting` rather than a new state: every consumer switches
+  // exhaustively on the four, and a registration failure is an operator problem surfaced in the
+  // console, not something the client can act on.
+  if (feature === "messaging" && site.a2pStatus !== "verified") {
+    return { state: "connecting" };
+  }
+
+  // 4. Connection. Live, but the id this feature needs was never recorded. Features with no
+  // requirement (leads, crm) skip this entirely — see FEATURE_REQUIREMENT.
+  const requiredKey = FEATURE_REQUIREMENT[feature];
+  if (requiredKey) {
+    const required = site[requiredKey];
+    if (typeof required !== "string" || !required.trim()) return { state: "connecting" };
+  }
 
   return { state: "ready" };
 }
@@ -628,5 +729,8 @@ export function siteFeatures(site: PortalSite): Record<PortalFeature, FeatureAva
     calls: siteFeature(site, "calls"),
     traffic: siteFeature(site, "traffic"),
     performance: siteFeature(site, "performance"),
+    leads: siteFeature(site, "leads"),
+    crm: siteFeature(site, "crm"),
+    messaging: siteFeature(site, "messaging"),
   };
 }

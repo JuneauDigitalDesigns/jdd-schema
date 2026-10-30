@@ -153,7 +153,7 @@ export declare const zFinding: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     id: string;
     severity: "unknown" | "red" | "amber" | "grey";
-    area: "portal" | "site" | "voice" | "leads" | "billing" | "account";
+    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     siteSlug: string;
     title: string;
     detail: string;
@@ -168,7 +168,7 @@ export declare const zFinding: z.ZodObject<{
 }, {
     id: string;
     severity: "unknown" | "red" | "amber" | "grey";
-    area: "portal" | "site" | "voice" | "leads" | "billing" | "account";
+    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     siteSlug: string;
     title: string;
     detail: string;

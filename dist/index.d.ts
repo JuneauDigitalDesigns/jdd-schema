@@ -30,4 +30,5 @@ export * from "./metering.js";
 export * from "./vertical-registry.js";
 export * from "./copy-brief.js";
 export * from "./ticket.js";
+export * from "./lead.js";
 //# sourceMappingURL=index.d.ts.map
