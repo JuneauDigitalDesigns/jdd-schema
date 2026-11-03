@@ -83,4 +83,12 @@ export * from "./ticket.js";
 //           (growth/enterprise; messaging additionally waits on a verified A2P campaign).
 //           FEATURE_REQUIREMENT became Partial — leads and crm genuinely require nothing.
 export * from "./lead.js";
+// v1.31.0 — operator orders: a client closed on a sales call. `OperatorOrder` replaces the
+//           purchase intent on that path (the operator states who is buying, since the client
+//           never signs in). `resumeStepFor` and `readinessFor` live here so the agency, the
+//           close wizard and the client cards cannot disagree about where a close stands.
+//           `PortalSite.slugLocked` / `.orderId`: an operator-closed site keeps its slug through
+//           onboarding. zPortalSite is a plain object, so without these fields a read would
+//           silently strip them.
+export * from "./operator-order.js";
 //# sourceMappingURL=index.js.map
