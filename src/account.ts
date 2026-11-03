@@ -145,6 +145,17 @@ export interface PortalSite {
   agreementVersion?: string;
   /** The `jdd:purchase:{id}` intent this site came from. Absent on pre-cutover sites. */
   purchaseId?: string;
+  /** The `jdd:order:{id}` operator order this site came from, when it was closed on a call. */
+  orderId?: string;
+  /**
+   * The slug was chosen at order time and must never be renamed.
+   *
+   * A self-serve site starts as a `pending-…` placeholder that the onboarding wizard renames.
+   * An operator-closed site does not: its A2P registration, its `clients/<slug>/` folder and its
+   * portal record are all keyed on this slug from the call onwards, so a rename at onboarding
+   * would orphan all three. Absent means "renameable", which is every self-serve site.
+   */
+  slugLocked?: boolean;
   /**
    * Client's consent to appear in the FeaturedSites homepage section.
    * Set when the client opts in via the portal. Nothing appears publicly until
@@ -258,6 +269,8 @@ export const zPortalSite = z.object({
   agreementPdfUrl: z.string().optional(),
   agreementVersion: z.string().optional(),
   purchaseId: z.string().optional(),
+  orderId: z.string().optional(),
+  slugLocked: z.boolean().optional(),
   featured: z.object({
     optedInAt: z.number(),
     quote: z.string().optional(),

@@ -54,6 +54,8 @@ export const zPortalSite = z.object({
     agreementPdfUrl: z.string().optional(),
     agreementVersion: z.string().optional(),
     purchaseId: z.string().optional(),
+    orderId: z.string().optional(),
+    slugLocked: z.boolean().optional(),
     featured: z.object({
         optedInAt: z.number(),
         quote: z.string().optional(),
