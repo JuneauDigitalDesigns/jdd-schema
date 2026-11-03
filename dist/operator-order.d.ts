@@ -48,7 +48,13 @@ export declare const zOperatorOrder: z.ZodObject<{
     client: z.ZodObject<{
         legalName: z.ZodString;
         dba: z.ZodOptional<z.ZodString>;
+        /** "LLC", "Corporation", … — the agreement names the client as "a {entityType} located at …". */
+        entityType: z.ZodString;
+        /** The business address the agreement names. Also prefills the A2P address. */
+        address: z.ZodString;
         contactName: z.ZodString;
+        /** The signer's title on the agreement. */
+        contactTitle: z.ZodString;
         /** Normalized. Becomes the portal account key. */
         email: z.ZodString;
         phone: z.ZodString;
@@ -56,13 +62,19 @@ export declare const zOperatorOrder: z.ZodObject<{
         email: string;
         contactName: string;
         phone: string;
+        address: string;
         legalName: string;
+        entityType: string;
+        contactTitle: string;
         dba?: string | undefined;
     }, {
         email: string;
         contactName: string;
         phone: string;
+        address: string;
         legalName: string;
+        entityType: string;
+        contactTitle: string;
         dba?: string | undefined;
     }>;
     /** Vertical preset id: seeds clients/<slug>/site.ts and the A2P industry default. */
@@ -155,7 +167,10 @@ export declare const zOperatorOrder: z.ZodObject<{
         email: string;
         contactName: string;
         phone: string;
+        address: string;
         legalName: string;
+        entityType: string;
+        contactTitle: string;
         dba?: string | undefined;
     };
     operator: string;
@@ -207,7 +222,10 @@ export declare const zOperatorOrder: z.ZodObject<{
         email: string;
         contactName: string;
         phone: string;
+        address: string;
         legalName: string;
+        entityType: string;
+        contactTitle: string;
         dba?: string | undefined;
     };
     operator: string;

@@ -25,6 +25,9 @@ function order(overrides = {}) {
     pricing: { kind: "standard" },
     client: {
       legalName: "Rivera Plumbing & Drain LLC",
+      entityType: "LLC",
+      address: "1420 Example Ave, Orlando, FL 32801",
+      contactTitle: "Owner",
       contactName: "Marisol Rivera",
       email: "marisol@riverapd.example",
       phone: "+14075550143",

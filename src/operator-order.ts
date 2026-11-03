@@ -84,7 +84,13 @@ export const zOperatorOrder = z.object({
   client: z.object({
     legalName: z.string().min(1),
     dba: z.string().optional(),
+    /** "LLC", "Corporation", … — the agreement names the client as "a {entityType} located at …". */
+    entityType: z.string().min(1),
+    /** The business address the agreement names. Also prefills the A2P address. */
+    address: z.string().min(1),
     contactName: z.string().min(1),
+    /** The signer's title on the agreement. */
+    contactTitle: z.string().min(1),
     /** Normalized. Becomes the portal account key. */
     email: z.string().min(1),
     phone: z.string().min(1),
