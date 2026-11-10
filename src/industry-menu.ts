@@ -159,9 +159,11 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
     id: "hvac",
     label: "HVAC / Heating & Cooling",
     services: [
-      // Suggestions: HVAC sample, approved on the onboarding copy deck "as drafted", 2026-11-10.
-      // Moved verbatim from the agency's wizard/service-suggestions.ts. Furnace's questions were
-      // left empty on purpose.
+      // Suggestions, approved word for word by Xander, one trade per batch:
+      // - batch 1 (v1.33.0): AC, and Furnace's included and jobs lists, on the onboarding copy deck
+      //   approved "as drafted", 2026-11-10;
+      // - batch 2 (v1.33.1): the other ten services and Furnace's questions, "Approve all as
+      //   drafted", 2026-11-10. HVAC is complete. test/fixtures/hvac-suggestions-approved.json pins it.
       {
         label: "Furnace Repair & Replacement", tag: "Heating",
         included: [
@@ -171,6 +173,11 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
         jobs: [
           "No heat", "Furnace won't turn on", "Burning smell", "Strange noises", "Turns on and off a lot",
           "High gas bills", "Pilot light keeps going out", "Carbon monoxide alarm", "Furnace over 15 years old",
+        ],
+        questions: [
+          "Should I repair or replace my furnace?", "How long does a new furnace take to put in?",
+          "What size furnace does my home need?", "Is my furnace safe to keep running?",
+          "Do you service all brands?", "How soon can you come out?",
         ],
       },
       {
@@ -188,16 +195,182 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
           "Do you service all brands?", "How soon can you come out?", "Do you offer financing?",
         ],
       },
-      { label: "Heat Pump Installation", tag: "Heat Pump" },
-      { label: "Maintenance Plans", tag: "Maintenance" },
-      { label: "Duct Cleaning & Sealing", tag: "Air Quality" },
-      { label: "24/7 Emergency Service", tag: "Emergency" },
-      { label: "Thermostat Installation", tag: "Controls" },
-      { label: "Indoor Air Quality", tag: "Air Quality" },
-      { label: "Boiler Service", tag: "Heating" },
-      { label: "Mini-Split Systems", tag: "Cooling" },
-      { label: "Commercial HVAC", tag: "Commercial" },
-      { label: "Energy Efficiency Audits", tag: "Efficiency" },
+      {
+        label: "Heat Pump Installation", tag: "Heat Pump",
+        included: [
+          "Sizing for your home", "Removal of the old system", "Permit and inspection", "New thermostat",
+          "Refrigerant line set", "Electrical hookup", "Pad or wall bracket", "Startup and testing",
+          "Warranty registration", "Rebate paperwork", "Repairs on all brands",
+        ],
+        jobs: [
+          "Heat pump not heating", "Heat pump not cooling", "Ice on the outdoor unit", "Runs all the time",
+          "Blowing cold air in winter", "Loud or strange noises", "High electric bills",
+          "Want to switch from gas or oil", "Old system needs replacing",
+        ],
+        questions: [
+          "Does a heat pump work when it's very cold?", "Can a heat pump replace my furnace?",
+          "What size heat pump does my home need?", "Should I repair or replace my heat pump?",
+          "Are there rebates for heat pumps?", "How long does a new heat pump take to put in?",
+        ],
+      },
+      {
+        label: "Maintenance Plans", tag: "Maintenance",
+        included: [
+          "Spring and fall tune-ups", "Filter change", "Coil cleaning", "Drain line flush",
+          "Refrigerant level check", "Electrical and safety check", "Thermostat check", "Priority scheduling",
+          "Reminder before each visit", "Written report after each visit", "Covers all brands",
+        ],
+        jobs: [
+          "Haven't had a tune-up in years", "Want fewer breakdowns", "New system to keep up",
+          "Warranty needs yearly service", "Want lower energy bills", "Rental properties to keep up",
+          "Older system to keep running",
+        ],
+        questions: [
+          "How often should my system be serviced?", "What's included in a tune-up?",
+          "Do I need a plan to keep my warranty?", "Does the plan cover repairs?",
+          "Does it cover heating and cooling?", "Can I cancel anytime?",
+        ],
+      },
+      {
+        label: "Duct Cleaning & Sealing", tag: "Air Quality",
+        included: [
+          "Supply and return duct cleaning", "Vent and register cleaning", "Blower cleaning",
+          "Before and after photos", "Duct sealing", "Leak testing", "Duct insulation", "Repair of damaged ducts",
+          "Dryer vent cleaning", "Filter change",
+        ],
+        jobs: [
+          "Dust everywhere", "Musty smell from the vents", "Weak airflow", "Some rooms too hot or cold",
+          "Just finished a remodel", "Just moved in", "Allergies acting up", "Pests in the ducts",
+          "High energy bills",
+        ],
+        questions: [
+          "How often should ducts be cleaned?", "How long does duct cleaning take?",
+          "Will it make a mess in my home?", "Do I need to be home?", "Will sealing my ducts lower my bills?",
+          "Can you show me what you found?",
+        ],
+      },
+      {
+        label: "24/7 Emergency Service", tag: "Emergency",
+        included: [
+          "Nights, weekends and holidays", "Diagnostic visit", "Repairs on all brands",
+          "Common parts on the truck", "Safety check", "Price before work starts",
+          "Temporary fix while parts come in",
+        ],
+        jobs: [
+          "No heat", "No AC", "Burning smell", "Carbon monoxide alarm", "Water leaking from the unit",
+          "System won't turn on", "Breaker keeps tripping", "Loud banging noise",
+        ],
+        questions: [
+          "Can you come out tonight?", "Do you charge more after hours?", "How soon can you get here?",
+          "What should I do until you arrive?", "Do you work weekends and holidays?", "Do you service all brands?",
+        ],
+      },
+      {
+        label: "Thermostat Installation", tag: "Controls",
+        included: [
+          "Smart thermostat setup", "Programmable thermostat", "Wi-Fi and app setup", "Compatibility check",
+          "Wiring check", "New thermostat wire if needed", "Removal of the old thermostat", "Schedule setup",
+          "Zoning controls", "Walkthrough of how to use it",
+        ],
+        jobs: [
+          "Thermostat screen is blank", "System ignores the thermostat", "Wrong temperature reading",
+          "Thermostat keeps resetting", "Want a smart thermostat", "Want to control it from my phone",
+          "Upstairs and downstairs never match",
+        ],
+        questions: [
+          "Will a smart thermostat work with my system?", "Can you install one I already bought?",
+          "Do I need a new wire for a smart thermostat?", "Can I control it from my phone?",
+          "How long does it take to put in?",
+        ],
+      },
+      {
+        label: "Indoor Air Quality", tag: "Air Quality",
+        included: [
+          "Air quality check", "Whole-home air purifier", "UV light", "Whole-home humidifier",
+          "Whole-home dehumidifier", "Better air filters", "Fresh air ventilation", "Duct cleaning",
+          "Filter change",
+        ],
+        jobs: [
+          "Allergies acting up", "Dust everywhere", "Musty smell", "Air feels too dry", "Too humid inside",
+          "Mold near the vents", "Stuffy rooms", "Pet hair and odors", "Someone at home has asthma",
+        ],
+        questions: [
+          "Will an air purifier help my allergies?", "What filter should I use?",
+          "How often should I change my filter?", "Do UV lights help?", "Can you test the air in my home?",
+          "Do I need a humidifier or a dehumidifier?",
+        ],
+      },
+      {
+        label: "Boiler Service", tag: "Heating",
+        included: [
+          "Safety inspection", "Carbon monoxide check", "Repairs on all brands", "Burner cleaning",
+          "Pressure and valve check", "Circulator pump repair", "Radiator bleeding", "Expansion tank check",
+          "Removal of the old boiler", "Permit and inspection", "Startup and testing",
+        ],
+        jobs: [
+          "No heat", "No hot water", "Radiators stay cold", "Boiler leaking", "Banging or gurgling pipes",
+          "Pilot light keeps going out", "Pressure too high or too low", "Carbon monoxide alarm",
+          "High gas or oil bills",
+        ],
+        questions: [
+          "Should I repair or replace my boiler?", "How often should a boiler be serviced?",
+          "Why are some radiators cold?", "Do you work on gas and oil boilers?", "How soon can you come out?",
+          "Do you offer financing?",
+        ],
+      },
+      {
+        label: "Mini-Split Systems", tag: "Cooling",
+        included: [
+          "Sizing for each room", "Indoor and outdoor units", "Wall or ceiling mounting", "Refrigerant line set",
+          "Electrical hookup", "Condensate drain line", "Remote or app setup", "Permit and inspection",
+          "Startup and testing", "Filter and coil cleaning", "Repairs on all brands",
+        ],
+        jobs: [
+          "Room with no ductwork", "Garage or addition to heat or cool", "One room always too hot",
+          "Mini-split not cooling", "Water dripping from the indoor unit", "Blinking lights on the unit",
+          "Bad smell when it runs", "Window units to replace", "Remote not working",
+        ],
+        questions: [
+          "Do I need ductwork for a mini-split?", "How many indoor units do I need?",
+          "Can one system heat and cool?", "Where does the indoor unit go?", "How do I clean the filters?",
+          "Do you service all brands?",
+        ],
+      },
+      {
+        label: "Commercial HVAC", tag: "Commercial",
+        included: [
+          "Rooftop units", "Split systems", "Preventive maintenance", "Repairs on all brands",
+          "Service after hours", "Building controls", "Make-up air units", "Replacement planning",
+          "Permit and inspection", "Written report after each visit", "Service for more than one site",
+        ],
+        jobs: [
+          "Rooftop unit down", "Office too hot", "Store too cold", "Tenants complaining",
+          "Water leaking from the ceiling", "High utility bills", "Need a maintenance contract",
+          "Failed inspection", "Equipment near the end of its life",
+        ],
+        questions: [
+          "Do you work after hours?", "Do you offer maintenance contracts?", "Do you service rooftop units?",
+          "Can you handle more than one location?", "How fast can you respond to a call?",
+          "Do you carry commercial insurance?",
+        ],
+      },
+      {
+        label: "Energy Efficiency Audits", tag: "Efficiency",
+        included: [
+          "Whole-home walkthrough", "Blower door test", "Duct leak testing", "Infrared camera scan",
+          "Insulation check", "Air leak check", "Equipment efficiency check", "Written report",
+          "Upgrade recommendations", "Rebate paperwork",
+        ],
+        jobs: [
+          "High energy bills", "Drafty rooms", "Some rooms too hot or cold", "Home hard to heat",
+          "Home hard to cool", "Planning to replace my system", "Want to use less energy",
+          "Buying or selling a home",
+        ],
+        questions: [
+          "What happens during an energy audit?", "How long does an audit take?", "Will it lower my bills?",
+          "Are there rebates for upgrades?", "Do I get a written report?", "Do I need to be home?",
+        ],
+      },
     ],
     differentiators: [
       "24/7 emergency callouts",
