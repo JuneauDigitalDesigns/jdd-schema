@@ -143,8 +143,9 @@ export interface BrandIntakeSubmission {
   offerBadge?: string;
 
   // ── v1.32.0 (2026-11-10): SEO + service pages. Absent = not asked (an older form). ──
-  /** True when customers are served at their address: the street address is then shown
-   *  nowhere on the site. */
+  /** True for a service-area business: customers do NOT come to the address, the business
+   *  travels to them, so the street address is shown nowhere on the site (city, state and ZIP
+   *  only). False: the address is a place customers visit and is shown. */
   serviceAreaBusiness?: boolean;
   /** The business's own profiles that exist. Google Business Profile is kind "google". */
   profiles?: { kind: ProfileKind; url: string; label?: string }[];
@@ -289,8 +290,14 @@ function serviceDetailsFrom(
     const tagged = photos.length > 0 || qs.length > 0;
     const slug = serviceSlug({ t: s.name }, taken);
     taken.push(slug);
+    // Every photo becomes a project tagged to the service (the page's proof block, and the
+    // gate's photo fact). The form asks no caption: an uncaptioned photo's caption is the
+    // service name, which is true and invented nothing, and is flagged so the console can
+    // offer a better one. loc and yr stay blank, never guessed.
     for (const p of photos) {
-      const alt = (p.alt ?? "").trim() || s.name;
+      const given = (p.alt ?? "").trim();
+      if (!given) missing.push(`work.projects.${projects.length}.caption`);
+      const alt = given || s.name;
       projects.push({
         t: s.name, loc: "", yr: null, scope: s.name, size: "",
         caption: alt, // never empty: it is the photo's alt text
@@ -301,12 +308,18 @@ function serviceDetailsFrom(
     for (const q of qs) questions.push({ ...q, service: slug });
     brands.push(...serviceBrands);
 
+    // Photo 1 is also the service's own picture (cards, page header, related-services
+    // thumbnail). It stays a project too, so the gate's photo fact never counts `image`, which
+    // can hold an operator's stock picture.
+    const first = photos[0];
+    const image = first ? { url: first.url, alt: (first.alt ?? "").trim() || s.name } : null;
+
     return {
       n: String(i + 1).padStart(2, "0"),
       t: s.name,
       d: "",
       tag: s.tag,
-      image: null,
+      image,
       priceFrom: price || null,
       ...(included.length ? { included } : {}),
       ...(typicalJobs.length ? { typicalJobs } : {}),

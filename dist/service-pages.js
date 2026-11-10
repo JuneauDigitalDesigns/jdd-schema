@@ -1,6 +1,6 @@
 /**
  * v1.32.0: moved here VERBATIM from jdd-ops console/src/lib/servicePages.ts (client-seo, draft PR
- * JDD-Ops#52, commits f25075d + def685d) so the agency onboarding wizard, the console intake and
+ * JDD-Ops#52, commits f25075d, def685d, 26dcfc6; copied at branch tip 889c5da) so the agency onboarding wizard, the console intake and
  * the export all import ONE implementation. The console keeps servicePages.ts as a re-export shim.
  * Copied, not rewritten: test/service-pages.test.mjs is that PR's test, unchanged but for the
  * import path, and its mutation checks (FACTS_MIN = 1, the old slugify) must still go red here.
@@ -14,11 +14,12 @@
  * real, client-supplied facts before it gets a page:
  *
  *   core:  `included` with 3+ items, or `typicalJobs` with 2+
- *   plus:  at least one more fact (the other core list, a starting price, brands, areas that
- *          narrow the service area, or a real review / job photo / customer question tagged to it)
+ *   plus:  at least one more fact (the other core list, a starting price, brands, this service's
+ *          own towns, or a real review / job photo / customer question tagged to it)
  *
- * A service that misses stays a card on /services (`/services#<slug>`): no page, no sitemap
- * entry, no dead link. Nothing here generates copy, and nothing is ever padded to pass.
+ * A service that misses stays a plain card with no link anywhere (Xander 2026-11-10): no page,
+ * no sitemap entry, not in related links, the footer or the Services menu. Nothing here generates
+ * copy, and nothing is ever padded to pass.
  *
  * The ONE implementation: the export, the Studio's page wiring and intake-wizard's "this service
  * needs N more facts" hint all import it, the way onboard-checks.js serves both the suite and
@@ -78,16 +79,15 @@ export function servicePageFacts(content, index) {
     const item = obj(arr(obj(c.services).items)[index]);
     const slug = serviceSlugs(content)[index] ?? '';
     const ext = obj(c.extensions);
-    const siteArea = new Set(filled(ext.serviceArea).map((a) => a.toLowerCase()));
-    const areas = filled(item.areas);
     const taggedTo = (list) => list.map(obj).some((x) => str(x.service) === slug && slug !== '');
     const has = {
         included: filled(item.included).length >= INCLUDED_MIN,
         typicalJobs: filled(item.typicalJobs).length >= TYPICAL_JOBS_MIN,
         priceFrom: str(item.priceFrom) !== '',
         brands: filled(item.brands).length > 0,
-        // Areas are a fact about THIS service only when they narrow the site's service area.
-        areas: areas.length > 0 && (siteArea.size === 0 || areas.length < siteArea.size),
+        // This service's own towns, whenever present (Xander 2026-11-10, "own towns only"): the page
+        // lists only these and hides the block without them, never borrowing the site's service area.
+        areas: filled(item.areas).length > 0,
         review: taggedTo(arr(obj(c.testimonials).items).filter((t) => str(obj(t).q) !== '')),
         photo: taggedTo(arr(obj(c.work).projects)),
         question: taggedTo(arr(ext.customerQuestions).filter((q) => str(obj(q).q) !== '')),

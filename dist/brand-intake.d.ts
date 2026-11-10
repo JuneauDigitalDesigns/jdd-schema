@@ -118,8 +118,9 @@ export interface BrandIntakeSubmission {
     }[];
     serviceRadiusMiles?: string;
     offerBadge?: string;
-    /** True when customers are served at their address: the street address is then shown
-     *  nowhere on the site. */
+    /** True for a service-area business: customers do NOT come to the address, the business
+     *  travels to them, so the street address is shown nowhere on the site (city, state and ZIP
+     *  only). False: the address is a place customers visit and is shown. */
     serviceAreaBusiness?: boolean;
     /** The business's own profiles that exist. Google Business Profile is kind "google". */
     profiles?: {

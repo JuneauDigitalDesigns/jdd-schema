@@ -103,6 +103,23 @@ test("job photos become work.projects tagged with the service slug, captioned, s
   }
   assert.equal(s.work.projects[1].caption, "AC Repair & Tune-Up");
   assert.equal(s.work.hidden, true);
+  // An uncaptioned photo's caption is the service name, flagged for a better one; a client's
+  // caption is not flagged.
+  assert.ok(s._meta.missing_fields.includes("work.projects.1.caption"));
+  assert.equal(s._meta.missing_fields.includes("work.projects.0.caption"), false);
+});
+
+test("photo 1 is also the service's own picture; every photo stays a tagged project", () => {
+  const photo = (n, alt = "") => ({ url: `https://x/${n}.jpg`, filename: `${n}.jpg`, alt });
+  const one = site({ serviceList: [{ name: "AC Repair", tag: "", photos: [photo(1)] }] });
+  assert.deepEqual(one.services.items[0].image, { url: "https://x/1.jpg", alt: "AC Repair" });
+  assert.equal(one.work.projects.length, 1);
+
+  const three = site({ serviceList: [{ name: "AC Repair", tag: "", photos: [photo(1, "New condenser"), photo(2), photo(3)] }] });
+  assert.deepEqual(three.services.items[0].image, { url: "https://x/1.jpg", alt: "New condenser" });
+  assert.deepEqual(three.work.projects.map((p) => p.image.url), ["https://x/1.jpg", "https://x/2.jpg", "https://x/3.jpg"]);
+
+  assert.equal(site().services.items[0].image, null, "no photo, no picture: never a placeholder");
 });
 
 test("questions: per-service ones are tagged with the slug, general ones are not, blanks dropped", () => {
