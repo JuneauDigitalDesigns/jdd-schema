@@ -210,7 +210,7 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
         { key: "roofsReplaced", prompt: "How many roofs have you replaced?", example: "500+" },
         { key: "warrantyYears", prompt: "How many years is your workmanship warranty?", example: "30 yr" },
         { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 211 reviews" },
-        { key: "typicalJobDays", prompt: "How many days does a typical job take?", example: "1–2" },
+        { key: "typicalJobDays", prompt: "How many days does a typical job take?", example: "1 to 2" },
       ],
       reviewAggregate: true,
       hoursPerDay: false,

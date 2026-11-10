@@ -270,7 +270,7 @@ function buildScaffold(f, plan) {
             headline: "",
             headlineEmphasis: null,
             sub: "",
-            formLabel: "Get a free estimate — we'll reach out same day.",
+            formLabel: "Tell us what you need.", // D3, approved word for word (2026-11-10): a neutral placeholder the copywriter overwrites; promises nothing
             placeholder: "Your email address",
             cta: "",
             secondaryCta: "",
