@@ -8,6 +8,7 @@ import {
   zBrandIntakeSubmission,
   qualifiesForServicePage,
   BUILT_IN_VERTICALS,
+  SITE_TYPES_SOURCE,
 } from "../dist/index.js";
 
 function sub(overrides = {}) {
@@ -216,4 +217,9 @@ test("duration: the client's words, trimmed; absent when blank; never flagged; n
   // zServiceEntry is not passthrough: the field must be declared to survive parse.
   const parsed = zBrandIntakeSubmission.parse(sub({ serviceList: [{ name: "AC Repair", tag: "", duration: "A few days" }] }));
   assert.equal(parsed.serviceList[0].duration, "A few days");
+});
+
+test("servicePages is optional routing the export writes; the form mapper never sets it", () => {
+  assert.equal("servicePages" in site(), false);
+  assert.ok(SITE_TYPES_SOURCE.includes("servicePages?: string[] | null"));
 });

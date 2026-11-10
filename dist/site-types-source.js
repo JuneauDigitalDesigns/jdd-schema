@@ -337,6 +337,7 @@ export interface SiteContent {
   /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
    *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
   subpages?:    Record<string, SubpageContent>;
+  servicePages?: string[] | null; // v1.32.0: slugs of services with their own page (export-written)
   extensions:   ExtensionsContent;
   images:       SiteImages;
   _meta:        ContentMeta;

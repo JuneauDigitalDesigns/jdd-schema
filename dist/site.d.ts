@@ -337,6 +337,10 @@ export interface SiteContent {
     /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
      *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
     subpages?: Record<string, SubpageContent>;
+    /** v1.32.0: slugs of the services that have their own page (/services/<slug>), written by the
+     *  console export from the composition, like `nav`. Routing, not client data. Menus, cards,
+     *  related links and the footer link a service here only when its slug is listed. */
+    servicePages?: string[] | null;
     extensions: ExtensionsContent;
     images: SiteImages;
     _meta: ContentMeta;
