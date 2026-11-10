@@ -12,6 +12,7 @@
  */
 import type { BrandDirection } from "./brand-direction.js";
 import type { CopyBrief } from "./copy-brief.js";
+import type { ProfileKind, ReviewSource } from "./profiles.js";
 export interface NavItem {
     label: string;
     href: string;
@@ -43,6 +44,20 @@ export interface ServiceItem {
     } | null;
     detail?: string;
     priceFrom?: string | null;
+    included?: string[];
+    typicalJobs?: string[];
+    areas?: string[];
+    brands?: string[];
+    duration?: string | null;
+    slug?: string;
+    page?: ServicePageCopy;
+}
+/** v1.32.0: generated copy for one service's own page. Its header + SEO live in
+ *  `subpages['services/<slug>']`, like every other subpage. */
+export interface ServicePageCopy {
+    intro: string;
+    expect?: string[];
+    faq: FaqItem[];
 }
 export interface Project {
     t: string;
@@ -55,6 +70,7 @@ export interface Project {
         url: string;
         alt: string;
     } | null;
+    service?: string;
 }
 export interface Testimonial {
     q: string;
@@ -62,6 +78,10 @@ export interface Testimonial {
     r: string;
     company?: string | null;
     stars: number;
+    source?: ReviewSource;
+    sourceUrl?: string;
+    date?: string;
+    service?: string;
 }
 export interface FaqItem {
     q: string;
@@ -216,6 +236,22 @@ export interface ExtensionsContent {
     responseTime?: string | null;
     offerBadge?: string | null;
     serviceRadiusMiles?: string | null;
+    serviceAreaBusiness?: boolean | null;
+    customerQuestions?: CustomerQuestion[] | null;
+    profiles?: ProfileLink[] | null;
+}
+/** v1.32.0: a question the client's customers really ask, with the client's own answer (may be
+ *  blank). `service` is a service slug when the question is about one service. */
+export interface CustomerQuestion {
+    q: string;
+    a: string;
+    service?: string;
+}
+/** v1.32.0: one of the business's own profiles on another site. Only profiles that exist. */
+export interface ProfileLink {
+    kind: ProfileKind;
+    url: string;
+    label?: string;
 }
 export interface SiteImages {
     hero: {
@@ -301,6 +337,10 @@ export interface SiteContent {
     /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
      *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
     subpages?: Record<string, SubpageContent>;
+    /** v1.32.0: slugs of the services that have their own page (/services/<slug>), written by the
+     *  console export from the composition, like `nav`. Routing, not client data. Menus, cards,
+     *  related links and the footer link a service here only when its slug is listed. */
+    servicePages?: string[] | null;
     extensions: ExtensionsContent;
     images: SiteImages;
     _meta: ContentMeta;

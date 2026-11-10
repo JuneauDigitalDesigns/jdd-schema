@@ -50,6 +50,19 @@ export interface ServiceItem {
   image?: { url: string; alt: string } | null; // optional preview image
   detail?: string; // v2.2: 2–3 sentence expansion shown when the card is opened on the Services page
   priceFrom?: string | null;
+  included?: string[];     // v1.32.0: what the service includes (client-supplied)
+  typicalJobs?: string[];  // jobs/problems it handles, in the customer's words
+  areas?: string[];        // towns for THIS service; none → no areas block
+  brands?: string[];       // brands for this service
+  duration?: string | null; // how long the job usually takes, in the client's words
+  slug?: string;           // /services/<slug>, stored once, never re-derived
+  page?: ServicePageCopy;  // generated copy for the service's own page
+}
+
+export interface ServicePageCopy {
+  intro: string;
+  expect?: string[];
+  faq: FaqItem[];
 }
 
 export interface Project {
@@ -60,6 +73,7 @@ export interface Project {
   size: string;    // scale e.g. "240,000 sqft" or "18-unit building"
   caption: string; // image caption / placeholder label
   image?: { url: string; alt: string } | null; // optional card image
+  service?: string; // v1.32.0: slug of the service this job belongs to
 }
 
 export interface Testimonial {
@@ -68,6 +82,10 @@ export interface Testimonial {
   r: string;        // role
   company?: string | null; // company or location (optional, shown as secondary line)
   stars: number;    // 1–5
+  source?: "google" | "yelp" | "facebook" | "client" | "other"; // v1.32.0: where the real review came from
+  sourceUrl?: string;     // link to the review, when public
+  date?: string;          // ISO date
+  service?: string;       // slug of the service it is about
 }
 
 export interface FaqItem {
@@ -234,6 +252,21 @@ export interface ExtensionsContent {
   responseTime?: string | null;     // client's own words, e.g. "under 60 minutes"
   offerBadge?: string | null;          // promotional ribbon text, e.g. "First mow free" (lawn-care)
   serviceRadiusMiles?: string | null;  // mobile-service radius, e.g. "25" (car-detailing)
+  serviceAreaBusiness?: boolean | null;          // v1.32.0: true → no street address anywhere on the site
+  customerQuestions?: CustomerQuestion[] | null; // questions customers really ask
+  profiles?: ProfileLink[] | null;               // the business's own profiles; footer + sameAs
+}
+
+export interface CustomerQuestion {
+  q: string;
+  a: string;
+  service?: string;
+}
+
+export interface ProfileLink {
+  kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+  url: string;
+  label?: string;
 }
 
 export interface SiteImages {
@@ -305,6 +338,7 @@ export interface SiteContent {
   /** v2.2: per-route content for non-home pages (header + per-page SEO), keyed by route
    *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
   subpages?:    Record<string, SubpageContent>;
+  servicePages?: string[] | null; // v1.32.0: slugs of services with their own page (export-written)
   extensions:   ExtensionsContent;
   images:       SiteImages;
   _meta:        ContentMeta;

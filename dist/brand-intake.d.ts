@@ -13,10 +13,32 @@ import type { Intake } from "./intake.js";
 import type { ImageMeta } from "./submission.js";
 import { BrandDirection } from "./brand-direction.js";
 import { PalettePick } from "./palette.js";
-/** One service the client offers — name + short category tag, no description. */
+import { type ProfileKind } from "./profiles.js";
+/**
+ * One service the client offers: name + short category tag, plus (v1.32.0, 2026-11-10) the
+ * optional facts its own page is built from. Nested here so the submission needs no key scheme.
+ * All client-supplied; blank or absent means not given, never filled in.
+ */
 export interface ServiceEntry {
     name: string;
     tag: string;
+    included?: string[];
+    typicalJobs?: string[];
+    /** Towns for this service: a subset of `serviceArea`. Absent = not narrowed. */
+    areas?: string[];
+    /** Also unioned into the site-wide brandsCarried. */
+    brands?: string[];
+    /** Wins over the old name-keyed `servicePrices`. */
+    /** How long the job usually takes, in the client's words ("Half a day"). Optional, not flagged. */
+    duration?: string;
+    priceFrom?: string;
+    /** Real job photos for this service. Mapped to work.projects[] tagged with its slug. */
+    photos?: ImageMeta[];
+    /** Questions customers ask about this service, with the client's answer (may be blank). */
+    questions?: {
+        q: string;
+        a: string;
+    }[];
 }
 export interface BrandIntakeSubmission {
     selectedPlan: "starter" | "growth" | "enterprise";
@@ -98,6 +120,21 @@ export interface BrandIntakeSubmission {
     }[];
     serviceRadiusMiles?: string;
     offerBadge?: string;
+    /** True for a service-area business: customers do NOT come to the address, the business
+     *  travels to them, so the street address is shown nowhere on the site (city, state and ZIP
+     *  only). False: the address is a place customers visit and is shown. */
+    serviceAreaBusiness?: boolean;
+    /** The business's own profiles that exist. Google Business Profile is kind "google". */
+    profiles?: {
+        kind: ProfileKind;
+        url: string;
+        label?: string;
+    }[];
+    /** Questions about the business in general (per-service ones nest on serviceList[i]). */
+    customerQuestions?: {
+        q: string;
+        a: string;
+    }[];
     additionalSites?: AdditionalBrandSite[];
 }
 /** Enterprise additional site — facts + palette + direction; copy is generated. */

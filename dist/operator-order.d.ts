@@ -159,10 +159,6 @@ export declare const zOperatorOrder: z.ZodObject<{
     plan: "starter" | "growth" | "enterprise";
     createdAt: number;
     updatedAt: number;
-    id: string;
-    source: "operator-call";
-    leadId: string;
-    siteSlug: string;
     client: {
         email: string;
         contactName: string;
@@ -173,6 +169,10 @@ export declare const zOperatorOrder: z.ZodObject<{
         contactTitle: string;
         dba?: string | undefined;
     };
+    id: string;
+    source: "operator-call";
+    leadId: string;
+    siteSlug: string;
     operator: string;
     period: "monthly" | "annual";
     pricing: {
@@ -214,10 +214,6 @@ export declare const zOperatorOrder: z.ZodObject<{
     plan: "starter" | "growth" | "enterprise";
     createdAt: number;
     updatedAt: number;
-    id: string;
-    source: "operator-call";
-    leadId: string;
-    siteSlug: string;
     client: {
         email: string;
         contactName: string;
@@ -228,6 +224,10 @@ export declare const zOperatorOrder: z.ZodObject<{
         contactTitle: string;
         dba?: string | undefined;
     };
+    id: string;
+    source: "operator-call";
+    leadId: string;
+    siteSlug: string;
     operator: string;
     period: "monthly" | "annual";
     pricing: {

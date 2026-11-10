@@ -12,6 +12,9 @@ export * from "./intake.js";
 export * from "./map.js";
 export * from "./zod.js";
 export * from "./site-types-source.js";
+// v1.32.0 - profile kinds + review sources, and the service-page gate (moved from the console)
+export * from "./profiles.js";
+export * from "./service-pages.js";
 // v1.1.0 — brand-direction intake
 export * from "./brand-direction.js";
 export * from "./palette.js";

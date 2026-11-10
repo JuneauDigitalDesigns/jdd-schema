@@ -12,6 +12,8 @@ export * from "./intake.js";
 export * from "./map.js";
 export * from "./zod.js";
 export * from "./site-types-source.js";
+export * from "./profiles.js";
+export * from "./service-pages.js";
 export * from "./brand-direction.js";
 export * from "./palette.js";
 export * from "./color.js";

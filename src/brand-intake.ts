@@ -16,17 +16,41 @@ import type {
   SeoContent,
   SiteContent,
   Stat,
+  CustomerQuestion,
+  ProfileLink,
+  Project,
+  ServiceItem,
 } from "./site.js";
 import type { Intake } from "./intake.js";
 import type { ImageMeta } from "./submission.js";
 import { BrandDirection } from "./brand-direction.js";
 import { DEFAULT_STRUCTURE } from "./structure.js";
 import { PalettePick, resolvePalette } from "./palette.js";
+import { PROFILE_KINDS, type ProfileKind } from "./profiles.js";
+import { serviceSlug } from "./service-pages.js";
 
-/** One service the client offers — name + short category tag, no description. */
+/**
+ * One service the client offers: name + short category tag, plus (v1.32.0, 2026-11-10) the
+ * optional facts its own page is built from. Nested here so the submission needs no key scheme.
+ * All client-supplied; blank or absent means not given, never filled in.
+ */
 export interface ServiceEntry {
   name: string;
   tag: string;
+  included?: string[];
+  typicalJobs?: string[];
+  /** Towns for this service: a subset of `serviceArea`. Absent = not narrowed. */
+  areas?: string[];
+  /** Also unioned into the site-wide brandsCarried. */
+  brands?: string[];
+  /** Wins over the old name-keyed `servicePrices`. */
+  /** How long the job usually takes, in the client's words ("Half a day"). Optional, not flagged. */
+  duration?: string;
+  priceFrom?: string;
+  /** Real job photos for this service. Mapped to work.projects[] tagged with its slug. */
+  photos?: ImageMeta[];
+  /** Questions customers ask about this service, with the client's answer (may be blank). */
+  questions?: { q: string; a: string }[];
 }
 
 export interface BrandIntakeSubmission {
@@ -120,6 +144,16 @@ export interface BrandIntakeSubmission {
   serviceRadiusMiles?: string;
   offerBadge?: string;
 
+  // ── v1.32.0 (2026-11-10): SEO + service pages. Absent = not asked (an older form). ──
+  /** True for a service-area business: customers do NOT come to the address, the business
+   *  travels to them, so the street address is shown nowhere on the site (city, state and ZIP
+   *  only). False: the address is a place customers visit and is shown. */
+  serviceAreaBusiness?: boolean;
+  /** The business's own profiles that exist. Google Business Profile is kind "google". */
+  profiles?: { kind: ProfileKind; url: string; label?: string }[];
+  /** Questions about the business in general (per-service ones nest on serviceList[i]). */
+  customerQuestions?: { q: string; a: string }[];
+
   // ── Enterprise only ──
   additionalSites?: AdditionalBrandSite[];
 }
@@ -195,6 +229,125 @@ function seasonsFrom(
   return filled.length ? filled.map((s) => ({ key: s.key, label: s.label, body: s.body.trim() })) : null;
 }
 
+/** Trimmed, non-blank, de-duplicated (case-insensitively, first spelling kept). */
+function cleanList(list: string[] | undefined): string[] {
+  const seen = new Set<string>();
+  const out: string[] = [];
+  for (const raw of list ?? []) {
+    const v = (raw ?? "").trim();
+    if (!v || seen.has(v.toLowerCase())) continue;
+    seen.add(v.toLowerCase());
+    out.push(v);
+  }
+  return out;
+}
+
+function cleanQuestions(list: { q: string; a: string }[] | undefined): { q: string; a: string }[] {
+  return (list ?? [])
+    .filter((x) => x && x.q && x.q.trim())
+    .map((x) => ({ q: x.q.trim(), a: (x.a ?? "").trim() }));
+}
+
+/**
+ * v1.32.0: the per-service facts, mapped. Returns the ServiceItems, the job photos as
+ * work.projects tagged to their service, the questions (per-service ones tagged), the brands to
+ * union into brandsCarried, and the missing_fields paths for the two core facts.
+ *
+ * A service's slug is written only when something is tagged to it (a photo or a question), per
+ * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
+ * Areas are kept only when they name a town in the service area (spelled as the area spells it).
+ */
+function serviceDetailsFrom(
+  serviceList: ServiceEntry[],
+  servicePrices: Record<string, string> | undefined,
+  serviceArea: string[],
+): {
+  items: ServiceItem[];
+  projects: Project[];
+  questions: CustomerQuestion[];
+  brands: string[];
+  missing: string[];
+} {
+  const areaByLower = new Map(serviceArea.map((a) => [a.toLowerCase(), a]));
+  const taken: string[] = [];
+  const projects: Project[] = [];
+  const questions: CustomerQuestion[] = [];
+  const brands: string[] = [];
+  const missing: string[] = [];
+
+  const items = serviceList.map((s, i): ServiceItem => {
+    const included = cleanList(s.included);
+    const typicalJobs = cleanList(s.typicalJobs);
+    const areas = cleanList(s.areas)
+      .map((a) => areaByLower.get(a.toLowerCase()))
+      .filter((a): a is string => Boolean(a));
+    const serviceBrands = cleanList(s.brands);
+    const photos = (s.photos ?? []).filter((p) => p && p.url && p.url.trim());
+    const qs = cleanQuestions(s.questions);
+    const price = (s.priceFrom ?? "").trim() || (servicePrices?.[s.name] ?? "").trim();
+    const duration = (s.duration ?? "").trim();
+
+    if (included.length === 0) missing.push(`services.items.${i}.included`);
+    if (typicalJobs.length === 0) missing.push(`services.items.${i}.typicalJobs`);
+
+    const tagged = photos.length > 0 || qs.length > 0;
+    const slug = serviceSlug({ t: s.name }, taken);
+    taken.push(slug);
+    // Every photo becomes a project tagged to the service (the page's proof block, and the
+    // gate's photo fact). The form asks no caption: an uncaptioned photo's caption is the
+    // service name, which is true and invented nothing, and is flagged so the console can
+    // offer a better one. loc and yr stay blank, never guessed.
+    for (const p of photos) {
+      const given = (p.alt ?? "").trim();
+      if (!given) missing.push(`work.projects.${projects.length}.caption`);
+      const alt = given || s.name;
+      projects.push({
+        t: s.name, loc: "", yr: null, scope: s.name, size: "",
+        caption: alt, // never empty: it is the photo's alt text
+        image: { url: p.url, alt },
+        service: slug,
+      });
+    }
+    for (const q of qs) questions.push({ ...q, service: slug });
+    brands.push(...serviceBrands);
+
+    // Photo 1 is also the service's own picture (cards, page header, related-services
+    // thumbnail). It stays a project too, so the gate's photo fact never counts `image`, which
+    // can hold an operator's stock picture.
+    const first = photos[0];
+    const image = first ? { url: first.url, alt: (first.alt ?? "").trim() || s.name } : null;
+
+    return {
+      n: String(i + 1).padStart(2, "0"),
+      t: s.name,
+      d: "",
+      tag: s.tag,
+      image,
+      priceFrom: price || null,
+      ...(included.length ? { included } : {}),
+      ...(typicalJobs.length ? { typicalJobs } : {}),
+      ...(areas.length ? { areas } : {}),
+      ...(serviceBrands.length ? { brands: serviceBrands } : {}),
+      ...(duration ? { duration } : {}),
+      ...(tagged ? { slug } : {}),
+    };
+  });
+
+  return { items, projects, questions, brands, missing };
+}
+
+function profilesFrom(list: { kind: ProfileKind; url: string; label?: string }[] | undefined): ProfileLink[] | null {
+  const kinds = new Set<string>(PROFILE_KINDS);
+  const out = (list ?? [])
+    .filter((p) => p && kinds.has(p.kind) && p.url && p.url.trim())
+    .map((p) => ({
+      kind: p.kind,
+      url: p.url.trim(),
+      ...(p.label && p.label.trim() ? { label: p.label.trim() } : {}),
+    }));
+  return out.length ? out : null;
+}
+
 const DEFAULT_TYPOGRAPHY: BrandContent["typography"] = {
   fontSans: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
   fontHeading: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -240,6 +393,9 @@ interface SiteFacts {
   seasons?: { key: string; label: string; body: string }[];
   serviceRadiusMiles?: string;
   offerBadge?: string;
+  serviceAreaBusiness?: boolean;
+  profiles?: { kind: ProfileKind; url: string; label?: string }[];
+  customerQuestions?: { q: string; a: string }[];
 }
 
 /** Empty copy fields at the RIGHT cardinality so the copywriter fills them in place. */
@@ -280,7 +436,21 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
   flag("about.seasons", resolvedSeasons !== null);
   flag("extensions.offerBadge", f.offerBadge && f.offerBadge.trim());
   flag("extensions.serviceRadiusMiles", f.serviceRadiusMiles && f.serviceRadiusMiles.trim());
-  flag("services.priceFrom", f.servicePrices && Object.values(f.servicePrices).some((p) => p && p.trim()));
+
+  // v1.32.0: per-service facts and the site-wide SEO facts. Every blank one is flagged, whether
+  // or not this form version asked it: the console tells "asked, left blank" (flagged) from
+  // "never asked" (empty, unflagged) for older clients only by this list, so a NEW mapper must
+  // flag unconditionally. Areas and brands are optional per service and are not flagged.
+  const siteArea = f.serviceArea && f.serviceArea.trim() ? splitList(f.serviceArea) : [];
+  const details = serviceDetailsFrom(f.serviceList, f.servicePrices, siteArea);
+  missing.push(...details.missing);
+  flag("services.priceFrom", details.items.some((it) => it.priceFrom));
+  flag("extensions.serviceAreaBusiness", typeof f.serviceAreaBusiness === "boolean");
+  const resolvedProfiles = profilesFrom(f.profiles);
+  flag("extensions.profiles", resolvedProfiles !== null);
+  const allQuestions = [...cleanQuestions(f.customerQuestions), ...details.questions];
+  flag("extensions.customerQuestions", allQuestions.length > 0);
+  const brandsCarried = cleanList([...(f.brandsCarried ? splitList(f.brandsCarried) : []), ...details.brands]);
 
   const serviceLinks: FooterLink[] = f.serviceList.map((s) => ({ label: s.name, href: "#services" }));
   const seo: SeoContent = {
@@ -318,7 +488,7 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
     // Brands carried (decision 29) join notable clients in trust.logos, which is where TrustBadges
     // reads them; the HVAC preset relabels this to "Brands we install". Certifications stay in
     // extensions.trustBadges, as before.
-    trust: { label: "Trusted by", logos: splitList([f.notableClients, f.brandsCarried].filter((x) => x && x.trim()).join("\n")) },
+    trust: { label: "Trusted by", logos: cleanList([...splitList(f.notableClients ?? ""), ...brandsCarried]) },
     hero: {
       eyebrow: "",
       headline: "",
@@ -348,16 +518,11 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       eyebrow: "",
       title: "",
       sub: "",
-      items: f.serviceList.map((s, i) => ({
-        n: String(i + 1).padStart(2, "0"),
-        t: s.name,
-        d: "",
-        tag: s.tag,
-        image: null,
-        priceFrom: orNull(f.servicePrices?.[s.name] ?? ""),
-      })),
+      items: details.items,
     },
-    work: { eyebrow: "", title: "", sub: "", projects: [], hidden: true },
+    // Job photos arrive as projects tagged to their service (service-page-spec.md §4). The work
+    // SECTION stays hidden: a photo-only project has no location or year to show there.
+    work: { eyebrow: "", title: "", sub: "", projects: details.projects, hidden: true },
     testimonials: {
       eyebrow: "",
       title: "",
@@ -408,10 +573,13 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       agentName: orNull(f.agentName ?? ""),
       serviceArea: f.serviceArea && f.serviceArea.trim() ? splitList(f.serviceArea) : null,
       ownerName: orNull(f.ownerName ?? ""),
-      brandsCarried: f.brandsCarried && f.brandsCarried.trim() ? splitList(f.brandsCarried) : null,
+      brandsCarried: brandsCarried.length ? brandsCarried : null,
       responseTime: orNull(f.responseTime ?? ""),
       offerBadge: orNull(f.offerBadge ?? ""),
       serviceRadiusMiles: orNull(f.serviceRadiusMiles ?? ""),
+      serviceAreaBusiness: typeof f.serviceAreaBusiness === "boolean" ? f.serviceAreaBusiness : null,
+      customerQuestions: allQuestions.length ? allQuestions : null,
+      profiles: resolvedProfiles,
     },
     images: {
       hero: {
@@ -486,6 +654,9 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
       seasons: sub.seasons,
       serviceRadiusMiles: sub.serviceRadiusMiles,
       offerBadge: sub.offerBadge,
+      serviceAreaBusiness: sub.serviceAreaBusiness,
+      profiles: sub.profiles,
+      customerQuestions: sub.customerQuestions,
     },
     sub.selectedPlan,
   );
@@ -547,6 +718,9 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
           seasons: sub.seasons,
           serviceRadiusMiles: sub.serviceRadiusMiles,
           offerBadge: sub.offerBadge,
+          // v1.32.0: a business-level fact, inherited. Profiles and general questions are per brand,
+          // so an additional site gets none (flagged missing) rather than the primary's.
+          serviceAreaBusiness: sub.serviceAreaBusiness,
         },
         "enterprise",
       );

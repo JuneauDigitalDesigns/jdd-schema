@@ -78,11 +78,11 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
     brandName: z.ZodString;
@@ -141,11 +141,11 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
     brandName: z.ZodString;
@@ -204,11 +204,11 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
 }, z.ZodTypeAny, "passthrough">>;
 /**
@@ -284,11 +284,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
@@ -347,11 +347,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -410,11 +410,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -473,11 +473,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
     formMode: z.ZodOptional<z.ZodEnum<["basic", "detailed"]>>;
@@ -552,11 +552,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
@@ -615,11 +615,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -678,11 +678,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -741,11 +741,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
     formMode: z.ZodOptional<z.ZodEnum<["basic", "detailed"]>>;
@@ -820,11 +820,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         q: z.ZodString;
         a: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        q: string;
         a: string;
+        q: string;
     }, {
-        q: string;
         a: string;
+        q: string;
     }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
@@ -883,11 +883,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brandName: z.ZodString;
@@ -946,11 +946,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brandName: z.ZodString;
@@ -1009,11 +1009,11 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             q: z.ZodString;
             a: z.ZodString;
         }, "strip", z.ZodTypeAny, {
-            q: string;
             a: string;
+            q: string;
         }, {
-            q: string;
             a: string;
+            q: string;
         }>, "many">>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
     formMode: z.ZodOptional<z.ZodEnum<["basic", "detailed"]>>;
@@ -1582,12 +1582,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
         name: z.ZodString;
         tag: z.ZodDefault<z.ZodString>;
+        included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
+        priceFrom: z.ZodOptional<z.ZodString>;
+        photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            alt: string;
+            filename: string;
+        }, {
+            url: string;
+            alt: string;
+            filename: string;
+        }>, "many">>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            q: z.ZodString;
+            a: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            a: string;
+            q: string;
+        }, {
+            q: string;
+            a?: string | undefined;
+        }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         name: string;
         tag: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            a: string;
+            q: string;
+        }[] | undefined;
     }, {
         name: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            q: string;
+            a?: string | undefined;
+        }[] | undefined;
     }>, "many">>;
     brandDirection: z.ZodObject<{
         differentiators: z.ZodDefault<z.ZodString>;
@@ -1847,6 +1906,30 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }>, "many">>;
     serviceRadiusMiles: z.ZodOptional<z.ZodString>;
     offerBadge: z.ZodOptional<z.ZodString>;
+    serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
+    profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        url: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }>, "many">>;
+    customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        q: z.ZodString;
+        a: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        a: string;
+        q: string;
+    }, {
+        q: string;
+        a?: string | undefined;
+    }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;
@@ -1857,12 +1940,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -1966,12 +2108,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -2075,12 +2276,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -2197,12 +2457,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
         name: z.ZodString;
         tag: z.ZodDefault<z.ZodString>;
+        included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
+        priceFrom: z.ZodOptional<z.ZodString>;
+        photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            alt: string;
+            filename: string;
+        }, {
+            url: string;
+            alt: string;
+            filename: string;
+        }>, "many">>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            q: z.ZodString;
+            a: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            a: string;
+            q: string;
+        }, {
+            q: string;
+            a?: string | undefined;
+        }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         name: string;
         tag: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            a: string;
+            q: string;
+        }[] | undefined;
     }, {
         name: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            q: string;
+            a?: string | undefined;
+        }[] | undefined;
     }>, "many">>;
     brandDirection: z.ZodObject<{
         differentiators: z.ZodDefault<z.ZodString>;
@@ -2462,6 +2781,30 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }>, "many">>;
     serviceRadiusMiles: z.ZodOptional<z.ZodString>;
     offerBadge: z.ZodOptional<z.ZodString>;
+    serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
+    profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        url: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }>, "many">>;
+    customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        q: z.ZodString;
+        a: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        a: string;
+        q: string;
+    }, {
+        q: string;
+        a?: string | undefined;
+    }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;
@@ -2472,12 +2815,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -2581,12 +2983,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -2690,12 +3151,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -2812,12 +3332,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
         name: z.ZodString;
         tag: z.ZodDefault<z.ZodString>;
+        included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
+        priceFrom: z.ZodOptional<z.ZodString>;
+        photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            alt: string;
+            filename: string;
+        }, {
+            url: string;
+            alt: string;
+            filename: string;
+        }>, "many">>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            q: z.ZodString;
+            a: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            a: string;
+            q: string;
+        }, {
+            q: string;
+            a?: string | undefined;
+        }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         name: string;
         tag: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            a: string;
+            q: string;
+        }[] | undefined;
     }, {
         name: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
+        photos?: {
+            url: string;
+            alt: string;
+            filename: string;
+        }[] | undefined;
+        questions?: {
+            q: string;
+            a?: string | undefined;
+        }[] | undefined;
     }>, "many">>;
     brandDirection: z.ZodObject<{
         differentiators: z.ZodDefault<z.ZodString>;
@@ -3077,6 +3656,30 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     }>, "many">>;
     serviceRadiusMiles: z.ZodOptional<z.ZodString>;
     offerBadge: z.ZodOptional<z.ZodString>;
+    serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
+    profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        url: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        label?: string | undefined;
+    }>, "many">>;
+    customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        q: z.ZodString;
+        a: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        a: string;
+        q: string;
+    }, {
+        q: string;
+        a?: string | undefined;
+    }>, "many">>;
     additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
         brandName: z.ZodString;
         brandShort: z.ZodDefault<z.ZodString>;
@@ -3087,12 +3690,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -3196,12 +3858,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
@@ -3305,12 +4026,71 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
             name: z.ZodString;
             tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                alt: string;
+                filename: string;
+            }, {
+                url: string;
+                alt: string;
+                filename: string;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             name: string;
             tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
         }, {
             name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
+            photos?: {
+                url: string;
+                alt: string;
+                filename: string;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
         }>, "many">>;
         palette: z.ZodObject<{
             mode: z.ZodEnum<["preset", "custom"]>;
