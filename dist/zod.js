@@ -167,6 +167,7 @@ const zServiceEntry = z.object({
     typicalJobs: z.array(z.string()).optional(),
     areas: z.array(z.string()).optional(),
     brands: z.array(z.string()).optional(),
+    duration: z.string().optional(),
     priceFrom: z.string().optional(),
     photos: z.array(zImageMeta).optional(),
     questions: z.array(zQuestion).optional(),

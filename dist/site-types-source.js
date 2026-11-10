@@ -53,6 +53,7 @@ export interface ServiceItem {
   typicalJobs?: string[];  // jobs/problems it handles, in the customer's words
   areas?: string[];        // towns for THIS service; none → no areas block
   brands?: string[];       // brands for this service
+  duration?: string | null; // how long the job usually takes, in the client's words
   slug?: string;           // /services/<slug>, stored once, never re-derived
   page?: ServicePageCopy;  // generated copy for the service's own page
 }

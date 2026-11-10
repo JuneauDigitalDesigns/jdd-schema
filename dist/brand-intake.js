@@ -105,6 +105,7 @@ function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
         const photos = (s.photos ?? []).filter((p) => p && p.url && p.url.trim());
         const qs = cleanQuestions(s.questions);
         const price = (s.priceFrom ?? "").trim() || (servicePrices?.[s.name] ?? "").trim();
+        const duration = (s.duration ?? "").trim();
         if (included.length === 0)
             missing.push(`services.items.${i}.included`);
         if (typicalJobs.length === 0)
@@ -147,6 +148,7 @@ function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
             ...(typicalJobs.length ? { typicalJobs } : {}),
             ...(areas.length ? { areas } : {}),
             ...(serviceBrands.length ? { brands: serviceBrands } : {}),
+            ...(duration ? { duration } : {}),
             ...(tagged ? { slug } : {}),
         };
     });

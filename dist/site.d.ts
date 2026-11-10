@@ -48,6 +48,7 @@ export interface ServiceItem {
     typicalJobs?: string[];
     areas?: string[];
     brands?: string[];
+    duration?: string | null;
     slug?: string;
     page?: ServicePageCopy;
 }

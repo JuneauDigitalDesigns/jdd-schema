@@ -202,3 +202,18 @@ test("no copywriter role still tells the model to write testimonials (decision 2
     assert.doesNotMatch(v.prompt.role, /testimonial/i, `${v.id} role mentions testimonials`);
   }
 });
+
+test("duration: the client's words, trimmed; absent when blank; never flagged; not a gate fact", () => {
+  const s = site({ serviceList: [{ name: "AC Repair", tag: "", duration: "  Half a day " }, { name: "Duct Cleaning", tag: "", duration: " " }] });
+  assert.equal(s.services.items[0].duration, "Half a day");
+  assert.equal("duration" in s.services.items[1], false);
+  assert.equal(s._meta.missing_fields.some((p) => p.endsWith(".duration")), false);
+  // Xander's approved gate is unchanged: a duration adds no fact.
+  const base = site({ serviceList: [{ name: "AC Repair", tag: "", included: ["a", "b", "c"] }] });
+  const timed = site({ serviceList: [{ name: "AC Repair", tag: "", included: ["a", "b", "c"], duration: "Half a day" }] });
+  assert.equal(qualifiesForServicePage(timed, 0), qualifiesForServicePage(base, 0));
+  assert.equal(qualifiesForServicePage(timed, 0), false);
+  // zServiceEntry is not passthrough: the field must be declared to survive parse.
+  const parsed = zBrandIntakeSubmission.parse(sub({ serviceList: [{ name: "AC Repair", tag: "", duration: "A few days" }] }));
+  assert.equal(parsed.serviceList[0].duration, "A few days");
+});

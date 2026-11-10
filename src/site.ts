@@ -57,6 +57,7 @@ export interface ServiceItem {
   typicalJobs?: string[];  // the jobs/problems it handles, in the customer's words
   areas?: string[];        // towns for THIS service, exact strings from extensions.serviceArea. None → no areas block, no fallback
   brands?: string[];       // brands for this service; each also appears in extensions.brandsCarried
+  duration?: string | null; // how long the job usually takes, in the client's words ("Half a day"). Feeds page.expect; never generated, not a gate fact
   slug?: string;           // /services/<slug>. Stored once (first tag or export), never re-derived, so a rename keeps the URL
   page?: ServicePageCopy;  // generated copy for the service's own page (console copywriter)
 }

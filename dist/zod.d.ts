@@ -1586,6 +1586,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
         priceFrom: z.ZodOptional<z.ZodString>;
         photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
@@ -1618,6 +1619,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         photos?: {
             url: string;
             alt: string;
@@ -1634,6 +1636,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
         photos?: {
             url: string;
@@ -1941,6 +1944,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -1973,6 +1977,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -1989,6 +1994,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -2106,6 +2112,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -2138,6 +2145,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -2154,6 +2162,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -2271,6 +2280,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -2303,6 +2313,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -2319,6 +2330,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -2449,6 +2461,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
         priceFrom: z.ZodOptional<z.ZodString>;
         photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
@@ -2481,6 +2494,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         photos?: {
             url: string;
             alt: string;
@@ -2497,6 +2511,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
         photos?: {
             url: string;
@@ -2804,6 +2819,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -2836,6 +2852,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -2852,6 +2869,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -2969,6 +2987,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -3001,6 +3020,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -3017,6 +3037,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -3134,6 +3155,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -3166,6 +3188,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -3182,6 +3205,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -3312,6 +3336,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
         brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
         priceFrom: z.ZodOptional<z.ZodString>;
         photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
@@ -3344,6 +3369,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         photos?: {
             url: string;
             alt: string;
@@ -3360,6 +3386,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFrom?: string | undefined;
         brands?: string[] | undefined;
         areas?: string[] | undefined;
+        duration?: string | undefined;
         tag?: string | undefined;
         photos?: {
             url: string;
@@ -3667,6 +3694,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -3699,6 +3727,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -3715,6 +3744,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -3832,6 +3862,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -3864,6 +3895,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -3880,6 +3912,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;
@@ -3997,6 +4030,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
             brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
             priceFrom: z.ZodOptional<z.ZodString>;
             photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 url: z.ZodString;
@@ -4029,6 +4063,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             photos?: {
                 url: string;
                 alt: string;
@@ -4045,6 +4080,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFrom?: string | undefined;
             brands?: string[] | undefined;
             areas?: string[] | undefined;
+            duration?: string | undefined;
             tag?: string | undefined;
             photos?: {
                 url: string;

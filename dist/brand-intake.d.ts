@@ -29,6 +29,8 @@ export interface ServiceEntry {
     /** Also unioned into the site-wide brandsCarried. */
     brands?: string[];
     /** Wins over the old name-keyed `servicePrices`. */
+    /** How long the job usually takes, in the client's words ("Half a day"). Optional, not flagged. */
+    duration?: string;
     priceFrom?: string;
     /** Real job photos for this service. Mapped to work.projects[] tagged with its slug. */
     photos?: ImageMeta[];

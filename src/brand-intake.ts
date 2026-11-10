@@ -44,6 +44,8 @@ export interface ServiceEntry {
   /** Also unioned into the site-wide brandsCarried. */
   brands?: string[];
   /** Wins over the old name-keyed `servicePrices`. */
+  /** How long the job usually takes, in the client's words ("Half a day"). Optional, not flagged. */
+  duration?: string;
   priceFrom?: string;
   /** Real job photos for this service. Mapped to work.projects[] tagged with its slug. */
   photos?: ImageMeta[];
@@ -283,6 +285,7 @@ function serviceDetailsFrom(
     const photos = (s.photos ?? []).filter((p) => p && p.url && p.url.trim());
     const qs = cleanQuestions(s.questions);
     const price = (s.priceFrom ?? "").trim() || (servicePrices?.[s.name] ?? "").trim();
+    const duration = (s.duration ?? "").trim();
 
     if (included.length === 0) missing.push(`services.items.${i}.included`);
     if (typicalJobs.length === 0) missing.push(`services.items.${i}.typicalJobs`);
@@ -325,6 +328,7 @@ function serviceDetailsFrom(
       ...(typicalJobs.length ? { typicalJobs } : {}),
       ...(areas.length ? { areas } : {}),
       ...(serviceBrands.length ? { brands: serviceBrands } : {}),
+      ...(duration ? { duration } : {}),
       ...(tagged ? { slug } : {}),
     };
   });
