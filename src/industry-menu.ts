@@ -34,6 +34,18 @@ import type { VerticalId } from "./verticals.js";
 export interface MenuService {
   label: string;
   tag: string;
+  /**
+   * v1.33.0 (Xander, 2026-11-10): tap-to-add suggestions for this service's details, shown by the
+   * agency onboarding form and the console intake alike. A suggestion is used only if picked;
+   * the copywriter may tidy a picked item but never adds one. Approved word for word, one trade
+   * per batch: a service with no approved batch has none of these, and the UI offers "add your
+   * own" only. Add nothing here without that approval.
+   */
+  included?: string[];
+  /** Problems customers call about (`ServiceItem.typicalJobs`). */
+  jobs?: string[];
+  /** Questions customers ask about it (`CustomerQuestion` tagged to the service). */
+  questions?: string[];
 }
 
 /**
@@ -147,8 +159,35 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
     id: "hvac",
     label: "HVAC / Heating & Cooling",
     services: [
-      { label: "Furnace Repair & Replacement", tag: "Heating" },
-      { label: "AC Installation & Service", tag: "Cooling" },
+      // Suggestions: HVAC sample, approved on the onboarding copy deck "as drafted", 2026-11-10.
+      // Moved verbatim from the agency's wizard/service-suggestions.ts. Furnace's questions were
+      // left empty on purpose.
+      {
+        label: "Furnace Repair & Replacement", tag: "Heating",
+        included: [
+          "Safety inspection", "Carbon monoxide check", "Repairs on all brands", "Igniter and flame sensor", "Blower motor repair",
+          "Removal of the old furnace", "Permit and inspection", "Heat exchanger check", "Thermostat check", "Filter change", "Startup and testing",
+        ],
+        jobs: [
+          "No heat", "Furnace won't turn on", "Burning smell", "Strange noises", "Turns on and off a lot",
+          "High gas bills", "Pilot light keeps going out", "Carbon monoxide alarm", "Furnace over 15 years old",
+        ],
+      },
+      {
+        label: "AC Installation & Service", tag: "Cooling",
+        included: [
+          "Sizing for your home", "Removal of the old unit", "Permit and inspection", "New thermostat",
+          "Refrigerant line set", "Startup and testing", "Warranty registration", "Repairs on all brands", "Diagnostic visit",
+        ],
+        jobs: [
+          "AC blowing warm air", "AC won't turn on", "Water leaking from the unit", "Ice on the lines",
+          "Loud or strange noises", "High electric bills", "Some rooms too hot", "System over 10 years old",
+        ],
+        questions: [
+          "Should I repair or replace my AC?", "How long does a new AC take to put in?", "What size AC does my home need?",
+          "Do you service all brands?", "How soon can you come out?", "Do you offer financing?",
+        ],
+      },
       { label: "Heat Pump Installation", tag: "Heat Pump" },
       { label: "Maintenance Plans", tag: "Maintenance" },
       { label: "Duct Cleaning & Sealing", tag: "Air Quality" },
@@ -411,4 +450,18 @@ export function joinChoices(selected: string[], freeText?: string): string {
   const extra = (freeText ?? "").trim();
   if (extra) parts.push(extra);
   return parts.join(". ");
+}
+
+/**
+ * v1.33.0: the approved suggestions for one service, matched by its menu LABEL (case-insensitive,
+ * trimmed). Never by tag: tags repeat inside a trade (HVAC has "Heating" and "Air Quality" twice).
+ * A service typed in by hand, or one with no approved batch, gets empty lists.
+ */
+export function serviceSuggestions(
+  industry: string | undefined | null,
+  serviceLabel: string | undefined | null,
+): { included: string[]; jobs: string[]; questions: string[] } {
+  const key = (serviceLabel ?? "").trim().toLowerCase();
+  const hit = key ? menuFor(industry)?.services.find((s) => s.label.trim().toLowerCase() === key) : undefined;
+  return { included: hit?.included ?? [], jobs: hit?.jobs ?? [], questions: hit?.questions ?? [] };
 }

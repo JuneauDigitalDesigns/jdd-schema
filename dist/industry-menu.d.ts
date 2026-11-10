@@ -32,6 +32,18 @@ import type { VerticalId } from "./verticals.js";
 export interface MenuService {
     label: string;
     tag: string;
+    /**
+     * v1.33.0 (Xander, 2026-11-10): tap-to-add suggestions for this service's details, shown by the
+     * agency onboarding form and the console intake alike. A suggestion is used only if picked;
+     * the copywriter may tidy a picked item but never adds one. Approved word for word, one trade
+     * per batch: a service with no approved batch has none of these, and the UI offers "add your
+     * own" only. Add nothing here without that approval.
+     */
+    included?: string[];
+    /** Problems customers call about (`ServiceItem.typicalJobs`). */
+    jobs?: string[];
+    /** Questions customers ask about it (`CustomerQuestion` tagged to the service). */
+    questions?: string[];
 }
 /**
  * What a vertical's bespoke whole-site template (console VERTICAL_TEMPLATES) needs from the
@@ -130,4 +142,14 @@ export declare function customersFor(industry: string | undefined | null): strin
  * the prompt, the mapper and the console all keep working untouched.
  */
 export declare function joinChoices(selected: string[], freeText?: string): string;
+/**
+ * v1.33.0: the approved suggestions for one service, matched by its menu LABEL (case-insensitive,
+ * trimmed). Never by tag: tags repeat inside a trade (HVAC has "Heating" and "Air Quality" twice).
+ * A service typed in by hand, or one with no approved batch, gets empty lists.
+ */
+export declare function serviceSuggestions(industry: string | undefined | null, serviceLabel: string | undefined | null): {
+    included: string[];
+    jobs: string[];
+    questions: string[];
+};
 //# sourceMappingURL=industry-menu.d.ts.map
