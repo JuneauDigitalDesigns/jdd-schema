@@ -11,6 +11,8 @@
  */
 import { DEFAULT_STRUCTURE } from "./structure.js";
 import { resolvePalette } from "./palette.js";
+import { PROFILE_KINDS } from "./profiles.js";
+import { serviceSlug } from "./service-pages.js";
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function splitList(value) {
     return (value || "")
@@ -58,6 +60,96 @@ function reviewBadgeFrom(agg) {
 function seasonsFrom(seasons) {
     const filled = (seasons ?? []).filter((s) => s.body && s.body.trim());
     return filled.length ? filled.map((s) => ({ key: s.key, label: s.label, body: s.body.trim() })) : null;
+}
+/** Trimmed, non-blank, de-duplicated (case-insensitively, first spelling kept). */
+function cleanList(list) {
+    const seen = new Set();
+    const out = [];
+    for (const raw of list ?? []) {
+        const v = (raw ?? "").trim();
+        if (!v || seen.has(v.toLowerCase()))
+            continue;
+        seen.add(v.toLowerCase());
+        out.push(v);
+    }
+    return out;
+}
+function cleanQuestions(list) {
+    return (list ?? [])
+        .filter((x) => x && x.q && x.q.trim())
+        .map((x) => ({ q: x.q.trim(), a: (x.a ?? "").trim() }));
+}
+/**
+ * v1.32.0: the per-service facts, mapped. Returns the ServiceItems, the job photos as
+ * work.projects tagged to their service, the questions (per-service ones tagged), the brands to
+ * union into brandsCarried, and the missing_fields paths for the two core facts.
+ *
+ * A service's slug is written only when something is tagged to it (a photo or a question), per
+ * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
+ * Areas are kept only when they name a town in the service area (spelled as the area spells it).
+ */
+function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
+    const areaByLower = new Map(serviceArea.map((a) => [a.toLowerCase(), a]));
+    const taken = [];
+    const projects = [];
+    const questions = [];
+    const brands = [];
+    const missing = [];
+    const items = serviceList.map((s, i) => {
+        const included = cleanList(s.included);
+        const typicalJobs = cleanList(s.typicalJobs);
+        const areas = cleanList(s.areas)
+            .map((a) => areaByLower.get(a.toLowerCase()))
+            .filter((a) => Boolean(a));
+        const serviceBrands = cleanList(s.brands);
+        const photos = (s.photos ?? []).filter((p) => p && p.url && p.url.trim());
+        const qs = cleanQuestions(s.questions);
+        const price = (s.priceFrom ?? "").trim() || (servicePrices?.[s.name] ?? "").trim();
+        if (included.length === 0)
+            missing.push(`services.items.${i}.included`);
+        if (typicalJobs.length === 0)
+            missing.push(`services.items.${i}.typicalJobs`);
+        const tagged = photos.length > 0 || qs.length > 0;
+        const slug = serviceSlug({ t: s.name }, taken);
+        taken.push(slug);
+        for (const p of photos) {
+            const alt = (p.alt ?? "").trim() || s.name;
+            projects.push({
+                t: s.name, loc: "", yr: null, scope: s.name, size: "",
+                caption: alt, // never empty: it is the photo's alt text
+                image: { url: p.url, alt },
+                service: slug,
+            });
+        }
+        for (const q of qs)
+            questions.push({ ...q, service: slug });
+        brands.push(...serviceBrands);
+        return {
+            n: String(i + 1).padStart(2, "0"),
+            t: s.name,
+            d: "",
+            tag: s.tag,
+            image: null,
+            priceFrom: price || null,
+            ...(included.length ? { included } : {}),
+            ...(typicalJobs.length ? { typicalJobs } : {}),
+            ...(areas.length ? { areas } : {}),
+            ...(serviceBrands.length ? { brands: serviceBrands } : {}),
+            ...(tagged ? { slug } : {}),
+        };
+    });
+    return { items, projects, questions, brands, missing };
+}
+function profilesFrom(list) {
+    const kinds = new Set(PROFILE_KINDS);
+    const out = (list ?? [])
+        .filter((p) => p && kinds.has(p.kind) && p.url && p.url.trim())
+        .map((p) => ({
+        kind: p.kind,
+        url: p.url.trim(),
+        ...(p.label && p.label.trim() ? { label: p.label.trim() } : {}),
+    }));
+    return out.length ? out : null;
 }
 const DEFAULT_TYPOGRAPHY = {
     fontSans: '-apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif',
@@ -109,7 +201,20 @@ function buildScaffold(f, plan) {
     flag("about.seasons", resolvedSeasons !== null);
     flag("extensions.offerBadge", f.offerBadge && f.offerBadge.trim());
     flag("extensions.serviceRadiusMiles", f.serviceRadiusMiles && f.serviceRadiusMiles.trim());
-    flag("services.priceFrom", f.servicePrices && Object.values(f.servicePrices).some((p) => p && p.trim()));
+    // v1.32.0: per-service facts and the site-wide SEO facts. Every blank one is flagged, whether
+    // or not this form version asked it: the console tells "asked, left blank" (flagged) from
+    // "never asked" (empty, unflagged) for older clients only by this list, so a NEW mapper must
+    // flag unconditionally. Areas and brands are optional per service and are not flagged.
+    const siteArea = f.serviceArea && f.serviceArea.trim() ? splitList(f.serviceArea) : [];
+    const details = serviceDetailsFrom(f.serviceList, f.servicePrices, siteArea);
+    missing.push(...details.missing);
+    flag("services.priceFrom", details.items.some((it) => it.priceFrom));
+    flag("extensions.serviceAreaBusiness", typeof f.serviceAreaBusiness === "boolean");
+    const resolvedProfiles = profilesFrom(f.profiles);
+    flag("extensions.profiles", resolvedProfiles !== null);
+    const allQuestions = [...cleanQuestions(f.customerQuestions), ...details.questions];
+    flag("extensions.customerQuestions", allQuestions.length > 0);
+    const brandsCarried = cleanList([...(f.brandsCarried ? splitList(f.brandsCarried) : []), ...details.brands]);
     const serviceLinks = f.serviceList.map((s) => ({ label: s.name, href: "#services" }));
     const seo = {
         title: "",
@@ -145,7 +250,7 @@ function buildScaffold(f, plan) {
         // Brands carried (decision 29) join notable clients in trust.logos, which is where TrustBadges
         // reads them; the HVAC preset relabels this to "Brands we install". Certifications stay in
         // extensions.trustBadges, as before.
-        trust: { label: "Trusted by", logos: splitList([f.notableClients, f.brandsCarried].filter((x) => x && x.trim()).join("\n")) },
+        trust: { label: "Trusted by", logos: cleanList([...splitList(f.notableClients ?? ""), ...brandsCarried]) },
         hero: {
             eyebrow: "",
             headline: "",
@@ -175,16 +280,11 @@ function buildScaffold(f, plan) {
             eyebrow: "",
             title: "",
             sub: "",
-            items: f.serviceList.map((s, i) => ({
-                n: String(i + 1).padStart(2, "0"),
-                t: s.name,
-                d: "",
-                tag: s.tag,
-                image: null,
-                priceFrom: orNull(f.servicePrices?.[s.name] ?? ""),
-            })),
+            items: details.items,
         },
-        work: { eyebrow: "", title: "", sub: "", projects: [], hidden: true },
+        // Job photos arrive as projects tagged to their service (service-page-spec.md §4). The work
+        // SECTION stays hidden: a photo-only project has no location or year to show there.
+        work: { eyebrow: "", title: "", sub: "", projects: details.projects, hidden: true },
         testimonials: {
             eyebrow: "",
             title: "",
@@ -235,10 +335,13 @@ function buildScaffold(f, plan) {
             agentName: orNull(f.agentName ?? ""),
             serviceArea: f.serviceArea && f.serviceArea.trim() ? splitList(f.serviceArea) : null,
             ownerName: orNull(f.ownerName ?? ""),
-            brandsCarried: f.brandsCarried && f.brandsCarried.trim() ? splitList(f.brandsCarried) : null,
+            brandsCarried: brandsCarried.length ? brandsCarried : null,
             responseTime: orNull(f.responseTime ?? ""),
             offerBadge: orNull(f.offerBadge ?? ""),
             serviceRadiusMiles: orNull(f.serviceRadiusMiles ?? ""),
+            serviceAreaBusiness: typeof f.serviceAreaBusiness === "boolean" ? f.serviceAreaBusiness : null,
+            customerQuestions: allQuestions.length ? allQuestions : null,
+            profiles: resolvedProfiles,
         },
         images: {
             hero: {
@@ -311,6 +414,9 @@ export function mapBrandIntakeToIntake(sub) {
         seasons: sub.seasons,
         serviceRadiusMiles: sub.serviceRadiusMiles,
         offerBadge: sub.offerBadge,
+        serviceAreaBusiness: sub.serviceAreaBusiness,
+        profiles: sub.profiles,
+        customerQuestions: sub.customerQuestions,
     }, sub.selectedPlan);
     const extras = (sub.additionalSites ?? []).filter((a) => a && a.brandName && a.brandName.trim());
     // Carried onto the envelope, not onto any site. Every field of SiteContent is serialized
@@ -363,6 +469,9 @@ export function mapBrandIntakeToIntake(sub) {
                 seasons: sub.seasons,
                 serviceRadiusMiles: sub.serviceRadiusMiles,
                 offerBadge: sub.offerBadge,
+                // v1.32.0: a business-level fact, inherited. Profiles and general questions are per brand,
+                // so an additional site gets none (flagged missing) rather than the primary's.
+                serviceAreaBusiness: sub.serviceAreaBusiness,
             }, "enterprise");
             return {
                 ...site,

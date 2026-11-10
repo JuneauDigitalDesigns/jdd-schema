@@ -9,6 +9,7 @@
  */
 
 import { z } from "zod";
+import { PROFILE_KINDS } from "./profiles.js";
 
 const plan = z.enum(["starter", "growth", "enterprise"]);
 
@@ -174,7 +175,25 @@ export const zPalettePick = z.object({
     .optional(),
 });
 
-const zServiceEntry = z.object({ name: z.string(), tag: z.string().default("") });
+// v1.32.0: per-service facts, nested so the submission needs no key scheme. This object is NOT
+// passthrough, so every nested field must be declared here or parse silently drops it.
+const zQuestion = z.object({ q: z.string(), a: z.string().default("") });
+const zServiceEntry = z.object({
+  name: z.string(),
+  tag: z.string().default(""),
+  included: z.array(z.string()).optional(),
+  typicalJobs: z.array(z.string()).optional(),
+  areas: z.array(z.string()).optional(),
+  brands: z.array(z.string()).optional(),
+  priceFrom: z.string().optional(),
+  photos: z.array(zImageMeta).optional(),
+  questions: z.array(zQuestion).optional(),
+});
+const zProfileLink = z.object({
+  kind: z.enum(PROFILE_KINDS),
+  url: z.string(),
+  label: z.string().optional(),
+});
 
 export const zBrandIntakeSubmission = z
   .object({
@@ -225,6 +244,10 @@ export const zBrandIntakeSubmission = z
       .optional(),
     serviceRadiusMiles: z.string().optional(),
     offerBadge: z.string().optional(),
+    // v1.32.0 (2026-11-10): site-wide SEO facts. Absent = not asked (an older form).
+    serviceAreaBusiness: z.boolean().optional(),
+    profiles: z.array(zProfileLink).optional(),
+    customerQuestions: z.array(zQuestion).optional(),
     additionalSites: z
       .array(
         z

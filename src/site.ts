@@ -13,6 +13,7 @@
 
 import type { BrandDirection } from "./brand-direction.js";
 import type { CopyBrief } from "./copy-brief.js";
+import type { ProfileKind, ReviewSource } from "./profiles.js";
 
 export interface NavItem {
   label: string;
@@ -49,6 +50,23 @@ export interface ServiceItem {
   // Price is a fact about the business (PLAN D4/D15), never generated. Absent → the card's
   // footer shows the tag only, never "$0" or "Call for pricing" (PLAN D5).
   priceFrom?: string | null;
+  // v1.32.0 (service pages, 2026-11-10): facts about THIS service, client-supplied (onboarding
+  // form or console intake), never generated. Absent/empty → that block is omitted on the
+  // service's page (PLAN D5) and the console intake lists it as still to do.
+  included?: string[];     // what the service includes, one short item each
+  typicalJobs?: string[];  // the jobs/problems it handles, in the customer's words
+  areas?: string[];        // towns for THIS service, exact strings from extensions.serviceArea. None → no areas block, no fallback
+  brands?: string[];       // brands for this service; each also appears in extensions.brandsCarried
+  slug?: string;           // /services/<slug>. Stored once (first tag or export), never re-derived, so a rename keeps the URL
+  page?: ServicePageCopy;  // generated copy for the service's own page (console copywriter)
+}
+
+/** v1.32.0: generated copy for one service's own page. Its header + SEO live in
+ *  `subpages['services/<slug>']`, like every other subpage. */
+export interface ServicePageCopy {
+  intro: string;      // answer-first, 2-3 sentences
+  expect?: string[];  // what to expect, only from stated facts
+  faq: FaqItem[];
 }
 
 export interface Project {
@@ -59,6 +77,7 @@ export interface Project {
   size: string;    // scale e.g. "240,000 sqft" or "18-unit building"
   caption: string; // image caption / placeholder label
   image?: { url: string; alt: string } | null; // optional card image
+  service?: string; // v1.32.0: slug of the service this job belongs to (a real job photo for its page)
 }
 
 export interface Testimonial {
@@ -67,6 +86,12 @@ export interface Testimonial {
   r: string;        // role
   company?: string | null; // company or location (optional, shown as secondary line)
   stars: number;    // 1–5
+  // v1.32.0 (2026-11-10): provenance of a REAL review. A review is a customer's own words, entered
+  // from a profile or sent by the client; the copywriter never writes one.
+  source?: ReviewSource;  // where it came from
+  sourceUrl?: string;     // link to the review itself, when public
+  date?: string;          // ISO date (YYYY-MM-DD or YYYY-MM)
+  service?: string;       // slug of the service it is about, if any
 }
 
 export interface FaqItem {
@@ -245,6 +270,25 @@ export interface ExtensionsContent {
   // copy we originate. Absent → the template hides the slot (PLAN D5), never a default.
   offerBadge?: string | null;          // promotional ribbon text, e.g. "First mow free" (lawn-care)
   serviceRadiusMiles?: string | null;  // mobile-service radius, e.g. "25" (car-detailing)
+  // v1.32.0 (2026-11-10, SEO + service pages): all client-supplied, never generated.
+  serviceAreaBusiness?: boolean | null;          // true → the street address appears nowhere on the site; null = not asked
+  customerQuestions?: CustomerQuestion[] | null; // questions customers really ask; the copywriter uses them first
+  profiles?: ProfileLink[] | null;               // the business's own profiles (GBP = kind "google"); footer + sameAs
+}
+
+/** v1.32.0: a question the client's customers really ask, with the client's own answer (may be
+ *  blank). `service` is a service slug when the question is about one service. */
+export interface CustomerQuestion {
+  q: string;
+  a: string;
+  service?: string;
+}
+
+/** v1.32.0: one of the business's own profiles on another site. Only profiles that exist. */
+export interface ProfileLink {
+  kind: ProfileKind;
+  url: string;
+  label?: string;
 }
 
 export interface SiteImages {
