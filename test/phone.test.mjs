@@ -58,3 +58,29 @@ test("the two historical regexes agree on every realistic input", () => {
   assert.equal(toE164("+12075550199"), "+12075550199");
   assert.equal(toE164("+441234567"), "+441234567"); // 9 digits, inside both bounds
 });
+
+// v1.33.3: the onboarding form stores bare digits and the templates printed them as is. Tracewell's
+// test site read "4075550177" in its nav, hero, Contact and footer (E2E-ONBOARDING-TEST-2026-11-10, F-D6).
+import { formatPhoneDisplay, phoneHref } from "../dist/index.js";
+
+test("formatPhoneDisplay writes a North American number the way a site prints it", () => {
+  assert.equal(formatPhoneDisplay("4075550177"), "(407) 555-0177");
+  assert.equal(formatPhoneDisplay("+14075550177"), "(407) 555-0177");
+  assert.equal(formatPhoneDisplay(" 407.555.0177 "), "(407) 555-0177");
+  assert.equal(formatPhoneDisplay("(407) 555-0177"), "(407) 555-0177");
+});
+
+test("formatPhoneDisplay never guesses at a number toE164 can't read", () => {
+  assert.equal(formatPhoneDisplay("+44 20 7946 0958"), "+44 20 7946 0958");
+  assert.equal(formatPhoneDisplay("555-0177"), "555-0177");
+  assert.equal(formatPhoneDisplay(""), "");
+  assert.equal(formatPhoneDisplay(undefined), "");
+});
+
+test("phoneHref dials E.164, and no number gives no link", () => {
+  assert.equal(phoneHref("4075550177"), "tel:+14075550177");
+  assert.equal(phoneHref("(407) 555-0177"), "tel:+14075550177");
+  assert.equal(phoneHref("555-0177"), "tel:5550177");
+  assert.equal(phoneHref(""), "");
+});
+

@@ -13,16 +13,13 @@ import { DEFAULT_STRUCTURE } from "./structure.js";
 import { resolvePalette } from "./palette.js";
 import { PROFILE_KINDS } from "./profiles.js";
 import { serviceSlug } from "./service-pages.js";
+import { formatPhoneDisplay, phoneHref } from "./phone.js";
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function splitList(value) {
     return (value || "")
         .split(/[,;\n]/)
         .map((s) => s.trim())
         .filter(Boolean);
-}
-function phoneHrefFor(phone) {
-    const digits = (phone || "").replace(/[^\d+]/g, "");
-    return digits ? `tel:${digits}` : "";
 }
 function orNull(value) {
     return value && value.trim() ? value : null;
@@ -244,8 +241,8 @@ function buildScaffold(f, plan) {
             long: f.brandName,
             established: orNull(f.established ?? ""),
             tagline: "",
-            phone: f.phone,
-            phoneHref: phoneHrefFor(f.phone),
+            phone: formatPhoneDisplay(f.phone),
+            phoneHref: phoneHref(f.phone),
             email: f.email,
             address: f.address,
             license: orNull(f.license ?? ""),

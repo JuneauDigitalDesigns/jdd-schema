@@ -10,6 +10,7 @@
 import type { FooterLink, SiteContent } from "./site.js";
 import type { AdditionalSiteEntry, OnboardingSubmission } from "./submission.js";
 import type { Intake } from "./intake.js";
+import { formatPhoneDisplay, phoneHref } from "./phone.js";
 
 function or(value: string, fallback: string): string {
   return value && value.trim() ? value : fallback;
@@ -19,10 +20,6 @@ function orNull(value: string): string | null {
   return value && value.trim() ? value : null;
 }
 
-function phoneHrefFor(phone: string): string {
-  const digits = phone.replace(/[^\d+]/g, "");
-  return digits ? `tel:${digits}` : "";
-}
 
 /**
  * Convert the sanitized onboarding form submission into the canonical
@@ -76,8 +73,8 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
       long: or(p.contact.brandLong, p.contact.brandName),
       established: orNull(p.businessDetails.established),
       tagline: p.businessDetails.brandTagline,
-      phone: p.contact.phone,
-      phoneHref: phoneHrefFor(p.contact.phone),
+      phone: formatPhoneDisplay(p.contact.phone),
+      phoneHref: phoneHref(p.contact.phone),
       email: p.contact.email,
       address: p.contact.address,
       license: orNull(p.contact.license),
@@ -123,7 +120,7 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
       formLabel: "Get a free estimate — we'll reach out same day.",
       placeholder: "Your email address",
       cta: or(p.hero.heroCta, "Get Started"),
-      secondaryCta: or(p.hero.heroSecondaryCta, `Call ${p.contact.phone}`),
+      secondaryCta: or(p.hero.heroSecondaryCta, `Call ${formatPhoneDisplay(p.contact.phone)}`),
       trust: p.businessDetails.usp,
       badge: orNull(p.hero.heroBadge),
       frictionReducers: p.hero.heroFrictionReducers,
@@ -301,8 +298,8 @@ function buildAdditionalSite(
       short: or(add.brandShort, add.brandName),
       long: add.brandName,
       tagline: add.brandTagline,
-      phone: add.phone,
-      phoneHref: phoneHrefFor(add.phone),
+      phone: formatPhoneDisplay(add.phone),
+      phoneHref: phoneHref(add.phone),
       email: add.email,
       address: add.address,
       palette: {

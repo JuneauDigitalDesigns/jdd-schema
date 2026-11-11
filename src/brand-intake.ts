@@ -28,6 +28,7 @@ import { DEFAULT_STRUCTURE } from "./structure.js";
 import { PalettePick, resolvePalette } from "./palette.js";
 import { PROFILE_KINDS, type ProfileKind } from "./profiles.js";
 import { serviceSlug } from "./service-pages.js";
+import { formatPhoneDisplay, phoneHref } from "./phone.js";
 
 /**
  * One service the client offers: name + short category tag, plus (v1.32.0, 2026-11-10) the
@@ -180,10 +181,6 @@ function splitList(value: string): string[] {
     .filter(Boolean);
 }
 
-function phoneHrefFor(phone: string): string {
-  const digits = (phone || "").replace(/[^\d+]/g, "");
-  return digits ? `tel:${digits}` : "";
-}
 
 function orNull(value: string): string | null {
   return value && value.trim() ? value : null;
@@ -468,8 +465,8 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       long: f.brandName,
       established: orNull(f.established ?? ""),
       tagline: "",
-      phone: f.phone,
-      phoneHref: phoneHrefFor(f.phone),
+      phone: formatPhoneDisplay(f.phone),
+      phoneHref: phoneHref(f.phone),
       email: f.email,
       address: f.address,
       license: orNull(f.license ?? ""),
