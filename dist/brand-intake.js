@@ -178,6 +178,7 @@ function buildScaffold(f, plan) {
         if (!ok)
             missing.push(path);
     };
+    flag("brand.tagline", f.tagline && f.tagline.trim());
     flag("brand.phone", f.phone && f.phone.trim());
     flag("brand.email", f.email && f.email.trim());
     flag("brand.address", f.address && f.address.trim());
@@ -240,7 +241,8 @@ function buildScaffold(f, plan) {
             short: f.brandShort && f.brandShort.trim() ? f.brandShort : f.brandName,
             long: f.brandName,
             established: orNull(f.established ?? ""),
-            tagline: "",
+            // One line: a stray line break from a pasted value becomes a space.
+            tagline: (f.tagline ?? "").replace(/\s+/g, " ").trim(),
             phone: formatPhoneDisplay(f.phone),
             phoneHref: phoneHref(f.phone),
             email: f.email,
@@ -398,6 +400,7 @@ export function mapBrandIntakeToIntake(sub) {
     const primary = buildScaffold({
         brandName: sub.brandName,
         brandShort: sub.brandShort,
+        tagline: sub.tagline,
         industry: sub.industry,
         email: sub.email,
         phone: sub.phone,

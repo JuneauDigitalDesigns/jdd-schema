@@ -75,6 +75,9 @@ export interface BrandIntakeSubmission {
   // remain legitimate values for the console or a website scan to fill in later.
   brandName: string;
   brandShort?: string; // derived from brandName when absent
+  /** v1.33.3: the client's own tagline, one line, at most 80 characters (the agency wizard caps it).
+   *  Blank or absent: `brand.tagline` stays empty and is flagged, never filled from a preset. */
+  tagline?: string;
   email: string;
   phone: string;
   address: string;
@@ -361,6 +364,7 @@ interface SiteFacts {
    * `brandName`, which is what the old field defaulted to anyway.
    */
   brandShort?: string;
+  tagline?: string;
   /** The client's industry pick. Carried onto `_meta` for the console's vertical. */
   industry?: string;
   email: string;
@@ -402,6 +406,7 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
   const flag = (path: string, ok: unknown) => {
     if (!ok) missing.push(path);
   };
+  flag("brand.tagline", f.tagline && f.tagline.trim());
   flag("brand.phone", f.phone && f.phone.trim());
   flag("brand.email", f.email && f.email.trim());
   flag("brand.address", f.address && f.address.trim());
@@ -464,7 +469,8 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       short: f.brandShort && f.brandShort.trim() ? f.brandShort : f.brandName,
       long: f.brandName,
       established: orNull(f.established ?? ""),
-      tagline: "",
+      // One line: a stray line break from a pasted value becomes a space.
+      tagline: (f.tagline ?? "").replace(/\s+/g, " ").trim(),
       phone: formatPhoneDisplay(f.phone),
       phoneHref: phoneHref(f.phone),
       email: f.email,
@@ -624,6 +630,7 @@ export function mapBrandIntakeToIntake(sub: BrandIntakeSubmission): Intake {
     {
       brandName: sub.brandName,
       brandShort: sub.brandShort,
+      tagline: sub.tagline,
       industry: sub.industry,
       email: sub.email,
       phone: sub.phone,
