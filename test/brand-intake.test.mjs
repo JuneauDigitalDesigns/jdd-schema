@@ -90,7 +90,7 @@ test("copy fields empty; facts + palette + service names present", () => {
   assert.equal(site.faq.items[0].q, "");
   // facts preserved verbatim
   assert.equal(site.brand.phone, "(930) 222-1343");
-  assert.equal(site.brand.phoneHref, "tel:9302221343");
+  assert.equal(site.brand.phoneHref, "tel:+19302221343"); // v1.33.3: E.164
   assert.equal(site.brand.email, "owner@peak.com");
   assert.equal(site.services.items[0].t, "AC Repair");
   assert.equal(site.services.items[0].tag, "HVAC");
@@ -291,4 +291,21 @@ test("zBrandIntakeSubmission rejects a malformed stats entry rather than passing
     sampleIntake({ stats: [{ key: "yearsTrading", label: "Years in business" }] }),
   );
   assert.equal(res.success, false);
+});
+
+test("v1.33.3: a bare-digit phone is stored formatted with an E.164 tel: (Tracewell, F-D6)", () => {
+  const site = mapBrandIntakeToIntake(sampleIntake({ phone: "4075550177" })).sites[0];
+  assert.equal(site.brand.phone, "(407) 555-0177");
+  assert.equal(site.brand.phoneHref, "tel:+14075550177");
+});
+
+test("v1.33.3: the client's tagline is stored as one line, and a blank one is flagged, never filled", () => {
+  const given = mapBrandIntakeToIntake(sampleIntake({ tagline: "  Comfort you can count on,\nyear round " })).sites[0];
+  assert.equal(given.brand.tagline, "Comfort you can count on, year round");
+  assert.equal(given._meta.missing_fields.includes("brand.tagline"), false);
+  for (const tagline of [undefined, "", "   "]) {
+    const blank = mapBrandIntakeToIntake(sampleIntake({ tagline })).sites[0];
+    assert.equal(blank.brand.tagline, "");
+    assert.equal(blank._meta.missing_fields.includes("brand.tagline"), true, `flagged for ${JSON.stringify(tagline)}`);
+  }
 });

@@ -54,6 +54,9 @@ export interface BrandIntakeSubmission {
     receptionistMode?: "forwarded" | "published" | "declined";
     brandName: string;
     brandShort?: string;
+    /** v1.33.3: the client's own tagline, one line, at most 80 characters (the agency wizard caps it).
+     *  Blank or absent: `brand.tagline` stays empty and is flagged, never filled from a preset. */
+    tagline?: string;
     email: string;
     phone: string;
     address: string;

@@ -67,7 +67,7 @@ test("mapPayloadToIntake produces a valid single-site Intake", () => {
   assert.equal(intake.sites.length, 1);
   assert.equal(intake.sites[0].brand.name, "Peak Home Services");
   assert.equal(intake.sites[0].brand.short, "Peak");
-  assert.equal(intake.sites[0].brand.phoneHref, "tel:9302221343");
+  assert.equal(intake.sites[0].brand.phoneHref, "tel:+19302221343"); // v1.33.3: E.164
 });
 
 test("empty required facts land in _meta.missing_fields", () => {

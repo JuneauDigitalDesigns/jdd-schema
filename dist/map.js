@@ -6,15 +6,12 @@
  * non-nullable strings) and tracked in _meta.missing_fields per the JDD plan:
  * "never invent values for flagged fields — leave placeholders for human review."
  */
+import { formatPhoneDisplay, phoneHref } from "./phone.js";
 function or(value, fallback) {
     return value && value.trim() ? value : fallback;
 }
 function orNull(value) {
     return value && value.trim() ? value : null;
-}
-function phoneHrefFor(phone) {
-    const digits = phone.replace(/[^\d+]/g, "");
-    return digits ? `tel:${digits}` : "";
 }
 /**
  * Convert the sanitized onboarding form submission into the canonical
@@ -53,8 +50,8 @@ export function mapPayloadToSchema(p) {
             long: or(p.contact.brandLong, p.contact.brandName),
             established: orNull(p.businessDetails.established),
             tagline: p.businessDetails.brandTagline,
-            phone: p.contact.phone,
-            phoneHref: phoneHrefFor(p.contact.phone),
+            phone: formatPhoneDisplay(p.contact.phone),
+            phoneHref: phoneHref(p.contact.phone),
             email: p.contact.email,
             address: p.contact.address,
             license: orNull(p.contact.license),
@@ -98,7 +95,7 @@ export function mapPayloadToSchema(p) {
             formLabel: "Get a free estimate — we'll reach out same day.",
             placeholder: "Your email address",
             cta: or(p.hero.heroCta, "Get Started"),
-            secondaryCta: or(p.hero.heroSecondaryCta, `Call ${p.contact.phone}`),
+            secondaryCta: or(p.hero.heroSecondaryCta, `Call ${formatPhoneDisplay(p.contact.phone)}`),
             trust: p.businessDetails.usp,
             badge: orNull(p.hero.heroBadge),
             frictionReducers: p.hero.heroFrictionReducers,
@@ -272,8 +269,8 @@ function buildAdditionalSite(primary, add, siteIndex, siteCount, siblingSlugs) {
             short: or(add.brandShort, add.brandName),
             long: add.brandName,
             tagline: add.brandTagline,
-            phone: add.phone,
-            phoneHref: phoneHrefFor(add.phone),
+            phone: formatPhoneDisplay(add.phone),
+            phoneHref: phoneHref(add.phone),
             email: add.email,
             address: add.address,
             palette: {

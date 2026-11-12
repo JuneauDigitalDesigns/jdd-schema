@@ -13,16 +13,13 @@ import { DEFAULT_STRUCTURE } from "./structure.js";
 import { resolvePalette } from "./palette.js";
 import { PROFILE_KINDS } from "./profiles.js";
 import { serviceSlug } from "./service-pages.js";
+import { formatPhoneDisplay, phoneHref } from "./phone.js";
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function splitList(value) {
     return (value || "")
         .split(/[,;\n]/)
         .map((s) => s.trim())
         .filter(Boolean);
-}
-function phoneHrefFor(phone) {
-    const digits = (phone || "").replace(/[^\d+]/g, "");
-    return digits ? `tel:${digits}` : "";
 }
 function orNull(value) {
     return value && value.trim() ? value : null;
@@ -181,6 +178,7 @@ function buildScaffold(f, plan) {
         if (!ok)
             missing.push(path);
     };
+    flag("brand.tagline", f.tagline && f.tagline.trim());
     flag("brand.phone", f.phone && f.phone.trim());
     flag("brand.email", f.email && f.email.trim());
     flag("brand.address", f.address && f.address.trim());
@@ -243,9 +241,10 @@ function buildScaffold(f, plan) {
             short: f.brandShort && f.brandShort.trim() ? f.brandShort : f.brandName,
             long: f.brandName,
             established: orNull(f.established ?? ""),
-            tagline: "",
-            phone: f.phone,
-            phoneHref: phoneHrefFor(f.phone),
+            // One line: a stray line break from a pasted value becomes a space.
+            tagline: (f.tagline ?? "").replace(/\s+/g, " ").trim(),
+            phone: formatPhoneDisplay(f.phone),
+            phoneHref: phoneHref(f.phone),
             email: f.email,
             address: f.address,
             license: orNull(f.license ?? ""),
@@ -401,6 +400,7 @@ export function mapBrandIntakeToIntake(sub) {
     const primary = buildScaffold({
         brandName: sub.brandName,
         brandShort: sub.brandShort,
+        tagline: sub.tagline,
         industry: sub.industry,
         email: sub.email,
         phone: sub.phone,

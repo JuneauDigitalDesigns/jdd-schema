@@ -35,4 +35,24 @@ export declare function toE164(raw: string | null | undefined): string | null;
  * what either one dials, we cannot claim they agree.
  */
 export declare function samePhone(a: string | null | undefined, b: string | null | undefined): boolean;
+/**
+ * A phone number as a website prints it: `(407) 555-0177` for a North American number, the
+ * input trimmed otherwise. v1.33.3.
+ *
+ * The agency's onboarding form stores what the client typed, usually bare digits, and the
+ * templates print `brand.phone` as is: Tracewell's test site read "4075550177" in the nav, the
+ * hero, Contact and the footer (E2E-ONBOARDING-TEST-2026-11-10, F-D6). buildScaffold now writes
+ * this form, and jdd-ops applies the same function to content it already holds.
+ *
+ * Presentation only: what counts as a dialable number is still `toE164`'s call alone, so this adds
+ * no second opinion. A number it can't read is returned as typed, never guessed at. This replaces
+ * onboard.js's private `formatPhoneForDisplay`, which did the same for the Twilio number.
+ */
+export declare function formatPhoneDisplay(raw: string | null | undefined): string;
+/**
+ * The `tel:` link for a number: E.164 when `toE164` can read it (`tel:+14075550177`), else the
+ * digits as typed, else "" (no number, so no dead link). v1.33.3: it was `tel:4075550177`, which
+ * most phones dial but which isn't E.164.
+ */
+export declare function phoneHref(raw: string | null | undefined): string;
 //# sourceMappingURL=phone.d.ts.map

@@ -48,3 +48,34 @@ export function samePhone(a: string | null | undefined, b: string | null | undef
   const nb = toE164(b);
   return na !== null && na === nb;
 }
+
+/**
+ * A phone number as a website prints it: `(407) 555-0177` for a North American number, the
+ * input trimmed otherwise. v1.33.3.
+ *
+ * The agency's onboarding form stores what the client typed, usually bare digits, and the
+ * templates print `brand.phone` as is: Tracewell's test site read "4075550177" in the nav, the
+ * hero, Contact and the footer (E2E-ONBOARDING-TEST-2026-11-10, F-D6). buildScaffold now writes
+ * this form, and jdd-ops applies the same function to content it already holds.
+ *
+ * Presentation only: what counts as a dialable number is still `toE164`'s call alone, so this adds
+ * no second opinion. A number it can't read is returned as typed, never guessed at. This replaces
+ * onboard.js's private `formatPhoneForDisplay`, which did the same for the Twilio number.
+ */
+export function formatPhoneDisplay(raw: string | null | undefined): string {
+  const trimmed = String(raw ?? "").trim();
+  const m = /^\+1(\d{3})(\d{3})(\d{4})$/.exec(toE164(trimmed) ?? "");
+  return m ? `(${m[1]}) ${m[2]}-${m[3]}` : trimmed;
+}
+
+/**
+ * The `tel:` link for a number: E.164 when `toE164` can read it (`tel:+14075550177`), else the
+ * digits as typed, else "" (no number, so no dead link). v1.33.3: it was `tel:4075550177`, which
+ * most phones dial but which isn't E.164.
+ */
+export function phoneHref(raw: string | null | undefined): string {
+  const e164 = toE164(raw);
+  if (e164) return `tel:${e164}`;
+  const digits = String(raw ?? "").replace(/[^\d+]/g, "");
+  return digits ? `tel:${digits}` : "";
+}
