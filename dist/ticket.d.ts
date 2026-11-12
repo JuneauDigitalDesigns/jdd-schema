@@ -63,25 +63,25 @@ export declare const zTicketActivity: z.ZodObject<{
     kind: z.ZodString;
     text: z.ZodString;
 }, "strip", z.ZodTypeAny, {
+    text: string;
     at: number;
     kind: string;
-    text: string;
 }, {
+    text: string;
     at: number;
     kind: string;
-    text: string;
 }>;
 export declare const zTicketMessage: z.ZodObject<{
     at: z.ZodNumber;
     author: z.ZodEnum<["client", "operator"]>;
     text: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    at: number;
     text: string;
+    at: number;
     author: "client" | "operator";
 }, {
-    at: number;
     text: string;
+    at: number;
     author: "client" | "operator";
 }>;
 export declare const zTicket: z.ZodObject<{
@@ -99,25 +99,25 @@ export declare const zTicket: z.ZodObject<{
         kind: z.ZodString;
         text: z.ZodString;
     }, "strip", z.ZodTypeAny, {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }, {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }>, "many">;
     messages: z.ZodArray<z.ZodObject<{
         at: z.ZodNumber;
         author: z.ZodEnum<["client", "operator"]>;
         text: z.ZodString;
     }, "strip", z.ZodTypeAny, {
-        at: number;
         text: string;
+        at: number;
         author: "client" | "operator";
     }, {
-        at: number;
         text: string;
+        at: number;
         author: "client" | "operator";
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
@@ -129,13 +129,13 @@ export declare const zTicket: z.ZodObject<{
     subject: string;
     category: "other" | "billing" | "technical" | "content" | "voice_agent";
     activity: {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }[];
     messages: {
-        at: number;
         text: string;
+        at: number;
         author: "client" | "operator";
     }[];
     updatedAt?: number | undefined;
@@ -149,13 +149,13 @@ export declare const zTicket: z.ZodObject<{
     subject: string;
     category: "other" | "billing" | "technical" | "content" | "voice_agent";
     activity: {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }[];
     messages: {
-        at: number;
         text: string;
+        at: number;
         author: "client" | "operator";
     }[];
     updatedAt?: number | undefined;

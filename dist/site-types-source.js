@@ -54,7 +54,9 @@ export interface ServiceItem {
   areas?: string[];        // towns for THIS service; none → no areas block
   brands?: string[];       // brands for this service
   duration?: string | null; // how long the job usually takes, in the client's words
-  slug?: string;           // /services/<slug>, stored once, never re-derived
+  priceFactors?: string[];  // v1.34.0: what changes the price (client), never a price
+  typicalVisit?: string[];  // v1.34.0: what happens on a typical visit (console, client's words)
+  slug?: string;          // /services/<slug>, stored once, never re-derived
   page?: ServicePageCopy;  // generated copy for the service's own page
 }
 
@@ -73,6 +75,7 @@ export interface Project {
   caption: string; // image caption / placeholder label
   image?: { url: string; alt: string } | null; // optional card image
   service?: string; // v1.32.0: slug of the service this job belongs to
+  town?: string;    // v1.34.0: the town of this job, as extensions.serviceArea spells it
 }
 
 export interface Testimonial {
@@ -85,6 +88,7 @@ export interface Testimonial {
   sourceUrl?: string;     // link to the review, when public
   date?: string;          // ISO date
   service?: string;       // slug of the service it is about
+  town?: string;          // v1.34.0: the town the review is from
 }
 
 export interface FaqItem {
@@ -254,6 +258,14 @@ export interface ExtensionsContent {
   serviceAreaBusiness?: boolean | null;          // v1.32.0: true → no street address anywhere on the site
   customerQuestions?: CustomerQuestion[] | null; // questions customers really ask
   profiles?: ProfileLink[] | null;               // the business's own profiles; footer + sameAs
+  topTowns?: string[] | null;    // v1.34.0: up to 3 towns the client gets the most work from
+  townNotes?: TownNote[] | null; // v1.34.0: operator facts about a town, each with its source
+}
+
+export interface TownNote {
+  town: string;
+  text: string;
+  sourceUrl: string; // required
 }
 
 export interface CustomerQuestion {
@@ -313,6 +325,17 @@ export interface PageHeaderContent {
   cta: { label: string; href: string } | null; // null → omit the button
 }
 
+export interface AreaPageRef {
+  town: string;     // as extensions.serviceArea spells it
+  slug: string;     // /areas/<slug>
+  spokes: string[]; // service slugs with an approved spoke here
+}
+
+export interface AreaPageCopy {
+  intro: string;
+  spokes?: Record<string, { intro: string }>; // keyed by service slug
+}
+
 /** v2.2: per-subpage content, keyed by route in SiteContent.subpages. Carries the page
  *  header copy and that page's own SEO. Home has no entry (it uses hero + site-level seo). */
 export interface SubpageContent {
@@ -338,6 +361,8 @@ export interface SiteContent {
    *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
   subpages?:    Record<string, SubpageContent>;
   servicePages?: string[] | null; // v1.32.0: slugs of services with their own page (export-written)
+  areaPages?: AreaPageRef[] | null;               // v1.34.0: town pages that exist (export-written)
+  areaCopy?: Record<string, AreaPageCopy> | null; // v1.34.0: generated town-page intros, by town slug
   extensions:   ExtensionsContent;
   images:       SiteImages;
   _meta:        ContentMeta;

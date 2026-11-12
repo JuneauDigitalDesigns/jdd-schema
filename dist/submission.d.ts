@@ -6,10 +6,13 @@
  * v1.0.0: extracted verbatim from the agency site's app/lib/site-schema.ts with
  * no field changes. The brand-direction fields land in v1.1.0.
  */
+/** v1.34.0: `town` is Q1 ("Which town was this job in?"), asked under each photo; absent or blank
+ *  = not answered ("Not sure"). */
 export type ImageMeta = {
     url: string;
     filename: string;
     alt: string;
+    town?: string;
 };
 export interface OnboardingSubmission {
     selectedPlan: "starter" | "growth" | "enterprise";

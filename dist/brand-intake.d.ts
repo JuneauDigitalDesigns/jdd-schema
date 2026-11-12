@@ -39,6 +39,8 @@ export interface ServiceEntry {
         q: string;
         a: string;
     }[];
+    /** v1.34.0: Q5 "What makes this job cost more or less?". Never a price. Flagged when blank. */
+    priceFactors?: string[];
 }
 export interface BrandIntakeSubmission {
     selectedPlan: "starter" | "growth" | "enterprise";
@@ -138,6 +140,8 @@ export interface BrandIntakeSubmission {
         q: string;
         a: string;
     }[];
+    /** v1.34.0: Q2 "Which towns do you get the most work from?". Up to 3 of `serviceArea`. */
+    topTowns?: string[];
     additionalSites?: AdditionalBrandSite[];
 }
 /** Enterprise additional site — facts + palette + direction; copy is generated. */

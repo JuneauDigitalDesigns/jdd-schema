@@ -15,6 +15,8 @@ export * from "./site-types-source.js";
 // v1.32.0 - profile kinds + review sources, and the service-page gate (moved from the console)
 export * from "./profiles.js";
 export * from "./service-pages.js";
+// v1.34.0 - town pages, spokes and the caps per page type (local SEO, 2026-11-12)
+export * from "./area-pages.js";
 // v1.1.0 — brand-direction intake
 export * from "./brand-direction.js";
 export * from "./palette.js";
