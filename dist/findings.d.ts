@@ -151,9 +151,9 @@ export declare const zFinding: z.ZodObject<{
         destructive?: boolean | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
+    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     id: string;
     severity: "unknown" | "red" | "amber" | "grey";
-    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     siteSlug: string;
     title: string;
     detail: string;
@@ -166,9 +166,9 @@ export declare const zFinding: z.ZodObject<{
         destructive?: boolean | undefined;
     } | undefined;
 }, {
+    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     id: string;
     severity: "unknown" | "red" | "amber" | "grey";
-    area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     siteSlug: string;
     title: string;
     detail: string;

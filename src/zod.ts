@@ -27,6 +27,8 @@ export const zImageMeta = z.object({
   url: z.string(),
   filename: z.string(),
   alt: z.string(),
+  // v1.34.0: Q1, the town a job photo was taken in. Not passthrough, so it must be declared.
+  town: z.string().optional(),
 });
 
 const svc = z.object({
@@ -189,6 +191,7 @@ const zServiceEntry = z.object({
   priceFrom: z.string().optional(),
   photos: z.array(zImageMeta).optional(),
   questions: z.array(zQuestion).optional(),
+  priceFactors: z.array(z.string()).optional(), // v1.34.0: Q5
 });
 const zProfileLink = z.object({
   kind: z.enum(PROFILE_KINDS),
@@ -249,6 +252,8 @@ export const zBrandIntakeSubmission = z
     serviceAreaBusiness: z.boolean().optional(),
     profiles: z.array(zProfileLink).optional(),
     customerQuestions: z.array(zQuestion).optional(),
+    // v1.34.0 (local SEO, 2026-11-12): Q2, the towns the client gets the most work from.
+    topTowns: z.array(z.string()).optional(),
     additionalSites: z
       .array(
         z

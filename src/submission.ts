@@ -7,7 +7,9 @@
  * no field changes. The brand-direction fields land in v1.1.0.
  */
 
-export type ImageMeta = { url: string; filename: string; alt: string };
+/** v1.34.0: `town` is Q1 ("Which town was this job in?"), asked under each photo; absent or blank
+ *  = not answered ("Not sure"). */
+export type ImageMeta = { url: string; filename: string; alt: string; town?: string };
 
 export interface OnboardingSubmission {
   selectedPlan: "starter" | "growth" | "enterprise";

@@ -58,7 +58,10 @@ export interface ServiceItem {
   areas?: string[];        // towns for THIS service, exact strings from extensions.serviceArea. None → no areas block, no fallback
   brands?: string[];       // brands for this service; each also appears in extensions.brandsCarried
   duration?: string | null; // how long the job usually takes, in the client's words ("Half a day"). Feeds page.expect; never generated, not a gate fact
-  slug?: string;           // /services/<slug>. Stored once (first tag or export), never re-derived, so a rename keeps the URL
+  // v1.34.0 (local SEO, 2026-11-12): client-supplied, never generated, not gate facts.
+  priceFactors?: string[];  // Q5 "What makes this job cost more or less?": what changes the price, never a price
+  typicalVisit?: string[];  // Q6 (console only, the operator enters it): what happens on a typical visit, in the client's words
+  slug?: string;          // /services/<slug>. Stored once (first tag or export), never re-derived, so a rename keeps the URL
   page?: ServicePageCopy;  // generated copy for the service's own page (console copywriter)
 }
 
@@ -79,6 +82,7 @@ export interface Project {
   caption: string; // image caption / placeholder label
   image?: { url: string; alt: string } | null; // optional card image
   service?: string; // v1.32.0: slug of the service this job belongs to (a real job photo for its page)
+  town?: string;    // v1.34.0: Q1 "Which town was this job in?", exactly as extensions.serviceArea spells it. Never guessed
 }
 
 export interface Testimonial {
@@ -93,6 +97,7 @@ export interface Testimonial {
   sourceUrl?: string;     // link to the review itself, when public
   date?: string;          // ISO date (YYYY-MM-DD or YYYY-MM)
   service?: string;       // slug of the service it is about, if any
+  town?: string;          // v1.34.0: the town the review is from, exactly as extensions.serviceArea spells it (console, operator-set)
 }
 
 export interface FaqItem {
@@ -275,6 +280,17 @@ export interface ExtensionsContent {
   serviceAreaBusiness?: boolean | null;          // true → the street address appears nowhere on the site; null = not asked
   customerQuestions?: CustomerQuestion[] | null; // questions customers really ask; the copywriter uses them first
   profiles?: ProfileLink[] | null;               // the business's own profiles (GBP = kind "google"); footer + sameAs
+  // v1.34.0 (local SEO, 2026-11-12): never generated.
+  topTowns?: string[] | null;    // Q2 "Which towns do you get the most work from?": up to 3, as extensions.serviceArea spells them
+  townNotes?: TownNote[] | null; // operator-researched facts about a town (codes, permits), each with its source (L9)
+}
+
+/** v1.34.0: a fact about one town that the operator looked up. It counts toward the town's page
+ *  and may be shown there only with its source link; it is never generated (L9). */
+export interface TownNote {
+  town: string;      // exactly as extensions.serviceArea spells it
+  text: string;      // the fact, in plain words
+  sourceUrl: string; // where it came from (required): an https:// link
 }
 
 /** v1.32.0: a question the client's customers really ask, with the client's own answer (may be

@@ -13,6 +13,7 @@ import { DEFAULT_STRUCTURE } from "./structure.js";
 import { resolvePalette } from "./palette.js";
 import { PROFILE_KINDS } from "./profiles.js";
 import { serviceSlug } from "./service-pages.js";
+import { TOP_TOWNS_MAX } from "./area-pages.js";
 import { formatPhoneDisplay, phoneHref } from "./phone.js";
 // ─── helpers ──────────────────────────────────────────────────────────────────
 function splitList(value) {
@@ -103,10 +104,14 @@ function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
         const qs = cleanQuestions(s.questions);
         const price = (s.priceFrom ?? "").trim() || (servicePrices?.[s.name] ?? "").trim();
         const duration = (s.duration ?? "").trim();
+        const priceFactors = cleanList(s.priceFactors);
         if (included.length === 0)
             missing.push(`services.items.${i}.included`);
         if (typicalJobs.length === 0)
             missing.push(`services.items.${i}.typicalJobs`);
+        // v1.34.0: Q5 is asked of every service, so a blank one is "asked, left blank" (flagged).
+        if (priceFactors.length === 0)
+            missing.push(`services.items.${i}.priceFactors`);
         const tagged = photos.length > 0 || qs.length > 0;
         const slug = serviceSlug({ t: s.name }, taken);
         taken.push(slug);
@@ -119,11 +124,15 @@ function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
             if (!given)
                 missing.push(`work.projects.${projects.length}.caption`);
             const alt = given || s.name;
+            // v1.34.0: Q1's answer, kept only when it is a town the client covers (L6). loc, the
+            // display line, shows the town and nothing more: never a street.
+            const town = areaByLower.get((p.town ?? "").trim().toLowerCase());
             projects.push({
-                t: s.name, loc: "", yr: null, scope: s.name, size: "",
+                t: s.name, loc: town ?? "", yr: null, scope: s.name, size: "",
                 caption: alt, // never empty: it is the photo's alt text
                 image: { url: p.url, alt },
                 service: slug,
+                ...(town ? { town } : {}),
             });
         }
         for (const q of qs)
@@ -146,6 +155,7 @@ function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
             ...(areas.length ? { areas } : {}),
             ...(serviceBrands.length ? { brands: serviceBrands } : {}),
             ...(duration ? { duration } : {}),
+            ...(priceFactors.length ? { priceFactors } : {}),
             ...(tagged ? { slug } : {}),
         };
     });
@@ -227,6 +237,35 @@ function buildScaffold(f, plan) {
     const allQuestions = [...cleanQuestions(f.customerQuestions), ...details.questions];
     flag("extensions.customerQuestions", allQuestions.length > 0);
     const brandsCarried = cleanList([...(f.brandsCarried ? splitList(f.brandsCarried) : []), ...details.brands]);
+    // v1.34.0 (local SEO, 2026-11-12). Q1 under a general photo: a photo the client placed in a town
+    // is a job in that town, so it also becomes an untagged project (the town page's "Recent jobs"
+    // and the town gate's job fact). It stays a hero slide too. No town, no project: it is a hero
+    // slide only, exactly as before. Its caption is flagged for the console, never written here.
+    const areaByLower = new Map(siteArea.map((a) => [a.toLowerCase(), a]));
+    const townOf = (raw) => areaByLower.get((raw ?? "").trim().toLowerCase());
+    const townProjects = [];
+    for (const p of f.images?.heroSlides ?? []) {
+        const town = townOf(p.town);
+        if (!town || !p.url || !p.url.trim())
+            continue;
+        const given = (p.alt ?? "").trim();
+        if (!given)
+            missing.push(`work.projects.${details.projects.length + townProjects.length}.caption`);
+        townProjects.push({
+            t: "", loc: town, yr: null, scope: "", size: "",
+            caption: given || town, // never empty: it is the photo's alt text
+            image: { url: p.url, alt: given || town },
+            town,
+        });
+    }
+    // Q2: up to 3 of the client's own towns, as the service area spells them.
+    const topTowns = [];
+    for (const raw of f.topTowns ?? []) {
+        const town = townOf(raw);
+        if (town && !topTowns.includes(town) && topTowns.length < TOP_TOWNS_MAX)
+            topTowns.push(town);
+    }
+    flag("extensions.topTowns", topTowns.length > 0);
     const serviceLinks = f.serviceList.map((s) => ({ label: s.name, href: "#services" }));
     const seo = {
         title: "",
@@ -297,7 +336,7 @@ function buildScaffold(f, plan) {
         },
         // Job photos arrive as projects tagged to their service (service-page-spec.md §4). The work
         // SECTION stays hidden: a photo-only project has no location or year to show there.
-        work: { eyebrow: "", title: "", sub: "", projects: details.projects, hidden: true },
+        work: { eyebrow: "", title: "", sub: "", projects: [...details.projects, ...townProjects], hidden: true },
         testimonials: {
             eyebrow: "",
             title: "",
@@ -355,6 +394,8 @@ function buildScaffold(f, plan) {
             serviceAreaBusiness: typeof f.serviceAreaBusiness === "boolean" ? f.serviceAreaBusiness : null,
             customerQuestions: allQuestions.length ? allQuestions : null,
             profiles: resolvedProfiles,
+            topTowns: topTowns.length ? topTowns : null,
+            townNotes: null, // operator-only (console), never from the form
         },
         images: {
             hero: {
@@ -431,6 +472,7 @@ export function mapBrandIntakeToIntake(sub) {
         serviceAreaBusiness: sub.serviceAreaBusiness,
         profiles: sub.profiles,
         customerQuestions: sub.customerQuestions,
+        topTowns: sub.topTowns,
     }, sub.selectedPlan);
     const extras = (sub.additionalSites ?? []).filter((a) => a && a.brandName && a.brandName.trim());
     // Carried onto the envelope, not onto any site. Every field of SiteContent is serialized

@@ -49,6 +49,8 @@ export interface ServiceItem {
     areas?: string[];
     brands?: string[];
     duration?: string | null;
+    priceFactors?: string[];
+    typicalVisit?: string[];
     slug?: string;
     page?: ServicePageCopy;
 }
@@ -71,6 +73,7 @@ export interface Project {
         alt: string;
     } | null;
     service?: string;
+    town?: string;
 }
 export interface Testimonial {
     q: string;
@@ -82,6 +85,7 @@ export interface Testimonial {
     sourceUrl?: string;
     date?: string;
     service?: string;
+    town?: string;
 }
 export interface FaqItem {
     q: string;
@@ -239,6 +243,15 @@ export interface ExtensionsContent {
     serviceAreaBusiness?: boolean | null;
     customerQuestions?: CustomerQuestion[] | null;
     profiles?: ProfileLink[] | null;
+    topTowns?: string[] | null;
+    townNotes?: TownNote[] | null;
+}
+/** v1.34.0: a fact about one town that the operator looked up. It counts toward the town's page
+ *  and may be shown there only with its source link; it is never generated (L9). */
+export interface TownNote {
+    town: string;
+    text: string;
+    sourceUrl: string;
 }
 /** v1.32.0: a question the client's customers really ask, with the client's own answer (may be
  *  blank). `service` is a service slug when the question is about one service. */

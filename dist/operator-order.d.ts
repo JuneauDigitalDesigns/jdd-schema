@@ -61,8 +61,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         email: string;
         contactName: string;
-        phone: string;
         address: string;
+        phone: string;
         legalName: string;
         entityType: string;
         contactTitle: string;
@@ -70,8 +70,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     }, {
         email: string;
         contactName: string;
-        phone: string;
         address: string;
+        phone: string;
         legalName: string;
         entityType: string;
         contactTitle: string;
@@ -143,13 +143,13 @@ export declare const zOperatorOrder: z.ZodObject<{
         kind: z.ZodString;
         text: z.ZodString;
     }, "strip", z.ZodTypeAny, {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }, {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }>, "many">;
     createdAt: z.ZodNumber;
     updatedAt: z.ZodNumber;
@@ -162,8 +162,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     client: {
         email: string;
         contactName: string;
-        phone: string;
         address: string;
+        phone: string;
         legalName: string;
         entityType: string;
         contactTitle: string;
@@ -180,9 +180,9 @@ export declare const zOperatorOrder: z.ZodObject<{
     };
     vertical: string;
     events: {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }[];
     agreementId?: string | undefined;
     receptionistMode?: "forwarded" | "published" | "declined" | undefined;
@@ -217,8 +217,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     client: {
         email: string;
         contactName: string;
-        phone: string;
         address: string;
+        phone: string;
         legalName: string;
         entityType: string;
         contactTitle: string;
@@ -235,9 +235,9 @@ export declare const zOperatorOrder: z.ZodObject<{
     };
     vertical: string;
     events: {
+        text: string;
         at: number;
         kind: string;
-        text: string;
     }[];
     agreementId?: string | undefined;
     receptionistMode?: "forwarded" | "published" | "declined" | undefined;
