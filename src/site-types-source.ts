@@ -326,6 +326,17 @@ export interface PageHeaderContent {
   cta: { label: string; href: string } | null; // null → omit the button
 }
 
+export interface AreaPageRef {
+  town: string;     // as extensions.serviceArea spells it
+  slug: string;     // /areas/<slug>
+  spokes: string[]; // service slugs with an approved spoke here
+}
+
+export interface AreaPageCopy {
+  intro: string;
+  spokes?: Record<string, { intro: string }>; // keyed by service slug
+}
+
 /** v2.2: per-subpage content, keyed by route in SiteContent.subpages. Carries the page
  *  header copy and that page's own SEO. Home has no entry (it uses hero + site-level seo). */
 export interface SubpageContent {
@@ -351,6 +362,8 @@ export interface SiteContent {
    *  ("services", "about", "contact", optional 5th). Undefined for legacy single-page sites. */
   subpages?:    Record<string, SubpageContent>;
   servicePages?: string[] | null; // v1.32.0: slugs of services with their own page (export-written)
+  areaPages?: AreaPageRef[] | null;               // v1.34.0: town pages that exist (export-written)
+  areaCopy?: Record<string, AreaPageCopy> | null; // v1.34.0: generated town-page intros, by town slug
   extensions:   ExtensionsContent;
   images:       SiteImages;
   _meta:        ContentMeta;

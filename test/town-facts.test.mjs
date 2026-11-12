@@ -109,6 +109,14 @@ test("client repos are typed for every new field (SITE_TYPES_SOURCE)", () => {
   }
 });
 
+test("client repos are typed for the town page list and its generated copy", () => {
+  // The export writes areaPages and the copywriter writes areaCopy into every client's site.ts;
+  // untyped, a client repo's `next build` fails at type-check (see site-types-mirror.test.mjs).
+  for (const needle of ["areaPages?: AreaPageRef[] | null", "areaCopy?: Record<string, AreaPageCopy> | null", "export interface AreaPageRef", "export interface AreaPageCopy", "spokes: string[]"]) {
+    assert.ok(SITE_TYPES_SOURCE.includes(needle), `SITE_TYPES_SOURCE lacks ${needle}`);
+  }
+});
+
 test("an additional enterprise site does not inherit the primary's top towns (a town belongs to one site)", () => {
   const r = mapBrandIntakeToIntake(sub({
     selectedPlan: "enterprise",

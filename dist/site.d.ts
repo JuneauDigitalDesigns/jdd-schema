@@ -321,6 +321,19 @@ export interface PageHeaderContent {
         href: string;
     } | null;
 }
+/** v1.34.0: one town page that exists. Export-written. */
+export interface AreaPageRef {
+    town: string;
+    slug: string;
+    spokes: string[];
+}
+/** v1.34.0: generated copy for one town page and its spokes. */
+export interface AreaPageCopy {
+    intro: string;
+    spokes?: Record<string, {
+        intro: string;
+    }>;
+}
 /** v2.2: per-subpage content, keyed by route in SiteContent.subpages. Carries the page
  *  header copy and that page's own SEO. Home has no entry (it uses `hero` + site-level `seo`). */
 export interface SubpageContent {
@@ -354,6 +367,14 @@ export interface SiteContent {
      *  console export from the composition, like `nav`. Routing, not client data. Menus, cards,
      *  related links and the footer link a service here only when its slug is listed. */
     servicePages?: string[] | null;
+    /** v1.34.0: the town pages that exist (/areas/<slug>), written by the console export from the
+     *  composition, like `servicePages`. Routing, not client data: a town or spoke is linked only
+     *  when it is listed here. The main city is never listed (L4). */
+    areaPages?: AreaPageRef[] | null;
+    /** v1.34.0: generated copy for the town pages, keyed by town slug (console copywriter). Only
+     *  the intros are generated; every other block renders from tagged facts, so it never counts
+     *  toward the 40% local share. Header and SEO live in subpages['areas/<slug>'] as for any page. */
+    areaCopy?: Record<string, AreaPageCopy> | null;
     extensions: ExtensionsContent;
     images: SiteImages;
     _meta: ContentMeta;
