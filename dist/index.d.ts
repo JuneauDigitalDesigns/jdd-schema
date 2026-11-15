@@ -35,4 +35,5 @@ export * from "./copy-brief.js";
 export * from "./ticket.js";
 export * from "./lead.js";
 export * from "./operator-order.js";
+export * from "./call-gate.js";
 //# sourceMappingURL=index.d.ts.map
