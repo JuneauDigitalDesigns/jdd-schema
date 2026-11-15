@@ -97,3 +97,10 @@ export * from "./lead.js";
 //           onboarding. zPortalSite is a plain object, so without these fields a read would
 //           silently strip them.
 export * from "./operator-order.js";
+// v1.35.0 — the client call log's gate and the call profile. `shouldLogCall` is the one rule for
+//           "should this finished call have a row": jdd-ops' Make filter is tested against it and
+//           the agency's client-call reconcile applies it before replaying anything, so a call
+//           the filter drops on purpose is never replayed. `CallProfile` is what jdd-ops
+//           publishes to KV per site so the reconcile can find the agent, base and clone hook,
+//           and `callProfileProblems` refuses a master base or the master hook.
+export * from "./call-gate.js";
