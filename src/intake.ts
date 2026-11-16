@@ -92,6 +92,33 @@ export interface QueuedIntake {
   slugGuess: string;
   sessionId: string;
   intake: IntakeEnvelope; // the full Intake envelope { plan, siteCount, sites }
+  /**
+   * The `jdd:order:{id}` operator order this signup's site came from: set when the client was
+   * closed on a sales call (the console's close wizard). Copied from `PortalSite.orderId` when
+   * the intake is queued, because the console sees the intake, not the account it belongs to.
+   */
+  orderId?: string;
+  /**
+   * The `jdd:purchase:{id}` intent this signup's site came from: set when the client bought on
+   * the agency site themselves (self-serve). Copied from `PortalSite.purchaseId`.
+   */
+  purchaseId?: string;
+}
+
+/** How a signup reached JDD. Null for intakes queued before either id was stamped. */
+export type IntakeOrigin = "operator-call" | "self-serve";
+
+/**
+ * Which path a queued signup came through, from the ids stamped at queue time.
+ *
+ * An order id always wins: an operator-closed site is the one path that writes one. A purchase
+ * id alone is self-serve. Neither (an intake queued before 2026-11-16, or a pre-cutover site)
+ * returns null, and the reader decides how to fall back; it never guesses "self-serve".
+ */
+export function intakeOrigin(rec: { orderId?: string | null; purchaseId?: string | null }): IntakeOrigin | null {
+  if (rec.orderId) return "operator-call";
+  if (rec.purchaseId) return "self-serve";
+  return null;
 }
 
 /** Compact summary for the console's Step 1 grid (no heavy `intake` payload). */
