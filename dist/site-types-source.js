@@ -228,7 +228,6 @@ export interface SeoContent {
   title: string;
   description: string;
   canonical: string;
-  googleAnalyticsId: string | null;
   facebookPixelId: string | null;
 }
 

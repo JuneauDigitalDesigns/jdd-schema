@@ -76,7 +76,7 @@ export * from "./ticket.js";
 //           Web-only ($197, no receptionist) is `plan: "starter"` + mode `declined`, NOT a
 //           fourth plan slug — the price is identical to Starter on purpose.
 // v1.30.0 — CRM v2 + web-form lead capture.
-//           `WebLead`: form enquiries captured into the portal, replacing Resend email
+//           `WebLead`: form inquiries captured into the portal, replacing Resend email
 //           delivery. Keyed on `normalizeE164(phone)` so a form submission and a call from
 //           the same person collapse onto one customer rather than two.
 //           `PortalSite.twilioNumber` / `.messagingServiceSid`: the portal cannot read a

@@ -500,7 +500,6 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
     title: "",
     description: "",
     canonical: f.existingWebsiteUrl && f.existingWebsiteUrl.trim() ? f.existingWebsiteUrl.trim() : "",
-    googleAnalyticsId: null,
     facebookPixelId: null,
   };
 

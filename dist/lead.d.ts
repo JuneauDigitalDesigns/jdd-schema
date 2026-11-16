@@ -1,6 +1,6 @@
 import { z } from "zod";
 /**
- * A web-form enquiry captured into the client portal.
+ * A web-form inquiry captured into the client portal.
  *
  * Replaces the old Resend-email delivery, where a lead existed only as an HTML email and was
  * gone the moment the owner deleted it. Every tier captures these — including web-only, which
@@ -15,7 +15,7 @@ import { z } from "zod";
  * → ingest route) and the consumer (portal Inbox) cannot drift.
  */
 export interface WebLead {
-    /** ULID — sortable by creation time. Two identical enquiries an hour apart are two leads. */
+    /** ULID — sortable by creation time. Two identical inquiries an hour apart are two leads. */
     leadId: string;
     slug: string;
     name: string | null;
