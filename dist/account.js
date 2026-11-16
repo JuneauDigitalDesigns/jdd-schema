@@ -68,6 +68,13 @@ export const zPortalSite = z.object({
     a2pStatus: z.enum(A2P_STATUSES).optional(),
     cancelRequestedAt: z.number().optional(),
     cancelEffectiveAt: z.number().optional(),
+    searchAddon: z
+        .object({
+        status: z.enum(["active", "ending"]),
+        since: z.number(),
+        endsAt: z.number().optional(),
+    })
+        .optional(),
 });
 export const zPortalAccount = z.object({
     email: z.string().min(1),

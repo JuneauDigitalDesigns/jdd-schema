@@ -183,6 +183,27 @@ export interface PortalSite {
     cancelRequestedAt?: number;
     /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
     cancelEffectiveAt?: number;
+    /**
+     * The Search add-on ($197 a month, per site), when this site has it. Absent means it doesn't.
+     *
+     * Billed as a second item on the site's Stripe subscription (Enterprise: one item, quantity =
+     * the sites that have it). Stripe is the source of truth; the agency's Stripe webhook mirrors
+     * it here, so the weekly search job, the notices and the facts wizard can gate without calling
+     * Stripe. Only the webhook writes it.
+     *
+     * - `active`: on, and renewing.
+     * - `ending`: on until `endsAt`, the end of the month already paid for, then removed with no
+     *   credit.
+     */
+    searchAddon?: SearchAddon;
+}
+/** The Search add-on on a site. See `PortalSite.searchAddon`. */
+export interface SearchAddon {
+    status: "active" | "ending";
+    /** Epoch ms it was first added. */
+    since: number;
+    /** Epoch ms it stops, for `ending`. */
+    endsAt?: number;
 }
 /** Everything needed to add or update a site; only `slug` is required. */
 export type PortalSiteInput = Partial<PortalSite> & {
@@ -267,6 +288,19 @@ export declare const zPortalSite: z.ZodObject<{
     a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
     cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
     cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
+    searchAddon: z.ZodOptional<z.ZodObject<{
+        status: z.ZodEnum<["active", "ending"]>;
+        since: z.ZodNumber;
+        endsAt: z.ZodOptional<z.ZodNumber>;
+    }, "strip", z.ZodTypeAny, {
+        status: "active" | "ending";
+        since: number;
+        endsAt?: number | undefined;
+    }, {
+        status: "active" | "ending";
+        since: number;
+        endsAt?: number | undefined;
+    }>>;
 }, "strip", z.ZodTypeAny, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
@@ -303,6 +337,11 @@ export declare const zPortalSite: z.ZodObject<{
     a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
+    searchAddon?: {
+        status: "active" | "ending";
+        since: number;
+        endsAt?: number | undefined;
+    } | undefined;
 }, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
@@ -339,6 +378,11 @@ export declare const zPortalSite: z.ZodObject<{
     a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
+    searchAddon?: {
+        status: "active" | "ending";
+        since: number;
+        endsAt?: number | undefined;
+    } | undefined;
 }>;
 export declare const zPortalAccount: z.ZodObject<{
     email: z.ZodString;
@@ -406,6 +450,19 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
         cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
         cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
+        searchAddon: z.ZodOptional<z.ZodObject<{
+            status: z.ZodEnum<["active", "ending"]>;
+            since: z.ZodNumber;
+            endsAt: z.ZodOptional<z.ZodNumber>;
+        }, "strip", z.ZodTypeAny, {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        }, {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        }>>;
     }, "strip", z.ZodTypeAny, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
@@ -442,6 +499,11 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
+        searchAddon?: {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        } | undefined;
     }, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
@@ -478,6 +540,11 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
+        searchAddon?: {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        } | undefined;
     }>, "many">;
     createdAt: z.ZodNumber;
     updatedAt: z.ZodNumber;
@@ -532,6 +599,11 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
+        searchAddon?: {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        } | undefined;
     }[];
     createdAt: number;
     updatedAt: number;
@@ -586,6 +658,11 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus?: "not-applicable" | "none" | "profile-pending" | "profile-approved" | "brand-pending" | "brand-approved" | "campaign-pending" | "verified" | "failed" | undefined;
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
+        searchAddon?: {
+            status: "active" | "ending";
+            since: number;
+            endsAt?: number | undefined;
+        } | undefined;
     }[];
     createdAt: number;
     updatedAt: number;

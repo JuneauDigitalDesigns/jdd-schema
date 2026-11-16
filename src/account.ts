@@ -208,6 +208,28 @@ export interface PortalSite {
   cancelRequestedAt?: number;
   /** Epoch ms of the first billing boundary ≥ now + notice period — the Stripe cancel_at. */
   cancelEffectiveAt?: number;
+  /**
+   * The Search add-on ($197 a month, per site), when this site has it. Absent means it doesn't.
+   *
+   * Billed as a second item on the site's Stripe subscription (Enterprise: one item, quantity =
+   * the sites that have it). Stripe is the source of truth; the agency's Stripe webhook mirrors
+   * it here, so the weekly search job, the notices and the facts wizard can gate without calling
+   * Stripe. Only the webhook writes it.
+   *
+   * - `active`: on, and renewing.
+   * - `ending`: on until `endsAt`, the end of the month already paid for, then removed with no
+   *   credit.
+   */
+  searchAddon?: SearchAddon;
+}
+
+/** The Search add-on on a site. See `PortalSite.searchAddon`. */
+export interface SearchAddon {
+  status: "active" | "ending";
+  /** Epoch ms it was first added. */
+  since: number;
+  /** Epoch ms it stops, for `ending`. */
+  endsAt?: number;
 }
 
 /** Everything needed to add or update a site; only `slug` is required. */
@@ -283,6 +305,13 @@ export const zPortalSite = z.object({
   a2pStatus: z.enum(A2P_STATUSES).optional(),
   cancelRequestedAt: z.number().optional(),
   cancelEffectiveAt: z.number().optional(),
+  searchAddon: z
+    .object({
+      status: z.enum(["active", "ending"]),
+      since: z.number(),
+      endsAt: z.number().optional(),
+    })
+    .optional(),
 });
 
 export const zPortalAccount = z.object({
