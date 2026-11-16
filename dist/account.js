@@ -70,9 +70,14 @@ export const zPortalSite = z.object({
     cancelEffectiveAt: z.number().optional(),
     searchAddon: z
         .object({
-        status: z.enum(["active", "ending"]),
+        status: z.enum(["scheduled", "active", "ending"]),
         since: z.number(),
+        startsAt: z.number().optional(),
         endsAt: z.number().optional(),
+    })
+        .refine((a) => a.status !== "scheduled" || a.startsAt !== undefined, {
+        message: "a scheduled search add-on needs startsAt",
+        path: ["startsAt"],
     })
         .optional(),
 });

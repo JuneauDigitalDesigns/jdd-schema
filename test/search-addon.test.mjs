@@ -22,7 +22,8 @@ const account = (sites) => ({ email: "a@b.c", sites, createdAt: NOW, updatedAt: 
 test("a site's search add-on survives a read of the account", () => {
   const active = { status: "active", since: NOW };
   const ending = { status: "ending", since: NOW, endsAt: NOW + 86_400_000 };
-  for (const searchAddon of [active, ending]) {
+  const scheduled = { status: "scheduled", since: NOW, startsAt: NOW + 86_400_000 };
+  for (const searchAddon of [active, ending, scheduled]) {
     const parsed = zPortalAccount.parse(account([site({ searchAddon })]));
     assert.deepEqual(parsed.sites[0].searchAddon, searchAddon);
   }
@@ -30,7 +31,13 @@ test("a site's search add-on survives a read of the account", () => {
   assert.equal(zPortalAccount.parse(account([site()])).sites[0].searchAddon, undefined);
 });
 
-test("only the two states are accepted", () => {
+// The Search Console session gates on "scheduled means not on yet" and shows "Starts {date}"
+// (D3, 2026-11-16). A scheduled add-on with no date would show "Starts undefined".
+test("a scheduled add-on must say when it starts", () => {
+  assert.throws(() => zPortalAccount.parse(account([site({ searchAddon: { status: "scheduled", since: NOW } })])));
+});
+
+test("only the three states are accepted", () => {
   assert.throws(() => zPortalAccount.parse(account([site({ searchAddon: { status: "on", since: NOW } })])));
   assert.throws(() => zPortalAccount.parse(account([site({ searchAddon: { status: "active" } })])));
 });

@@ -191,17 +191,25 @@ export interface PortalSite {
      * it here, so the weekly search job, the notices and the facts wizard can gate without calling
      * Stripe. Only the webhook writes it.
      *
+     * - `scheduled`: booked to start at `startsAt` (the site's next renewal), not on yet. Nothing
+     *   has been charged; the first $197 is billed then, with the plan. Gate on `active` or
+     *   `ending`, never on the field being present.
      * - `active`: on, and renewing.
      * - `ending`: on until `endsAt`, the end of the month already paid for, then removed with no
      *   credit.
+     *
+     * The price is flat, never prorated (operator decision D3, 2026-11-16): started mid-month, the
+     * client pays the full $197 that day.
      */
     searchAddon?: SearchAddon;
 }
 /** The Search add-on on a site. See `PortalSite.searchAddon`. */
 export interface SearchAddon {
-    status: "active" | "ending";
-    /** Epoch ms it was first added. */
+    status: "scheduled" | "active" | "ending";
+    /** Epoch ms it was first added; for `scheduled`, when the start was booked. */
     since: number;
+    /** Epoch ms it starts, for `scheduled`. */
+    startsAt?: number;
     /** Epoch ms it stops, for `ending`. */
     endsAt?: number;
 }
@@ -288,17 +296,30 @@ export declare const zPortalSite: z.ZodObject<{
     a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
     cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
     cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
-    searchAddon: z.ZodOptional<z.ZodObject<{
-        status: z.ZodEnum<["active", "ending"]>;
+    searchAddon: z.ZodOptional<z.ZodEffects<z.ZodObject<{
+        status: z.ZodEnum<["scheduled", "active", "ending"]>;
         since: z.ZodNumber;
+        startsAt: z.ZodOptional<z.ZodNumber>;
         endsAt: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        status: "active" | "ending";
+        status: "scheduled" | "active" | "ending";
         since: number;
+        startsAt?: number | undefined;
         endsAt?: number | undefined;
     }, {
-        status: "active" | "ending";
+        status: "scheduled" | "active" | "ending";
         since: number;
+        startsAt?: number | undefined;
+        endsAt?: number | undefined;
+    }>, {
+        status: "scheduled" | "active" | "ending";
+        since: number;
+        startsAt?: number | undefined;
+        endsAt?: number | undefined;
+    }, {
+        status: "scheduled" | "active" | "ending";
+        since: number;
+        startsAt?: number | undefined;
         endsAt?: number | undefined;
     }>>;
 }, "strip", z.ZodTypeAny, {
@@ -338,8 +359,9 @@ export declare const zPortalSite: z.ZodObject<{
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
     searchAddon?: {
-        status: "active" | "ending";
+        status: "scheduled" | "active" | "ending";
         since: number;
+        startsAt?: number | undefined;
         endsAt?: number | undefined;
     } | undefined;
 }, {
@@ -379,8 +401,9 @@ export declare const zPortalSite: z.ZodObject<{
     cancelRequestedAt?: number | undefined;
     cancelEffectiveAt?: number | undefined;
     searchAddon?: {
-        status: "active" | "ending";
+        status: "scheduled" | "active" | "ending";
         since: number;
+        startsAt?: number | undefined;
         endsAt?: number | undefined;
     } | undefined;
 }>;
@@ -450,17 +473,30 @@ export declare const zPortalAccount: z.ZodObject<{
         a2pStatus: z.ZodOptional<z.ZodEnum<["not-applicable", "none", "profile-pending", "profile-approved", "brand-pending", "brand-approved", "campaign-pending", "verified", "failed"]>>;
         cancelRequestedAt: z.ZodOptional<z.ZodNumber>;
         cancelEffectiveAt: z.ZodOptional<z.ZodNumber>;
-        searchAddon: z.ZodOptional<z.ZodObject<{
-            status: z.ZodEnum<["active", "ending"]>;
+        searchAddon: z.ZodOptional<z.ZodEffects<z.ZodObject<{
+            status: z.ZodEnum<["scheduled", "active", "ending"]>;
             since: z.ZodNumber;
+            startsAt: z.ZodOptional<z.ZodNumber>;
             endsAt: z.ZodOptional<z.ZodNumber>;
         }, "strip", z.ZodTypeAny, {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         }, {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
+            endsAt?: number | undefined;
+        }>, {
+            status: "scheduled" | "active" | "ending";
+            since: number;
+            startsAt?: number | undefined;
+            endsAt?: number | undefined;
+        }, {
+            status: "scheduled" | "active" | "ending";
+            since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         }>>;
     }, "strip", z.ZodTypeAny, {
@@ -500,8 +536,9 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
         searchAddon?: {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
     }, {
@@ -541,8 +578,9 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
         searchAddon?: {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
     }>, "many">;
@@ -600,8 +638,9 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
         searchAddon?: {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
     }[];
@@ -659,8 +698,9 @@ export declare const zPortalAccount: z.ZodObject<{
         cancelRequestedAt?: number | undefined;
         cancelEffectiveAt?: number | undefined;
         searchAddon?: {
-            status: "active" | "ending";
+            status: "scheduled" | "active" | "ending";
             since: number;
+            startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
     }[];
