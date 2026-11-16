@@ -18,4 +18,18 @@
 export function leadModeFor(plan) {
     return plan === "starter" ? "email" : "phone";
 }
+/**
+ * Which path a queued signup came through, from the ids stamped at queue time.
+ *
+ * An order id always wins: an operator-closed site is the one path that writes one. A purchase
+ * id alone is self-serve. Neither (an intake queued before 2026-11-16, or a pre-cutover site)
+ * returns null, and the reader decides how to fall back; it never guesses "self-serve".
+ */
+export function intakeOrigin(rec) {
+    if (rec.orderId)
+        return "operator-call";
+    if (rec.purchaseId)
+        return "self-serve";
+    return null;
+}
 //# sourceMappingURL=intake.js.map
