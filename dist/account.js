@@ -68,6 +68,18 @@ export const zPortalSite = z.object({
     a2pStatus: z.enum(A2P_STATUSES).optional(),
     cancelRequestedAt: z.number().optional(),
     cancelEffectiveAt: z.number().optional(),
+    searchAddon: z
+        .object({
+        status: z.enum(["scheduled", "active", "ending"]),
+        since: z.number(),
+        startsAt: z.number().optional(),
+        endsAt: z.number().optional(),
+    })
+        .refine((a) => a.status !== "scheduled" || a.startsAt !== undefined, {
+        message: "a scheduled search add-on needs startsAt",
+        path: ["startsAt"],
+    })
+        .optional(),
 });
 export const zPortalAccount = z.object({
     email: z.string().min(1),

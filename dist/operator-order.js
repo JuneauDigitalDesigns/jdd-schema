@@ -67,7 +67,13 @@ export const zOperatorOrder = z.object({
     /** Locked at creation. Every system — portal site, clients/ folder, A2P record — uses it. */
     siteSlug: z.string().min(1),
     plan: zPlan,
+    /**
+     * Every plan is month to month since 2026-11-16, and nothing writes "annual" any more. The
+     * value stays accepted so orders saved before then still parse.
+     */
     period: z.enum(["monthly", "annual"]),
+    /** Paid add-ons sold with the order. `search`: the $197-a-month Search add-on for this site. */
+    addons: z.object({ search: z.boolean().optional() }).optional(),
     pricing: z.object({ kind: z.literal("standard") }),
     client: z.object({
         legalName: z.string().min(1),

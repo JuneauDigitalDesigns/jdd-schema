@@ -37,7 +37,19 @@ export declare const zOperatorOrder: z.ZodObject<{
     /** Locked at creation. Every system — portal site, clients/ folder, A2P record — uses it. */
     siteSlug: z.ZodString;
     plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    /**
+     * Every plan is month to month since 2026-11-16, and nothing writes "annual" any more. The
+     * value stays accepted so orders saved before then still parse.
+     */
     period: z.ZodEnum<["monthly", "annual"]>;
+    /** Paid add-ons sold with the order. `search`: the $197-a-month Search add-on for this site. */
+    addons: z.ZodOptional<z.ZodObject<{
+        search: z.ZodOptional<z.ZodBoolean>;
+    }, "strip", z.ZodTypeAny, {
+        search?: boolean | undefined;
+    }, {
+        search?: boolean | undefined;
+    }>>;
     pricing: z.ZodObject<{
         kind: z.ZodLiteral<"standard">;
     }, "strip", z.ZodTypeAny, {
@@ -171,8 +183,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     };
     id: string;
     source: "operator-call";
-    leadId: string;
     siteSlug: string;
+    leadId: string;
     operator: string;
     period: "monthly" | "annual";
     pricing: {
@@ -186,6 +198,9 @@ export declare const zOperatorOrder: z.ZodObject<{
     }[];
     agreementId?: string | undefined;
     receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    addons?: {
+        search?: boolean | undefined;
+    } | undefined;
     forwardingNumber?: string | undefined;
     callRef?: string | undefined;
     agreementKind?: "master" | "addendum" | undefined;
@@ -226,8 +241,8 @@ export declare const zOperatorOrder: z.ZodObject<{
     };
     id: string;
     source: "operator-call";
-    leadId: string;
     siteSlug: string;
+    leadId: string;
     operator: string;
     period: "monthly" | "annual";
     pricing: {
@@ -241,6 +256,9 @@ export declare const zOperatorOrder: z.ZodObject<{
     }[];
     agreementId?: string | undefined;
     receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    addons?: {
+        search?: boolean | undefined;
+    } | undefined;
     forwardingNumber?: string | undefined;
     callRef?: string | undefined;
     agreementKind?: "master" | "addendum" | undefined;
