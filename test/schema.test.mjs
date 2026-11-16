@@ -36,7 +36,7 @@ function sampleSubmission(overrides = {}) {
       paletteInk: "#0F1B2D", paletteInkSoft: "#4A5568", paletteRule: "#CBD5E1", hasLogo: "yes",
     },
     announcement: "",
-    seo: { seoTitle: "Peak | HVAC", seoDescription: "Juneau HVAC", seoCanonical: "", googleAnalyticsId: "", facebookPixelId: "" },
+    seo: { seoTitle: "Peak | HVAC", seoDescription: "Juneau HVAC", seoCanonical: "", facebookPixelId: "" },
     extensions: { mapsUrl: "", bookingUrl: "", portalUrl: "" },
     socialMedia: { linkedin: "", instagram: "", facebook: "", youtube: "" },
     hero: {
@@ -109,4 +109,18 @@ test("SITE_TYPES_SOURCE is self-contained and defines SiteContent", () => {
   // Must NOT import from the package — client repos have to stay dependency-free.
   assert.ok(!SITE_TYPES_SOURCE.includes("@jdd/schema"));
   assert.ok(!/\bimport\b/.test(SITE_TYPES_SOURCE));
+});
+
+// v1.37.0 (2026-11-16): JDD doesn't use Google Analytics (site stats are Vercel Analytics and
+// Lighthouse), so `seo.googleAnalyticsId` is gone from the content, the intake and the mapper.
+// A submission saved before then may still carry the key; it must be ignored, not carried over.
+test("no Google Analytics field survives the mapping, the missing-fields list or the types source", () => {
+  const legacy = sampleSubmission();
+  legacy.seo.googleAnalyticsId = "G-LEGACY0001";
+  const intake = mapPayloadToIntake(legacy);
+  assert.equal(zIntake.safeParse(intake).success, true);
+  assert.ok(!("googleAnalyticsId" in intake.sites[0].seo));
+  assert.ok(!JSON.stringify(intake).includes("G-LEGACY0001"));
+  assert.ok(!intake.sites[0]._meta.missing_fields.some((f) => /analytics/i.test(f)));
+  assert.ok(!/googleAnalytics/i.test(SITE_TYPES_SOURCE));
 });

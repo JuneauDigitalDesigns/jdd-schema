@@ -38,7 +38,7 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
       "business.notableClients", "business.businessHours", "business.certifications", "business.awards",
       "branding.palette", "branding.hasLogo", "branding.logo",
       "announcement",
-      "seo.title", "seo.description", "seo.canonical", "seo.googleAnalyticsId", "seo.facebookPixelId",
+      "seo.title", "seo.description", "seo.canonical", "seo.facebookPixelId",
       "extensions.mapsUrl", "extensions.bookingUrl", "extensions.portalUrl",
       "social.linkedin", "social.instagram", "social.facebook", "social.youtube",
       "hero.eyebrow", "hero.headline", "hero.headlineEmphasis", "hero.sub",
@@ -227,7 +227,6 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
       title: p.seo.seoTitle,
       description: p.seo.seoDescription,
       canonical: p.seo.seoCanonical,
-      googleAnalyticsId: orNull(p.seo.googleAnalyticsId),
       facebookPixelId: orNull(p.seo.facebookPixelId),
     },
     extensions: {
