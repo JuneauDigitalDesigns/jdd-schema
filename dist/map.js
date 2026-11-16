@@ -25,7 +25,7 @@ export function mapPayloadToSchema(p) {
     };
     if (p.formMode === "basic") {
         // Basic mode — all non-contact fields are intentionally skipped; flag all for human review
-        missing.push("business.industry", "business.established", "brand.tagline", "business.usp", "business.notableClients", "business.businessHours", "business.certifications", "business.awards", "branding.palette", "branding.hasLogo", "branding.logo", "announcement", "seo.title", "seo.description", "seo.canonical", "seo.googleAnalyticsId", "seo.facebookPixelId", "extensions.mapsUrl", "extensions.bookingUrl", "extensions.portalUrl", "social.linkedin", "social.instagram", "social.facebook", "social.youtube", "hero.eyebrow", "hero.headline", "hero.headlineEmphasis", "hero.sub", "hero.cta", "hero.secondaryCta", "hero.badge", "hero.frictionReducers", "hero.bullets", "hero.slides", "about.eyebrow", "about.title", "about.body", "about.pillars", "about.stats", "about.featureImage", "services.eyebrow", "services.title", "services.sub", "services.items", "work.eyebrow", "work.title", "work.sub", "work.projects", "testimonials.eyebrow", "testimonials.title", "testimonials.items", "faq.eyebrow", "faq.title", "faq.sub", "faq.items", "finalCta.eyebrow", "finalCta.headline", "finalCta.sub", "finalCta.cta", "finalCta.secondary", "finalCta.frictionReducers", "footer.blurb", "footer.legal");
+        missing.push("business.industry", "business.established", "brand.tagline", "business.usp", "business.notableClients", "business.businessHours", "business.certifications", "business.awards", "branding.palette", "branding.hasLogo", "branding.logo", "announcement", "seo.title", "seo.description", "seo.canonical", "seo.facebookPixelId", "extensions.mapsUrl", "extensions.bookingUrl", "extensions.portalUrl", "social.linkedin", "social.instagram", "social.facebook", "social.youtube", "hero.eyebrow", "hero.headline", "hero.headlineEmphasis", "hero.sub", "hero.cta", "hero.secondaryCta", "hero.badge", "hero.frictionReducers", "hero.bullets", "hero.slides", "about.eyebrow", "about.title", "about.body", "about.pillars", "about.stats", "about.featureImage", "services.eyebrow", "services.title", "services.sub", "services.items", "work.eyebrow", "work.title", "work.sub", "work.projects", "testimonials.eyebrow", "testimonials.title", "testimonials.items", "faq.eyebrow", "faq.title", "faq.sub", "faq.items", "finalCta.eyebrow", "finalCta.headline", "finalCta.sub", "finalCta.cta", "finalCta.secondary", "finalCta.frictionReducers", "footer.blurb", "footer.legal");
     }
     else {
         // Detailed / default mode — flag only genuinely empty required fields
@@ -203,7 +203,6 @@ export function mapPayloadToSchema(p) {
             title: p.seo.seoTitle,
             description: p.seo.seoDescription,
             canonical: p.seo.seoCanonical,
-            googleAnalyticsId: orNull(p.seo.googleAnalyticsId),
             facebookPixelId: orNull(p.seo.facebookPixelId),
         },
         extensions: {

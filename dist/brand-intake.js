@@ -271,7 +271,6 @@ function buildScaffold(f, plan) {
         title: "",
         description: "",
         canonical: f.existingWebsiteUrl && f.existingWebsiteUrl.trim() ? f.existingWebsiteUrl.trim() : "",
-        googleAnalyticsId: null,
         facebookPixelId: null,
     };
     return {

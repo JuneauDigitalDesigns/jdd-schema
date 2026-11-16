@@ -50,7 +50,6 @@ export interface OnboardingSubmission {
         seoTitle: string;
         seoDescription: string;
         seoCanonical: string;
-        googleAnalyticsId: string;
         facebookPixelId: string;
     };
     extensions: {
