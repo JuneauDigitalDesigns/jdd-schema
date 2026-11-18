@@ -17,10 +17,10 @@
  * Kept as its own tiny module rather than living on `palette.ts` or `industry-menu.ts`
  * because both of those need it, and importing either from the other would be a cycle.
  */
-export type VerticalId = "hvac" | "roofing" | "plumbing" | "lawn-care" | "car-detailing" | "health";
+export type VerticalId = "hvac" | "roofing" | "plumbing" | "lawn-care" | "car-detailing" | "pressure-washing" | "health";
 export declare const VERTICAL_IDS: VerticalId[];
 /**
- * The value the wizard submits when none of the six fit.
+ * The value the wizard submits when none of the verticals fit.
  *
  * Deliberately a distinct constant rather than an empty string: "the client told us none of
  * these apply" and "the client hasn't answered yet" are different states, and the wizard's

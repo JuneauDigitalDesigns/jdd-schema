@@ -43,6 +43,19 @@ Write warm, reassuring, benefit-led marketing copy grounded in the business fact
 - Match the exact section counts you are asked for.
 - SEO: title <= 60 chars (include the business name and city when known), description <= 155 chars.`;
 const HEALTH_GUARDRAILS = `HEALTH GUARDRAILS: make NO medical claims and NO promises of specific health outcomes or results. Do not imply diagnosis, cure, or treatment of any condition. Do not reference insurance coverage, pricing, or reimbursement. Avoid absolute or superlative health promises (e.g. "cure", "guaranteed results", "pain-free", "best care"). Keep everything supportive and non-committal about outcomes.`;
+// Pressure washing's own rules, G1 to G6, approved word for word by Xander on 2026-11-18 (the
+// mockup canvas's "Copywriter rules" board). They sit on top of the home-service role. G1 and G6
+// carry no "unless the facts say it" on purpose: even a client's own promise doesn't reach the site.
+// Each answers a real way this trade's copy goes wrong: stains that only lighten, high pressure on
+// soft surfaces, unbacked chemical-safety and "eco" claims, results that regrow, protection a crew
+// doesn't actually do, and finishes that come away under any wash. Don't reword without sign-off.
+const PRESSURE_WASHING_GUARDRAILS = `PRESSURE WASHING RULES:
+- Never promise that a stain will come out. Oil, rust and old stains often only lighten, so say the business treats them.
+- Never describe a roof, siding, stucco, a painted surface or wood being cleaned with high pressure. When the facts say the business soft washes, say those surfaces are soft washed at low pressure.
+- Never call a cleaning product or method safe, gentle, non-toxic, eco-friendly, green, biodegradable, or safe for pets, children or plants, unless the facts say it.
+- Never say how long a clean or a sealer will last, or that algae, mildew or streaks won't come back.
+- Mention covering or rinsing plants, protecting windows or cars, collecting runoff, or bringing water only when the facts say the business does it.
+- Never promise no damage, or that a method is safe for every surface.`;
 const HOME_SERVICE_FORBIDDEN = [
     "top-notch",
     "one-stop shop",
@@ -60,9 +73,12 @@ function promptFor(id) {
     if (id === "health") {
         return { role: HEALTH_ROLE, guardrails: HEALTH_GUARDRAILS, forbidden: HEALTH_FORBIDDEN };
     }
+    if (id === "pressure-washing") {
+        return { role: HOME_SERVICE_ROLE, guardrails: PRESSURE_WASHING_GUARDRAILS, forbidden: HOME_SERVICE_FORBIDDEN };
+    }
     return { role: HOME_SERVICE_ROLE, guardrails: "", forbidden: HOME_SERVICE_FORBIDDEN };
 }
-/** The six shipped verticals, built from INDUSTRY_MENUS + the copywriter prompt data above. */
+/** The shipped verticals (seven since v1.40.0), built from INDUSTRY_MENUS + the copywriter prompt data above. */
 export const BUILT_IN_VERTICALS = INDUSTRY_MENUS.map((menu) => ({
     id: menu.id,
     label: menu.label,

@@ -35,9 +35,10 @@ test("every built-in vertical carries a non-empty prompt role and no baseVertica
   }
 });
 
-test("only health carries guardrails text", () => {
+test("only health and pressure washing carry guardrails text", () => {
+  // Pressure washing's rules were approved on 2026-11-18 (pressure-washing.test.mjs pins the text).
   for (const v of BUILT_IN_VERTICALS) {
-    if (v.id === "health") {
+    if (v.id === "health" || v.id === "pressure-washing") {
       assert.ok(v.prompt.guardrails.length > 0);
     } else {
       assert.equal(v.prompt.guardrails, "");

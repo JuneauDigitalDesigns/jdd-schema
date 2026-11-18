@@ -23,10 +23,11 @@ export const VERTICAL_IDS = [
     "plumbing",
     "lawn-care",
     "car-detailing",
+    "pressure-washing",
     "health",
 ];
 /**
- * The value the wizard submits when none of the six fit.
+ * The value the wizard submits when none of the verticals fit.
  *
  * Deliberately a distinct constant rather than an empty string: "the client told us none of
  * these apply" and "the client hasn't answered yet" are different states, and the wizard's

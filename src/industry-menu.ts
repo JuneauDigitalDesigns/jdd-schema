@@ -1245,6 +1245,159 @@ export const INDUSTRY_MENUS: IndustryMenu[] = [
     },
   },
   {
+    id: "pressure-washing",
+    label: "Pressure Washing / Soft Washing",
+    // v1.40.0: approved word for word by Xander on 2026-11-18 from the mockup canvas ("Overall it
+    // looks very good"): the tile label (W44), these services and tags (M1 to M8), their suggestions
+    // (pinned by test/fixtures/trade-suggestions-approved.json), the chips (M9, M10) and the slots and
+    // stat prompts (W62). Add or reword nothing here without his sign-off.
+    services: [
+      {
+        label: "House Washing", tag: "House",
+        included: [
+          "Siding", "Soffits and eaves", "Trim and shutters", "Front entry and porch", "Garage door",
+          "Exterior light fixtures", "Outside window frames", "Soft wash, low pressure",
+        ],
+        jobs: [
+          "Green or black streaks on the siding", "Mildew on the north side", "Spider webs under the eaves",
+          "Getting ready to sell", "Getting ready to paint", "Hosting an event", "HOA notice",
+          "House hasn't been washed in years",
+        ],
+        questions: [
+          "Will soft washing hurt my plants?", "Do I need to be home?", "Do you need my water?",
+          "Is it safe for vinyl siding?", "Is it safe for stucco?", "How long does it take?",
+        ],
+      },
+      {
+        label: "Roof Soft Washing", tag: "Roof",
+        included: [
+          "Shingle roofs", "Tile roofs", "Metal roofs", "Black streak removal", "Moss and lichen treatment",
+          "Gutter rinse after", "Low pressure only",
+        ],
+        jobs: [
+          "Black streaks on the roof", "Moss on the shingles", "Roof looks old", "Selling the house",
+          "HOA notice", "Insurance inspection coming up",
+        ],
+        questions: [
+          "Will it damage my shingles?", "Do you walk on the roof?", "How long do the results last?",
+          "Is it safe for tile roofs?", "What happens to the runoff?",
+        ],
+      },
+      {
+        label: "Driveway & Sidewalk Cleaning", tag: "Concrete",
+        included: [
+          "Driveway", "Sidewalks", "Walkways", "Curb", "Garage floor", "Oil stain treatment",
+          "Rust stain treatment", "Surface cleaner for an even finish",
+        ],
+        jobs: [
+          "Driveway has gone dark", "Oil stains", "Rust stains from sprinklers", "Tire marks",
+          "Mildew on the sidewalk", "Slippery walkway", "HOA notice", "Getting ready to sell",
+        ],
+        questions: [
+          "Can you get oil stains out?", "Will it leave stripes?", "Can you remove rust stains?",
+          "Do I need to move my cars?", "How long before I can drive on it?",
+        ],
+      },
+      {
+        label: "Paver Cleaning & Sealing", tag: "Pavers",
+        included: [
+          "Paver driveways", "Paver patios", "Pool deck pavers", "Weed removal from joints",
+          "Joint sand refill", "Sealing", "Stain treatment",
+        ],
+        jobs: [
+          "Weeds between the pavers", "Pavers look faded", "Sand washed out of the joints",
+          "Mildew on the pavers", "Pavers never sealed", "Getting ready to sell",
+        ],
+        questions: [
+          "Do you re-sand the joints?", "How long does sealer take to dry?", "Wet look or natural finish?",
+          "How often should pavers be sealed?", "Can I walk on them the same day?",
+        ],
+      },
+      {
+        label: "Pool Deck & Patio Cleaning", tag: "Patio",
+        included: [
+          "Pool deck", "Patio", "Lanai", "Screen enclosure", "Pool cage frame", "Outdoor furniture rinse",
+          "Steps and coping",
+        ],
+        jobs: [
+          "Slippery pool deck", "Mildew on the pool deck", "Dirty screen enclosure",
+          "Getting ready for summer", "Hosting a party", "Stains around the pool",
+        ],
+        questions: [
+          "Will cleaner get in my pool?", "Do you clean the screens?", "Is it safe for a painted pool deck?",
+          "Do I need to move the furniture?", "How long does it take?",
+        ],
+      },
+      {
+        label: "Deck & Fence Cleaning", tag: "Wood",
+        included: [
+          "Wood decks", "Composite decks", "Wood fences", "Vinyl fences", "Railings", "Stairs",
+          "Wood brightener", "Prep for stain or seal",
+        ],
+        jobs: [
+          "Deck turned gray", "Green growth on the fence", "Slippery deck boards", "Getting ready to stain",
+          "Fence looks old", "Selling the house",
+        ],
+        questions: [
+          "Will pressure damage the wood?", "Do you stain or seal too?", "How long before I can stain?",
+          "Is it safe for composite?", "Can you clean vinyl fences?",
+        ],
+      },
+      {
+        label: "Gutter Brightening", tag: "Gutters",
+        included: [
+          "Gutter faces", "Downspouts", "Black streak removal", "Fascia", "Hand scrub where needed",
+        ],
+        jobs: [
+          "Black stripes on the gutters", "Gutters look dirty from the street", "Washing the house anyway",
+          "Getting ready to sell",
+        ],
+        questions: [
+          "Is this the same as cleaning out the gutters?", "Will the streaks come back?",
+          "Can you do it with a house wash?", "Do you clean inside the gutters?",
+        ],
+      },
+      {
+        label: "Commercial Pressure Washing", tag: "Commercial",
+        included: [
+          "Storefronts", "Sidewalks", "Dumpster pads", "Drive-thru lanes", "Parking garage areas",
+          "Building exteriors", "Gum removal", "After-hours scheduling",
+        ],
+        jobs: [
+          "Gum on the sidewalk", "Dirty dumpster area", "Storefront looks tired",
+          "Property inspection coming up", "Opening a new location", "Regular cleaning for a property",
+        ],
+        questions: [
+          "Can you work after hours?", "Do you offer regular service?", "Do you carry commercial insurance?",
+          "Can you handle more than one location?", "What happens to the wastewater?",
+        ],
+      },
+    ],
+    differentiators: [
+      "Soft washing for siding and roofs",
+      "Before-and-after photos every time",
+      "We cover plants and rinse them after",
+      "Free quotes",
+    ],
+    customers: ["Homeowners", "Property managers and HOAs", "Businesses and storefronts"],
+    templateSlots: {
+      stats: [
+        { key: "propertiesCleaned", prompt: "About how many properties have you cleaned?", example: "800+" },
+        { key: "quoteTurnaround", prompt: "How soon do you usually send a quote?", example: "Same day" },
+        { key: "rating", prompt: "Your average review rating and count", example: "4.9★ from 180+ reviews" },
+      ],
+      reviewAggregate: true,
+      hoursPerDay: false,
+      // A "starting at" price and a service radius are facts about the business (PLAN D15), exactly
+      // as on car detailing: a blank price shows the tag alone, a blank radius the statement with no
+      // distance, never a placeholder.
+      priceFrom: true,
+      seasons: null,
+      serviceRadius: true,
+      offerBadge: false,
+    },
+  },
+  {
     id: "health",
     label: "Health & Wellness",
     services: [
