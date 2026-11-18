@@ -9,7 +9,8 @@
 
 /** v1.34.0: `town` is Q1 ("Which town was this job in?"), asked under each photo; absent or blank
  *  = not answered ("Not sure"). */
-export type ImageMeta = { url: string; filename: string; alt: string; town?: string };
+/** v1.41.0: `before` is the same job before the work, beside this photo (the after). */
+export type ImageMeta = { url: string; filename: string; alt: string; town?: string; before?: { url: string; filename: string; alt: string } };
 
 export interface OnboardingSubmission {
   selectedPlan: "starter" | "growth" | "enterprise";

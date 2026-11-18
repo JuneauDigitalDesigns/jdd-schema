@@ -29,6 +29,8 @@ export const zImageMeta = z.object({
   alt: z.string(),
   // v1.34.0: Q1, the town a job photo was taken in. Not passthrough, so it must be declared.
   town: z.string().optional(),
+  // v1.41.0: the same job BEFORE the work, beside this photo (the after). The client's own upload.
+  before: z.object({ url: z.string(), filename: z.string(), alt: z.string() }).optional(),
 });
 
 const svc = z.object({

@@ -262,6 +262,17 @@ function cleanQuestions(list: { q: string; a: string }[] | undefined): { q: stri
  * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
  * Areas are kept only when they name a town in the service area (spelled as the area spells it).
  */
+/**
+ * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
+ * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
+ * nothing invented.
+ */
+function beforeOf(p: { before?: { url?: string; alt?: string } }, alt: string): { before: { url: string; alt: string } } | Record<string, never> {
+  const url = (p.before?.url ?? "").trim();
+  if (!url) return {};
+  return { before: { url, alt: (p.before?.alt ?? "").trim() || alt } };
+}
+
 function serviceDetailsFrom(
   serviceList: ServiceEntry[],
   servicePrices: Record<string, string> | undefined,
@@ -316,6 +327,7 @@ function serviceDetailsFrom(
         t: s.name, loc: town ?? "", yr: null, scope: s.name, size: "",
         caption: alt, // never empty: it is the photo's alt text
         image: { url: p.url, alt },
+        ...beforeOf(p, alt),
         service: slug,
         ...(town ? { town } : {}),
       });
@@ -484,6 +496,7 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       t: "", loc: town, yr: null, scope: "", size: "",
       caption: given || town, // never empty: it is the photo's alt text
       image: { url: p.url, alt: given || town },
+      ...beforeOf(p, given || town),
       town,
     });
   }
