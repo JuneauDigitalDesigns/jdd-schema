@@ -5,10 +5,13 @@
  * would swallow the next interface's body. SITE_TYPES_SOURCE inlines both unions instead.
  */
 
-/** A business profile on another site. 'google' is the Google Business Profile. Order is the
+/** v1.39.0 (2026-11-17): linkedin, youtube, tiktok and x, which the lead card offered and the
+ *  intake stored as "other", so a footer could only guess the platform from the address.
+ *
+ *  A business profile on another site. 'google' is the Google Business Profile. Order is the
  *  footer's and the intake's display order (GBP first; see the client-seo research notes). */
 export const PROFILE_KINDS = [
-  "google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other",
+  "google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other",
 ] as const;
 export type ProfileKind = (typeof PROFILE_KINDS)[number];
 
