@@ -153,8 +153,8 @@ export declare const zFinding: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     id: string;
-    severity: "unknown" | "red" | "amber" | "grey";
     siteSlug: string;
+    severity: "unknown" | "red" | "amber" | "grey";
     title: string;
     detail: string;
     expected?: string | undefined;
@@ -168,8 +168,8 @@ export declare const zFinding: z.ZodObject<{
 }, {
     area: "leads" | "portal" | "site" | "voice" | "billing" | "account";
     id: string;
-    severity: "unknown" | "red" | "amber" | "grey";
     siteSlug: string;
+    severity: "unknown" | "red" | "amber" | "grey";
     title: string;
     detail: string;
     expected?: string | undefined;
@@ -189,18 +189,18 @@ export declare const zFindingTransition: z.ZodObject<{
     event: z.ZodEnum<["opened", "closed"]>;
     title: z.ZodString;
 }, "strip", z.ZodTypeAny, {
-    severity: "unknown" | "red" | "amber" | "grey";
+    event: "opened" | "closed";
     siteSlug: string;
+    severity: "unknown" | "red" | "amber" | "grey";
     title: string;
     at: number;
     findingId: string;
-    event: "opened" | "closed";
 }, {
-    severity: "unknown" | "red" | "amber" | "grey";
+    event: "opened" | "closed";
     siteSlug: string;
+    severity: "unknown" | "red" | "amber" | "grey";
     title: string;
     at: number;
     findingId: string;
-    event: "opened" | "closed";
 }>;
 //# sourceMappingURL=findings.d.ts.map

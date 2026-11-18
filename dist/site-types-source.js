@@ -274,7 +274,7 @@ export interface CustomerQuestion {
 }
 
 export interface ProfileLink {
-  kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+  kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
   url: string;
   label?: string;
 }

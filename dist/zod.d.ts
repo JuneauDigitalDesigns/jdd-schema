@@ -2021,16 +2021,16 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     offerBadge: z.ZodOptional<z.ZodString>;
     serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
     profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other"]>;
         url: z.ZodString;
         label: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }>, "many">>;
     customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -2956,16 +2956,16 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     offerBadge: z.ZodOptional<z.ZodString>;
     serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
     profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other"]>;
         url: z.ZodString;
         label: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }>, "many">>;
     customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
@@ -3891,16 +3891,16 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
     offerBadge: z.ZodOptional<z.ZodString>;
     serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
     profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
-        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other"]>;
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other"]>;
         url: z.ZodString;
         label: z.ZodOptional<z.ZodString>;
     }, "strip", z.ZodTypeAny, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }, {
         url: string;
-        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "other";
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
         label?: string | undefined;
     }>, "many">>;
     customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{

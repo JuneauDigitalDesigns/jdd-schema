@@ -4,10 +4,13 @@
  * site.ts's `export interface|type X {` blocks with a regex, and a bare union type alias there
  * would swallow the next interface's body. SITE_TYPES_SOURCE inlines both unions instead.
  */
-/** A business profile on another site. 'google' is the Google Business Profile. Order is the
+/** v1.39.0 (2026-11-17): linkedin, youtube, tiktok and x, which the lead card offered and the
+ *  intake stored as "other", so a footer could only guess the platform from the address.
+ *
+ *  A business profile on another site. 'google' is the Google Business Profile. Order is the
  *  footer's and the intake's display order (GBP first; see the client-seo research notes). */
 export const PROFILE_KINDS = [
-    "google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "other",
+    "google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other",
 ];
 /** Where a real customer review came from. A review is the customer's own words, supplied by
  *  the client or copied from a profile, never written by the copywriter. */
