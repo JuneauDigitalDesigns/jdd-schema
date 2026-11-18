@@ -56,7 +56,7 @@ export interface VerticalOverrides {
     }>;
     customs: VerticalDef[];
 }
-/** The six shipped verticals, built from INDUSTRY_MENUS + the copywriter prompt data above. */
+/** The shipped verticals (seven since v1.40.0), built from INDUSTRY_MENUS + the copywriter prompt data above. */
 export declare const BUILT_IN_VERTICALS: VerticalDef[];
 /**
  * Layer console-side overrides and custom verticals over the built-ins.

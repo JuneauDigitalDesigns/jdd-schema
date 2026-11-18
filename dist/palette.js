@@ -164,8 +164,8 @@ const PRESET_DEFS = [
     { id: "classic-navy", label: "Classic Navy", source: { accent: "#1E3A8A", ink: "#111827", bgMood: "white" }, verticals: ["plumbing", "roofing", "car-detailing"] },
     // Emergency red — right for the trades people call in a crisis.
     { id: "crimson", label: "Crimson", source: { accent: "#B91C1C", ink: "#1F1315", bgMood: "white" }, verticals: ["plumbing", "hvac"] },
-    { id: "teal", label: "Teal", source: { accent: "#0F766E", ink: "#0B2422", bgMood: "cool" }, verticals: ["health", "car-detailing"] },
-    { id: "graphite", label: "Graphite", source: { accent: "#4B5563", ink: "#111827", bgMood: "white" }, verticals: ["car-detailing"] },
+    { id: "teal", label: "Teal", source: { accent: "#0F766E", ink: "#0B2422", bgMood: "cool" }, verticals: ["health", "car-detailing", "pressure-washing"] },
+    { id: "graphite", label: "Graphite", source: { accent: "#4B5563", ink: "#111827", bgMood: "white" }, verticals: ["car-detailing", "pressure-washing"] },
     // Dark themes flatter strong imagery and punish thin content, so they go to the trades
     // that reliably have photography rather than to everyone.
     { id: "midnight", label: "Midnight", source: { accent: "#60A5FA", bgMood: "deep-dark" }, verticals: ["car-detailing", "health"] },
