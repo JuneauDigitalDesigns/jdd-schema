@@ -13,16 +13,39 @@ export declare const zImageMeta: z.ZodObject<{
     filename: z.ZodString;
     alt: z.ZodString;
     town: z.ZodOptional<z.ZodString>;
+    before: z.ZodOptional<z.ZodObject<{
+        url: z.ZodString;
+        filename: z.ZodString;
+        alt: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        filename: string;
+        alt: string;
+    }, {
+        url: string;
+        filename: string;
+        alt: string;
+    }>>;
 }, "strip", z.ZodTypeAny, {
     url: string;
-    alt: string;
     filename: string;
+    alt: string;
     town?: string | undefined;
+    before?: {
+        url: string;
+        filename: string;
+        alt: string;
+    } | undefined;
 }, {
     url: string;
-    alt: string;
     filename: string;
+    alt: string;
     town?: string | undefined;
+    before?: {
+        url: string;
+        filename: string;
+        alt: string;
+    } | undefined;
 }>;
 export declare const zAdditionalSiteEntry: z.ZodObject<{
     brandName: z.ZodString;
@@ -50,16 +73,39 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -67,9 +113,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -77,9 +128,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -118,16 +174,39 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -135,9 +214,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -145,9 +229,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -186,16 +275,39 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -203,9 +315,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -213,9 +330,14 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -260,16 +382,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -277,9 +422,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -287,9 +437,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     testimonials: z.ZodDefault<z.ZodArray<z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>, "many">>;
@@ -339,16 +494,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -356,9 +534,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -366,9 +549,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -407,16 +595,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -424,9 +635,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -434,9 +650,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -475,16 +696,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -492,9 +736,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -502,9 +751,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -548,16 +802,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -565,9 +842,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -575,9 +857,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     testimonials: z.ZodDefault<z.ZodArray<z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>, "many">>;
@@ -627,16 +914,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -644,9 +954,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -654,9 +969,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -695,16 +1015,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -712,9 +1055,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -722,9 +1070,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -763,16 +1116,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -780,9 +1156,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -790,9 +1171,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -836,16 +1222,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
     }, "strip", z.ZodTypeAny, {
         t: string;
@@ -853,9 +1262,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[];
     }, {
         t: string;
@@ -863,9 +1277,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
         d: string;
         images?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
     }>, "many">>;
     testimonials: z.ZodDefault<z.ZodArray<z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>, "many">>;
@@ -915,16 +1334,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -932,9 +1374,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -942,9 +1389,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -983,16 +1435,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -1000,9 +1475,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -1010,9 +1490,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -1051,16 +1536,39 @@ export declare const zOnboardingSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
         }, "strip", z.ZodTypeAny, {
             t: string;
@@ -1068,9 +1576,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[];
         }, {
             t: string;
@@ -1078,9 +1591,14 @@ export declare const zOnboardingSubmission: z.ZodObject<{
             d: string;
             images?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
         }>, "many">>;
         faqs: z.ZodDefault<z.ZodArray<z.ZodObject<{
@@ -1671,16 +2189,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
             q: z.ZodString;
@@ -1705,9 +2246,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFactors?: string[] | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             a: string;
@@ -1725,9 +2271,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         tag?: string | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             q: string;
@@ -1833,48 +2384,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -1882,48 +2502,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -1931,48 +2620,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
@@ -2065,16 +2823,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -2099,9 +2880,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -2119,9 +2905,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -2241,16 +3032,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -2275,9 +3089,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -2295,9 +3114,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -2417,16 +3241,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -2451,9 +3298,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -2471,9 +3323,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -2606,16 +3463,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
             q: z.ZodString;
@@ -2640,9 +3520,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFactors?: string[] | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             a: string;
@@ -2660,9 +3545,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         tag?: string | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             q: string;
@@ -2768,48 +3658,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -2817,48 +3776,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -2866,48 +3894,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
@@ -3000,16 +4097,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -3034,9 +4154,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -3054,9 +4179,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -3176,16 +4306,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -3210,9 +4363,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -3230,9 +4388,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -3352,16 +4515,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -3386,9 +4572,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -3406,9 +4597,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -3541,16 +4737,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
             q: z.ZodString;
@@ -3575,9 +4794,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         priceFactors?: string[] | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             a: string;
@@ -3595,9 +4819,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         tag?: string | undefined;
         photos?: {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }[] | undefined;
         questions?: {
             q: string;
@@ -3703,48 +4932,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -3752,48 +5050,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
@@ -3801,48 +5168,117 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>, "many">>;
         aboutFeature: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
             town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
         }, "strip", z.ZodTypeAny, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }, {
             url: string;
-            alt: string;
             filename: string;
+            alt: string;
             town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
         }>>;
     }, z.ZodTypeAny, "passthrough">>;
     existingWebsiteUrl: z.ZodDefault<z.ZodString>;
@@ -3935,16 +5371,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -3969,9 +5428,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -3989,9 +5453,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -4111,16 +5580,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -4145,9 +5637,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -4165,9 +5662,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;
@@ -4287,16 +5789,39 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 filename: z.ZodString;
                 alt: z.ZodString;
                 town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
             }, "strip", z.ZodTypeAny, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }, {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }>, "many">>;
             questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
                 q: z.ZodString;
@@ -4321,9 +5846,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             priceFactors?: string[] | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 a: string;
@@ -4341,9 +5871,14 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
             tag?: string | undefined;
             photos?: {
                 url: string;
-                alt: string;
                 filename: string;
+                alt: string;
                 town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
             }[] | undefined;
             questions?: {
                 q: string;

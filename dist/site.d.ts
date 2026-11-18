@@ -74,6 +74,10 @@ export interface Project {
     } | null;
     service?: string;
     town?: string;
+    before?: {
+        url: string;
+        alt: string;
+    } | null;
 }
 export interface Testimonial {
     q: string;

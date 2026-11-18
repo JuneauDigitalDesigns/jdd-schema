@@ -76,6 +76,7 @@ export interface Project {
   image?: { url: string; alt: string } | null; // optional card image
   service?: string; // v1.32.0: slug of the service this job belongs to
   town?: string;    // v1.34.0: the town of this job, as extensions.serviceArea spells it
+  before?: { url: string; alt: string } | null; // v1.41.0: the same job before the work; image is the after
 }
 
 export interface Testimonial {

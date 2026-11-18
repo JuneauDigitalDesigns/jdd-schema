@@ -83,6 +83,7 @@ export interface Project {
   image?: { url: string; alt: string } | null; // optional card image
   service?: string; // v1.32.0: slug of the service this job belongs to (a real job photo for its page)
   town?: string;    // v1.34.0: Q1 "Which town was this job in?", exactly as extensions.serviceArea spells it. Never guessed
+  before?: { url: string; alt: string } | null; // v1.41.0: the same job before the work; `image` is the after
 }
 
 export interface Testimonial {

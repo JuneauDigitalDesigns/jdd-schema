@@ -137,6 +137,10 @@ export function mapPayloadToSchema(p) {
                 image: pr.image
                     ? { url: pr.image.url, alt: pr.image.alt }
                     : null,
+                // v1.41.0: the same job before the work, when the client sent one.
+                ...(pr.image?.before?.url?.trim()
+                    ? { before: { url: pr.image.before.url.trim(), alt: pr.image.before.alt.trim() || pr.image.alt } }
+                    : {}),
             })),
         },
         testimonials: {
