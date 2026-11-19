@@ -283,6 +283,9 @@ export interface ExtensionsContent {
   // v1.34.0 (local SEO, 2026-11-12): never generated.
   topTowns?: string[] | null;    // Q2 "Which towns do you get the most work from?": up to 3, as extensions.serviceArea spells them
   townNotes?: TownNote[] | null; // operator-researched facts about a town (codes, permits), each with its source (L9)
+  // v1.43.0: the operator's tick in the console's intake (Business step, under License). True, the
+  // site says "Licensed & insured"; false or unset, it says "Licensed". Never generated.
+  insured?: boolean | null;
 }
 
 /** v1.34.0: a fact about one town that the operator looked up. It counts toward the town's page
