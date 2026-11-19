@@ -11,6 +11,7 @@ import type { FooterLink, SiteContent } from "./site.js";
 import type { AdditionalSiteEntry, OnboardingSubmission } from "./submission.js";
 import type { Intake } from "./intake.js";
 import { formatPhoneDisplay, phoneHref } from "./phone.js";
+import { monogramOf } from "./brand-intake.js";
 
 function or(value: string, fallback: string): string {
   return value && value.trim() ? value : fallback;
@@ -254,6 +255,7 @@ export function mapPayloadToSchema(p: OnboardingSubmission): SiteContent {
       },
       about: { feature: p.images.aboutFeature?.url },
       testimonials: {},
+      ...monogramOf(p.images.monogram),
       footer: { logoImage: p.images.logo?.url },
     },
     _meta: {

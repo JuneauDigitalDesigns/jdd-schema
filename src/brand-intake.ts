@@ -112,7 +112,8 @@ export interface BrandIntakeSubmission {
   // ── Look & feel ──
   palette: PalettePick;
   hasLogo: boolean;
-  images: { logo?: ImageMeta; heroSlides: ImageMeta[]; aboutFeature?: ImageMeta };
+  /** `logo` is the wordmark (the footer's); `monogram` (v1.42.0) the square mark in the nav. */
+  images: { logo?: ImageMeta; monogram?: ImageMeta; heroSlides: ImageMeta[]; aboutFeature?: ImageMeta };
 
   // ── Existing site (fed to the copywriter's `url` scan) ──
   existingWebsiteUrl: string;
@@ -267,6 +268,12 @@ function cleanQuestions(list: { q: string; a: string }[] | undefined): { q: stri
  * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
  * nothing invented.
  */
+/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
+export function monogramOf(m: { url?: string } | undefined): { nav: { logoImage: string } } | Record<string, never> {
+  const url = (m?.url ?? "").trim();
+  return url ? { nav: { logoImage: url } } : {};
+}
+
 function beforeOf(p: { before?: { url?: string; alt?: string } }, alt: string): { before: { url: string; alt: string } } | Record<string, never> {
   const url = (p.before?.url ?? "").trim();
   if (!url) return {};
@@ -410,7 +417,7 @@ interface SiteFacts {
   brandDirection: BrandDirection;
   palette: PalettePick;
   hasLogo?: boolean;
-  images?: { logo?: ImageMeta; heroSlides: ImageMeta[]; aboutFeature?: ImageMeta };
+  images?: { logo?: ImageMeta; monogram?: ImageMeta; heroSlides: ImageMeta[]; aboutFeature?: ImageMeta };
   existingWebsiteUrl?: string;
   // vertical-templates-v1 (PLAN §3.2) — see BrandIntakeSubmission for the shape rationale.
   stats?: { key: string; value: string; label: string }[];
@@ -646,6 +653,8 @@ function buildScaffold(f: SiteFacts, plan: SiteContent["_meta"]["selectedPlan"])
       },
       about: { feature: f.images?.aboutFeature?.url },
       testimonials: {},
+      // v1.42.0: the monogram is the nav's, the logo the footer's wordmark. Never one for the other.
+      ...monogramOf(f.images?.monogram),
       footer: { logoImage: f.images?.logo?.url },
     },
     _meta: {

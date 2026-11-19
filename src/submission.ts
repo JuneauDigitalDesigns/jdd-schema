@@ -95,7 +95,7 @@ export interface OnboardingSubmission {
     finalCtaFrictionReducers: string[];
   };
   footer: { footerBlurb: string; footerLegal: string };
-  images: { heroSlides: ImageMeta[]; logo?: ImageMeta; aboutFeature?: ImageMeta };
+  images: { heroSlides: ImageMeta[]; logo?: ImageMeta; monogram?: ImageMeta; aboutFeature?: ImageMeta };
   services: Array<{ t: string; tag: string; d: string; images: ImageMeta[] }>;
   testimonials: Array<{
     q: string;

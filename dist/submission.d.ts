@@ -136,6 +136,7 @@ export interface OnboardingSubmission {
     images: {
         heroSlides: ImageMeta[];
         logo?: ImageMeta;
+        monogram?: ImageMeta;
         aboutFeature?: ImageMeta;
     };
     services: Array<{

@@ -312,6 +312,9 @@ export interface SiteImages {
   hero:         { portrait?: string; slides?: Array<{ url: string; alt: string }> };
   about:        { feature?: string };
   testimonials: { avatars?: string[] };
+  /** v1.42.0: the nav's MONOGRAM, a square mark. Optional: with none the nav shows the name alone. */
+  nav?:         { logoImage?: string };
+  /** The footer's WORDMARK (since v1.42.0; before it, the one logo every nav and footer drew). */
   footer:       { logoImage?: string };
 }
 

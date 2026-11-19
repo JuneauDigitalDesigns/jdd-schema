@@ -2418,6 +2418,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -2536,6 +2575,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -2616,6 +2694,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
@@ -3692,6 +3809,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -3810,6 +3966,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -3890,6 +4085,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
@@ -4966,6 +5200,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -5084,6 +5357,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
                 alt: string;
             } | undefined;
         }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
         heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
@@ -5164,6 +5476,45 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }>>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
             url: z.ZodString;
             filename: z.ZodString;
             alt: z.ZodString;
