@@ -91,6 +91,11 @@ function cleanQuestions(list) {
  * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
  * nothing invented.
  */
+/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
+export function monogramOf(m) {
+    const url = (m?.url ?? "").trim();
+    return url ? { nav: { logoImage: url } } : {};
+}
 function beforeOf(p, alt) {
     const url = (p.before?.url ?? "").trim();
     if (!url)
@@ -416,6 +421,8 @@ function buildScaffold(f, plan) {
             },
             about: { feature: f.images?.aboutFeature?.url },
             testimonials: {},
+            // v1.42.0: the monogram is the nav's, the logo the footer's wordmark. Never one for the other.
+            ...monogramOf(f.images?.monogram),
             footer: { logoImage: f.images?.logo?.url },
         },
         _meta: {

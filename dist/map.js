@@ -7,6 +7,7 @@
  * "never invent values for flagged fields — leave placeholders for human review."
  */
 import { formatPhoneDisplay, phoneHref } from "./phone.js";
+import { monogramOf } from "./brand-intake.js";
 function or(value, fallback) {
     return value && value.trim() ? value : fallback;
 }
@@ -230,6 +231,7 @@ export function mapPayloadToSchema(p) {
             },
             about: { feature: p.images.aboutFeature?.url },
             testimonials: {},
+            ...monogramOf(p.images.monogram),
             footer: { logoImage: p.images.logo?.url },
         },
         _meta: {

@@ -209,6 +209,7 @@ export const zBrandIntakeSubmission = z
     images: z
         .object({
         logo: zImageMeta.optional(),
+        monogram: zImageMeta.optional(),
         heroSlides: z.array(zImageMeta).default([]),
         aboutFeature: zImageMeta.optional(),
     })
