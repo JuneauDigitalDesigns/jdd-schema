@@ -260,6 +260,7 @@ export interface ExtensionsContent {
   profiles?: ProfileLink[] | null;               // the business's own profiles; footer + sameAs
   topTowns?: string[] | null;    // v1.34.0: up to 3 towns the client gets the most work from
   townNotes?: TownNote[] | null; // v1.34.0: operator facts about a town, each with its source
+  insured?: boolean | null;       // v1.43.0: the operator's intake tick; true → "Licensed & insured", never generated
 }
 
 export interface TownNote {

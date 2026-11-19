@@ -77,6 +77,22 @@ function cleanQuestions(list) {
         .filter((x) => x && x.q && x.q.trim())
         .map((x) => ({ q: x.q.trim(), a: (x.a ?? "").trim() }));
 }
+/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
+export function monogramOf(m) {
+    const url = (m?.url ?? "").trim();
+    return url ? { nav: { logoImage: url } } : {};
+}
+/**
+ * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
+ * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
+ * nothing invented.
+ */
+function beforeOf(p, alt) {
+    const url = (p.before?.url ?? "").trim();
+    if (!url)
+        return {};
+    return { before: { url, alt: (p.before?.alt ?? "").trim() || alt } };
+}
 /**
  * v1.32.0: the per-service facts, mapped. Returns the ServiceItems, the job photos as
  * work.projects tagged to their service, the questions (per-service ones tagged), the brands to
@@ -86,22 +102,6 @@ function cleanQuestions(list) {
  * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
  * Areas are kept only when they name a town in the service area (spelled as the area spells it).
  */
-/**
- * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
- * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
- * nothing invented.
- */
-/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
-export function monogramOf(m) {
-    const url = (m?.url ?? "").trim();
-    return url ? { nav: { logoImage: url } } : {};
-}
-function beforeOf(p, alt) {
-    const url = (p.before?.url ?? "").trim();
-    if (!url)
-        return {};
-    return { before: { url, alt: (p.before?.alt ?? "").trim() || alt } };
-}
 function serviceDetailsFrom(serviceList, servicePrices, serviceArea) {
     const areaByLower = new Map(serviceArea.map((a) => [a.toLowerCase(), a]));
     const taken = [];

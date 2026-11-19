@@ -248,6 +248,7 @@ export interface ExtensionsContent {
     profiles?: ProfileLink[] | null;
     topTowns?: string[] | null;
     townNotes?: TownNote[] | null;
+    insured?: boolean | null;
 }
 /** v1.34.0: a fact about one town that the operator looked up. It counts toward the town's page
  *  and may be shown there only with its source link; it is never generated (L9). */

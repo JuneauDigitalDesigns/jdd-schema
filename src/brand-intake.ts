@@ -254,6 +254,23 @@ function cleanQuestions(list: { q: string; a: string }[] | undefined): { q: stri
     .map((x) => ({ q: x.q.trim(), a: (x.a ?? "").trim() }));
 }
 
+/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
+export function monogramOf(m: { url?: string } | undefined): { nav: { logoImage: string } } | Record<string, never> {
+  const url = (m?.url ?? "").trim();
+  return url ? { nav: { logoImage: url } } : {};
+}
+
+/**
+ * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
+ * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
+ * nothing invented.
+ */
+function beforeOf(p: { before?: { url?: string; alt?: string } }, alt: string): { before: { url: string; alt: string } } | Record<string, never> {
+  const url = (p.before?.url ?? "").trim();
+  if (!url) return {};
+  return { before: { url, alt: (p.before?.alt ?? "").trim() || alt } };
+}
+
 /**
  * v1.32.0: the per-service facts, mapped. Returns the ServiceItems, the job photos as
  * work.projects tagged to their service, the questions (per-service ones tagged), the brands to
@@ -263,23 +280,6 @@ function cleanQuestions(list: { q: string; a: string }[] | undefined): { q: stri
  * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
  * Areas are kept only when they name a town in the service area (spelled as the area spells it).
  */
-/**
- * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
- * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
- * nothing invented.
- */
-/** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
-export function monogramOf(m: { url?: string } | undefined): { nav: { logoImage: string } } | Record<string, never> {
-  const url = (m?.url ?? "").trim();
-  return url ? { nav: { logoImage: url } } : {};
-}
-
-function beforeOf(p: { before?: { url?: string; alt?: string } }, alt: string): { before: { url: string; alt: string } } | Record<string, never> {
-  const url = (p.before?.url ?? "").trim();
-  if (!url) return {};
-  return { before: { url, alt: (p.before?.alt ?? "").trim() || alt } };
-}
-
 function serviceDetailsFrom(
   serviceList: ServiceEntry[],
   servicePrices: Record<string, string> | undefined,

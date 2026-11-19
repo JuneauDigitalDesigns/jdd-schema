@@ -158,20 +158,6 @@ export interface AdditionalBrandSite {
     palette: PalettePick;
     brandDirection: BrandDirection;
 }
-/**
- * v1.32.0: the per-service facts, mapped. Returns the ServiceItems, the job photos as
- * work.projects tagged to their service, the questions (per-service ones tagged), the brands to
- * union into brandsCarried, and the missing_fields paths for the two core facts.
- *
- * A service's slug is written only when something is tagged to it (a photo or a question), per
- * service-page-spec.md §2: stored once, then never re-derived, so a later rename keeps the URL.
- * Areas are kept only when they name a town in the service area (spelled as the area spells it).
- */
-/**
- * v1.41.0: a job photo's before photo, as the Project carries it, or nothing. Only a real upload
- * counts (a blank url is no photo). Its alt is the client's own, else the job's caption: true, and
- * nothing invented.
- */
 /** v1.42.0: the nav's monogram, as the site carries it, or nothing. A blank upload is no monogram. */
 export declare function monogramOf(m: {
     url?: string;
