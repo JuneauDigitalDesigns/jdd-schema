@@ -109,6 +109,7 @@ export interface HeroContent {
   headlineEmphasis: string | null; // substring of headline to render in accent color; null → no highlight
   sub: string;
   formLabel: string;
+  formNote?: string;               // v1.44.0: the line under the lead form's heading, editable per site; absent → the catalog's default
   placeholder: string;
   cta: string;
   secondaryCta: string;            // ghost link below form
