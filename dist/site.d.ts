@@ -105,6 +105,7 @@ export interface HeroContent {
     headlineEmphasis: string | null;
     sub: string;
     formLabel: string;
+    formNote?: string;
     placeholder: string;
     cta: string;
     secondaryCta: string;
