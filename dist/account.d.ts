@@ -214,6 +214,29 @@ export interface PortalSite {
      * client pays the full $197 that day.
      */
     searchAddon?: SearchAddon;
+    /**
+     * The call log a site kept from before it lost its receptionist (v1.46.0, Xander's B4: past
+     * calls stay viewable after a downgrade to website).
+     *
+     * A web-only site has `airtableBaseId` and `retellAgentId` nulled on every write (see
+     * `buildPortalSiteEntries`), because no new call can arrive. The calls it already answered
+     * did happen, and the portal's call log, recording and transcript routes need those two ids
+     * to show them. So the downgrade copies them here before the live ids go.
+     *
+     * Written by the downgrade path only. **No writer clears it**: `upsertSite` ignores a
+     * `null`, and `buildPortalSiteEntries` never emits the key. Read it through
+     * `siteFeature(site, "pastCalls")`, never directly as a sign of a live receptionist.
+     */
+    callHistory?: CallHistory;
+}
+/** A site's past call log, kept after its receptionist ended. See `PortalSite.callHistory`. */
+export interface CallHistory {
+    /** The Airtable base the call log lives in. */
+    airtableBaseId: string;
+    /** The Retell agent that answered, for recordings and transcripts. Null if never recorded. */
+    retellAgentId: string | null;
+    /** Epoch ms the receptionist ended: the downgrade's effective time. */
+    endedAt: number;
 }
 /** The Search add-on on a site. See `PortalSite.searchAddon`. */
 export interface SearchAddon {
@@ -334,6 +357,19 @@ export declare const zPortalSite: z.ZodObject<{
         startsAt?: number | undefined;
         endsAt?: number | undefined;
     }>>;
+    callHistory: z.ZodOptional<z.ZodObject<{
+        airtableBaseId: z.ZodString;
+        retellAgentId: z.ZodNullable<z.ZodString>;
+        endedAt: z.ZodNumber;
+    }, "strip", z.ZodTypeAny, {
+        airtableBaseId: string;
+        retellAgentId: string | null;
+        endedAt: number;
+    }, {
+        airtableBaseId: string;
+        retellAgentId: string | null;
+        endedAt: number;
+    }>>;
 }, "strip", z.ZodTypeAny, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
@@ -376,6 +412,11 @@ export declare const zPortalSite: z.ZodObject<{
         startsAt?: number | undefined;
         endsAt?: number | undefined;
     } | undefined;
+    callHistory?: {
+        airtableBaseId: string;
+        retellAgentId: string | null;
+        endedAt: number;
+    } | undefined;
 }, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
@@ -417,6 +458,11 @@ export declare const zPortalSite: z.ZodObject<{
         since: number;
         startsAt?: number | undefined;
         endsAt?: number | undefined;
+    } | undefined;
+    callHistory?: {
+        airtableBaseId: string;
+        retellAgentId: string | null;
+        endedAt: number;
     } | undefined;
 }>;
 export declare const zPortalAccount: z.ZodObject<{
@@ -511,6 +557,19 @@ export declare const zPortalAccount: z.ZodObject<{
             startsAt?: number | undefined;
             endsAt?: number | undefined;
         }>>;
+        callHistory: z.ZodOptional<z.ZodObject<{
+            airtableBaseId: z.ZodString;
+            retellAgentId: z.ZodNullable<z.ZodString>;
+            endedAt: z.ZodNumber;
+        }, "strip", z.ZodTypeAny, {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
+        }, {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
+        }>>;
     }, "strip", z.ZodTypeAny, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
@@ -553,6 +612,11 @@ export declare const zPortalAccount: z.ZodObject<{
             startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
+        callHistory?: {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
+        } | undefined;
     }, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
@@ -594,6 +658,11 @@ export declare const zPortalAccount: z.ZodObject<{
             since: number;
             startsAt?: number | undefined;
             endsAt?: number | undefined;
+        } | undefined;
+        callHistory?: {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
         } | undefined;
     }>, "many">;
     createdAt: z.ZodNumber;
@@ -655,6 +724,11 @@ export declare const zPortalAccount: z.ZodObject<{
             startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
+        callHistory?: {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
+        } | undefined;
     }[];
     createdAt: number;
     updatedAt: number;
@@ -715,6 +789,11 @@ export declare const zPortalAccount: z.ZodObject<{
             startsAt?: number | undefined;
             endsAt?: number | undefined;
         } | undefined;
+        callHistory?: {
+            airtableBaseId: string;
+            retellAgentId: string | null;
+            endedAt: number;
+        } | undefined;
     }[];
     createdAt: number;
     updatedAt: number;
@@ -749,7 +828,8 @@ export declare function createAccount(email: string, now?: number): PortalAccoun
  * safe for a multi-site account.
  *
  * Updates merge only *defined* fields, so a partial upsert (e.g. onboard.js supplying
- * airtableBaseId later) never blanks values set earlier. `addedAt` is preserved on update.
+ * airtableBaseId later) never blanks values set earlier. `callHistory` is never cleared at all:
+ * a `null` for it is ignored (v1.46.0). `addedAt` is preserved on update.
  * On insert, `plan` defaults to "starter" and `status` to "building".
  */
 export declare function upsertSite(account: PortalAccount, site: PortalSiteInput, now?: number): PortalAccount;
@@ -878,6 +958,8 @@ export interface PortalEntrySource {
  *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
  *  - **plan / status** — applied uniformly; the caller decides them, since only the caller
  *    knows whether it is looking at disk state or a live deploy result.
+ *  - **callHistory** — never emitted (v1.46.0). Nulling a web-only site's live base and agent is
+ *    safe because a downgrade copied them to `callHistory` first, and `upsertSite` keeps it.
  */
 export declare function buildPortalSiteEntries(input: {
     plan: PortalPlan;
@@ -892,7 +974,13 @@ export type PortalFeature = "calls" | "traffic" | "performance"
 /** The customer CRM. Growth and Enterprise only. */
  | "crm"
 /** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
- | "messaging";
+ | "messaging"
+/**
+ * The read-only call log a web-only site kept from before its receptionist ended (v1.46.0).
+ * Ready only for a web-only site with `callHistory`. A site that still has a receptionist
+ * shows its calls through `calls`, so this is `not-on-plan` there.
+ */
+ | "pastCalls";
 /**
  * *Why* a feature is or isn't usable — not just whether it is.
  *

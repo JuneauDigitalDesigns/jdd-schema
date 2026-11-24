@@ -81,6 +81,14 @@ export const zPortalSite = z.object({
         path: ["startsAt"],
     })
         .optional(),
+    // v1.46.0. zPortalSite is a plain object, so without this a read would silently strip it.
+    callHistory: z
+        .object({
+        airtableBaseId: z.string().min(1),
+        retellAgentId: z.string().nullable(),
+        endedAt: z.number(),
+    })
+        .optional(),
 });
 export const zPortalAccount = z.object({
     email: z.string().min(1),
@@ -133,12 +141,27 @@ function definedOnly(o) {
     return out;
 }
 /**
+ * The fields an upsert applies: the defined ones, minus a `callHistory` that is not an object.
+ *
+ * `callHistory` is the one field a writer can replace but never clear. A `null` from a writer
+ * that does not know the history (a repair, a re-run) would otherwise erase the only copy of
+ * the ids a downgraded client's past calls are read by.
+ */
+function mergeableFields(site) {
+    const out = definedOnly(site);
+    const history = out.callHistory;
+    if (history === null || typeof history !== "object")
+        delete out.callHistory;
+    return out;
+}
+/**
  * Add a site, or update it in place when the slug already exists — **always preserving
  * every other site**. This is the invariant that makes provisioning/repairing one site
  * safe for a multi-site account.
  *
  * Updates merge only *defined* fields, so a partial upsert (e.g. onboard.js supplying
- * airtableBaseId later) never blanks values set earlier. `addedAt` is preserved on update.
+ * airtableBaseId later) never blanks values set earlier. `callHistory` is never cleared at all:
+ * a `null` for it is ignored (v1.46.0). `addedAt` is preserved on update.
  * On insert, `plan` defaults to "starter" and `status` to "building".
  */
 export function upsertSite(account, site, now = Date.now()) {
@@ -148,14 +171,14 @@ export function upsertSite(account, site, now = Date.now()) {
         const created = {
             plan: "starter",
             status: "building",
-            ...definedOnly(site),
+            ...mergeableFields(site),
             slug: site.slug,
             addedAt: site.addedAt ?? now,
         };
         sites = [...account.sites, created];
     }
     else {
-        sites = account.sites.map((s, i) => i === idx ? { ...s, ...definedOnly(site), addedAt: s.addedAt } : s);
+        sites = account.sites.map((s, i) => i === idx ? { ...s, ...mergeableFields(site), addedAt: s.addedAt } : s);
     }
     return { ...account, sites, updatedAt: now };
 }
@@ -195,7 +218,7 @@ export function upsertSiteBySessionId(account, sessionId, updates, now = Date.no
     const existing = account.sites[idx];
     const merged = {
         ...existing,
-        ...definedOnly(updates),
+        ...mergeableFields(updates),
         addedAt: existing.addedAt,
     };
     const sites = [
@@ -304,6 +327,8 @@ function firstNonEmpty(...values) {
  *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
  *  - **plan / status** — applied uniformly; the caller decides them, since only the caller
  *    knows whether it is looking at disk state or a live deploy result.
+ *  - **callHistory** — never emitted (v1.46.0). Nulling a web-only site's live base and agent is
+ *    safe because a downgrade copied them to `callHistory` first, and `upsertSite` keeps it.
  */
 export function buildPortalSiteEntries(input) {
     const { plan, status, sharedAirtableBaseId = null, sites } = input;
@@ -353,6 +378,11 @@ const FEATURE_REQUIREMENT = {
     // PageSpeed measures a URL; without a canonical there is nothing to score.
     performance: "canonical",
 };
+/** A stored past call log with a base to read it from. */
+function hasCallHistory(site) {
+    const base = site.callHistory?.airtableBaseId;
+    return typeof base === "string" && base.trim() !== "";
+}
 /** Tiers that include the customer CRM and customer-facing messaging. */
 function hasCrmPlan(site) {
     return site.plan === "growth" || site.plan === "enterprise";
@@ -365,6 +395,11 @@ function hasCrmPlan(site) {
  * truth about what it bought rather than a promise of call data it will never receive.
  */
 export function siteFeature(site, feature) {
+    // Past calls are stored history, not a connection: no build status or live id applies. Only
+    // a web-only site reads them here; a receptionist site has its live call log under `calls`.
+    if (feature === "pastCalls") {
+        return isWebOnly(site) && hasCallHistory(site) ? { state: "ready" } : { state: "not-on-plan" };
+    }
     // 1. Entitlement. `isWebOnly` covers both the `website` plan and the legacy declined
     // Starter: neither has call data, and never will.
     if (feature === "calls" && isWebOnly(site))
@@ -404,6 +439,7 @@ export function siteFeatures(site) {
         leads: siteFeature(site, "leads"),
         crm: siteFeature(site, "crm"),
         messaging: siteFeature(site, "messaging"),
+        pastCalls: siteFeature(site, "pastCalls"),
     };
 }
 //# sourceMappingURL=account.js.map

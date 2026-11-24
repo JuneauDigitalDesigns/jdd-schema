@@ -118,3 +118,9 @@ export * from "./call-gate.js";
 //           legacy declined Starter. `canAddPlan("website")` is unlimited; a `website` site is
 //           never metered; a `website` operator order carries no `receptionistMode`.
 export * from "./plans.js";
+// v1.46.0 — past calls stay viewable after a downgrade to website (Xander, B4). The first onboard
+//           re-run after a downgrade nulls a web-only site's `airtableBaseId` and `retellAgentId`,
+//           which the portal's call log, recording and transcript routes read. The downgrade now
+//           copies them to `PortalSite.callHistory` ({ airtableBaseId, retellAgentId, endedAt }),
+//           which `upsertSite` never clears (a null is ignored) and `buildPortalSiteEntries` never
+//           emits. New `PortalFeature` "pastCalls": ready only for a web-only site with history.

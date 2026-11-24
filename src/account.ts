@@ -239,6 +239,30 @@ export interface PortalSite {
    * client pays the full $197 that day.
    */
   searchAddon?: SearchAddon;
+  /**
+   * The call log a site kept from before it lost its receptionist (v1.46.0, Xander's B4: past
+   * calls stay viewable after a downgrade to website).
+   *
+   * A web-only site has `airtableBaseId` and `retellAgentId` nulled on every write (see
+   * `buildPortalSiteEntries`), because no new call can arrive. The calls it already answered
+   * did happen, and the portal's call log, recording and transcript routes need those two ids
+   * to show them. So the downgrade copies them here before the live ids go.
+   *
+   * Written by the downgrade path only. **No writer clears it**: `upsertSite` ignores a
+   * `null`, and `buildPortalSiteEntries` never emits the key. Read it through
+   * `siteFeature(site, "pastCalls")`, never directly as a sign of a live receptionist.
+   */
+  callHistory?: CallHistory;
+}
+
+/** A site's past call log, kept after its receptionist ended. See `PortalSite.callHistory`. */
+export interface CallHistory {
+  /** The Airtable base the call log lives in. */
+  airtableBaseId: string;
+  /** The Retell agent that answered, for recordings and transcripts. Null if never recorded. */
+  retellAgentId: string | null;
+  /** Epoch ms the receptionist ended: the downgrade's effective time. */
+  endedAt: number;
 }
 
 /** The Search add-on on a site. See `PortalSite.searchAddon`. */
@@ -337,6 +361,14 @@ export const zPortalSite = z.object({
       path: ["startsAt"],
     })
     .optional(),
+  // v1.46.0. zPortalSite is a plain object, so without this a read would silently strip it.
+  callHistory: z
+    .object({
+      airtableBaseId: z.string().min(1),
+      retellAgentId: z.string().nullable(),
+      endedAt: z.number(),
+    })
+    .optional(),
 });
 
 export const zPortalAccount = z.object({
@@ -398,12 +430,27 @@ function definedOnly<T extends object>(o: T): Partial<T> {
 }
 
 /**
+ * The fields an upsert applies: the defined ones, minus a `callHistory` that is not an object.
+ *
+ * `callHistory` is the one field a writer can replace but never clear. A `null` from a writer
+ * that does not know the history (a repair, a re-run) would otherwise erase the only copy of
+ * the ids a downgraded client's past calls are read by.
+ */
+function mergeableFields(site: PortalSiteInput): Partial<PortalSite> {
+  const out = definedOnly(site);
+  const history = (out as { callHistory?: unknown }).callHistory;
+  if (history === null || typeof history !== "object") delete out.callHistory;
+  return out;
+}
+
+/**
  * Add a site, or update it in place when the slug already exists — **always preserving
  * every other site**. This is the invariant that makes provisioning/repairing one site
  * safe for a multi-site account.
  *
  * Updates merge only *defined* fields, so a partial upsert (e.g. onboard.js supplying
- * airtableBaseId later) never blanks values set earlier. `addedAt` is preserved on update.
+ * airtableBaseId later) never blanks values set earlier. `callHistory` is never cleared at all:
+ * a `null` for it is ignored (v1.46.0). `addedAt` is preserved on update.
  * On insert, `plan` defaults to "starter" and `status` to "building".
  */
 export function upsertSite(
@@ -418,14 +465,14 @@ export function upsertSite(
     const created: PortalSite = {
       plan: "starter",
       status: "building",
-      ...definedOnly(site),
+      ...mergeableFields(site),
       slug: site.slug,
       addedAt: site.addedAt ?? now,
     } as PortalSite;
     sites = [...account.sites, created];
   } else {
     sites = account.sites.map((s, i) =>
-      i === idx ? ({ ...s, ...definedOnly(site), addedAt: s.addedAt } as PortalSite) : s,
+      i === idx ? ({ ...s, ...mergeableFields(site), addedAt: s.addedAt } as PortalSite) : s,
     );
   }
 
@@ -477,7 +524,7 @@ export function upsertSiteBySessionId(
   const existing = account.sites[idx];
   const merged: PortalSite = {
     ...existing,
-    ...definedOnly(updates),
+    ...mergeableFields(updates),
     addedAt: existing.addedAt,
   } as PortalSite;
   const sites = [
@@ -665,6 +712,8 @@ function firstNonEmpty(...values: Array<string | null | undefined>): string | un
  *  - **vercelProjectId** — passed through, and omitted entirely when `undefined`.
  *  - **plan / status** — applied uniformly; the caller decides them, since only the caller
  *    knows whether it is looking at disk state or a live deploy result.
+ *  - **callHistory** — never emitted (v1.46.0). Nulling a web-only site's live base and agent is
+ *    safe because a downgrade copied them to `callHistory` first, and `upsertSite` keeps it.
  */
 export function buildPortalSiteEntries(input: {
   plan: PortalPlan;
@@ -718,7 +767,13 @@ export type PortalFeature =
   /** The customer CRM. Growth and Enterprise only. */
   | "crm"
   /** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
-  | "messaging";
+  | "messaging"
+  /**
+   * The read-only call log a web-only site kept from before its receptionist ended (v1.46.0).
+   * Ready only for a web-only site with `callHistory`. A site that still has a receptionist
+   * shows its calls through `calls`, so this is `not-on-plan` there.
+   */
+  | "pastCalls";
 
 /**
  * *Why* a feature is or isn't usable — not just whether it is.
@@ -755,6 +810,12 @@ const FEATURE_REQUIREMENT: Partial<Record<PortalFeature, keyof PortalSite>> = {
   performance: "canonical",
 };
 
+/** A stored past call log with a base to read it from. */
+function hasCallHistory(site: PortalSite): boolean {
+  const base = site.callHistory?.airtableBaseId;
+  return typeof base === "string" && base.trim() !== "";
+}
+
 /** Tiers that include the customer CRM and customer-facing messaging. */
 function hasCrmPlan(site: PortalSite): boolean {
   return site.plan === "growth" || site.plan === "enterprise";
@@ -768,6 +829,12 @@ function hasCrmPlan(site: PortalSite): boolean {
  * truth about what it bought rather than a promise of call data it will never receive.
  */
 export function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAvailability {
+  // Past calls are stored history, not a connection: no build status or live id applies. Only
+  // a web-only site reads them here; a receptionist site has its live call log under `calls`.
+  if (feature === "pastCalls") {
+    return isWebOnly(site) && hasCallHistory(site) ? { state: "ready" } : { state: "not-on-plan" };
+  }
+
   // 1. Entitlement. `isWebOnly` covers both the `website` plan and the legacy declined
   // Starter: neither has call data, and never will.
   if (feature === "calls" && isWebOnly(site)) return { state: "not-on-plan" };
@@ -810,5 +877,6 @@ export function siteFeatures(site: PortalSite): Record<PortalFeature, FeatureAva
     leads: siteFeature(site, "leads"),
     crm: siteFeature(site, "crm"),
     messaging: siteFeature(site, "messaging"),
+    pastCalls: siteFeature(site, "pastCalls"),
   };
 }
