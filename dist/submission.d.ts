@@ -21,7 +21,7 @@ export type ImageMeta = {
     };
 };
 export interface OnboardingSubmission {
-    selectedPlan: "starter" | "growth" | "enterprise";
+    selectedPlan: "website" | "starter" | "growth" | "enterprise";
     contact: {
         brandName: string;
         brandLong: string;

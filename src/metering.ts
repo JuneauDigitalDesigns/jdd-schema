@@ -29,8 +29,8 @@ import { isWebOnly, type PortalSite } from "./account.js";
 /**
  * A site that can actually consume minutes.
  *
- * Every plan tier qualifies since the 2026-10-12 reprice. What disqualifies a site is not its
- * tier but a declined receptionist, which `voiceSitesOf` filters on.
+ * Every plan but `website` qualifies. What `voiceSitesOf` filters on is `isWebOnly`, which covers
+ * both the `website` plan and the legacy declined Starter, so neither is ever metered.
  */
 export type VoicePlan = "starter" | "growth" | "enterprise";
 
@@ -71,10 +71,11 @@ export interface MeteringGroup {
  * provisioned agent counts, including `building` — the agent is live on the phone number
  * from the moment onboard.js creates it, whether or not the website has finished deploying.
  *
- * The plan check that used to live here is gone: every tier can consume minutes now, so the
- * tier tells you nothing. `isWebOnly` replaces it, and `Boolean(s.retellAgentId)` still
- * carries the "actually provisioned" requirement, which is what keeps the two externally
- * managed Starter sites (no agent, billed off-platform) out of minute accounting.
+ * The plan check that used to live here is gone: `isWebOnly` replaces it, covering the
+ * `website` plan (v1.45.0) and the legacy declined Starter, the two shapes with no minutes.
+ * `Boolean(s.retellAgentId)` still carries the "actually provisioned" requirement, which is
+ * what keeps the two externally managed Starter sites (no agent, billed off-platform) out of
+ * minute accounting.
  */
 export function voiceSitesOf(sites: PortalSite[]): PortalSite[] {
   return sites.filter(
@@ -105,7 +106,9 @@ export function meteringGroups(sites: PortalSite[], caps: MinuteCaps): MeteringG
   // plan includes no minutes, which is not the same as "no allowance to track" — it would
   // bill every second as overage — so such a site is skipped rather than grouped at 0.
   for (const site of voice) {
-    if (site.plan === "enterprise") continue;
+    // `website` never reaches here (`voiceSitesOf` drops it); the check narrows the type and
+    // keeps a website site from ever falling through to the Growth cap.
+    if (site.plan === "enterprise" || site.plan === "website") continue;
     const cap = site.plan === "starter" ? caps.starter : caps.growth;
     if (!cap) continue;
     groups.push({ ref: site.slug, plan: site.plan, sites: [site], cap });

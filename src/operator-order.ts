@@ -17,6 +17,7 @@
 
 import { z } from "zod";
 import type { A2pStatus, PortalPlan, PortalSite, ReceptionistMode } from "./account.js";
+import { PLAN_IDS } from "./plans.js";
 
 // ── Status ──────────────────────────────────────────────────────────────────
 
@@ -68,9 +69,9 @@ export const slugClaimKey = (slug: string) => `jdd:slug-claim:${slug}`;
 export const payCodeKey = (code: string) => `jdd:pay:${code}`;
 export const ORDERS_INDEX_KEY = "jdd:orders:index";
 
-const zPlan = z.enum(["starter", "growth", "enterprise"]);
+const zPlan = z.enum(PLAN_IDS);
 
-export const zOperatorOrder = z.object({
+const zOperatorOrderShape = z.object({
   id: z.string().min(1),
   version: z.literal(1),
   source: z.literal("operator-call"),
@@ -141,6 +142,24 @@ export const zOperatorOrder = z.object({
   updatedAt: z.number(),
 });
 
+/**
+ * An operator order, as stored and as saved.
+ *
+ * A `website` order (v1.45.0) carries no `receptionistMode` at all: the plan states that there
+ * is no receptionist, and the close wizard has no phone-setup step for it. A `starter` order
+ * with `declined` is the legacy web-only close and still parses, so orders saved before
+ * `website` existed keep reading.
+ */
+export const zOperatorOrder = zOperatorOrderShape.superRefine((order, ctx) => {
+  if (order.plan === "website" && order.receptionistMode !== undefined) {
+    ctx.addIssue({
+      code: z.ZodIssueCode.custom,
+      path: ["receptionistMode"],
+      message: "A website order has no receptionist, so it carries no receptionistMode.",
+    });
+  }
+});
+
 export type OperatorOrder = z.infer<typeof zOperatorOrder>;
 
 // ── Resume ──────────────────────────────────────────────────────────────────
@@ -148,8 +167,8 @@ export type OperatorOrder = z.infer<typeof zOperatorOrder>;
 export type CloseStep = "order" | "terms" | "payment" | "setup" | "sms" | "done";
 
 /**
- * Plans that register for A2P during the close. Starter and web-only send no customer-facing
- * messages, so they have no SMS step at all.
+ * Plans that register for A2P during the close. Website, Starter and the legacy web-only
+ * Starter send no customer-facing messages, so they have no SMS step at all.
  */
 export function closeHasSmsStep(plan: PortalPlan): boolean {
   return plan === "growth" || plan === "enterprise";

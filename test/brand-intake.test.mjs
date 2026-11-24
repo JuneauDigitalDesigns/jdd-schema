@@ -174,8 +174,14 @@ test("receptionistMode survives the zod round trip", () => {
   // The failure this guards is silent: zod strips unknown keys, so a field the wizard sends
   // but the schema does not declare simply vanishes, with no error anywhere. Provisioning
   // would then refuse to run for want of a choice the client actually made.
-  for (const mode of ["forwarded", "published", "declined"]) {
-    const parsed = zBrandIntakeSubmission.parse(sampleIntake({ receptionistMode: mode }));
+  // v1.45.0: `declined` belongs to the website plan; a receptionist plan refuses it.
+  const cases = [
+    ["growth", "forwarded"],
+    ["growth", "published"],
+    ["website", "declined"],
+  ];
+  for (const [selectedPlan, mode] of cases) {
+    const parsed = zBrandIntakeSubmission.parse(sampleIntake({ selectedPlan, receptionistMode: mode }));
     assert.equal(parsed.receptionistMode, mode, mode);
   }
 });

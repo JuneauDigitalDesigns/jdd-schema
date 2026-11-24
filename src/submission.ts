@@ -13,7 +13,7 @@
 export type ImageMeta = { url: string; filename: string; alt: string; town?: string; before?: { url: string; filename: string; alt: string } };
 
 export interface OnboardingSubmission {
-  selectedPlan: "starter" | "growth" | "enterprise";
+  selectedPlan: "website" | "starter" | "growth" | "enterprise";
   contact: {
     brandName: string;
     brandLong: string;

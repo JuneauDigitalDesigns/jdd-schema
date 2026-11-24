@@ -11,7 +11,9 @@
  * re-deriving anything.
  *
  * The rules:
- *   - **Starter** — unlimited per account. Still the cheapest tier to stand up, though since
+ *   - **Website** (shown as "Starter", v1.45.0) — unlimited per account, like Starter. No
+ *     number, no agent, no minutes.
+ *   - **Starter** (shown as "Starter + AI Receptionist") — unlimited per account. Still the cheapest tier to stand up, though since
  *     the 2026-10-12 reprice it carries a phone number, an agent and real per-minute cost, so
  *     it is no longer close to free to run.
  *   - **Growth** — at most two per account. A third is the moment Enterprise becomes the

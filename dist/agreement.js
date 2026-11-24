@@ -16,6 +16,7 @@
  * themselves live in the agency app's legal module, next to the terms they render.
  */
 import { z } from "zod";
+import { PLAN_IDS, PLAN_RANK } from "./plans.js";
 /**
  * Version recorded for accounts that predate the master/addendum split.
  *
@@ -29,17 +30,12 @@ export const LEGACY_AGREEMENT_VERSION = "legacy";
 export const zMasterAgreementRef = z.object({
     agreementId: z.string().nullable(),
     version: z.string().min(1),
-    tierCeiling: z.enum(["starter", "growth", "enterprise"]),
+    tierCeiling: z.enum(PLAN_IDS),
     signedAt: z.number(),
 });
-const TIER_RANK = {
-    starter: 0,
-    growth: 1,
-    enterprise: 2,
-};
-/** Is `a` at least as high a tier as `b`? */
+/** Is `a` at least as high a tier as `b`? Ranked by the shared `PLAN_RANK`. */
 export function tierAtLeast(a, b) {
-    return TIER_RANK[a] >= TIER_RANK[b];
+    return PLAN_RANK[a] >= PLAN_RANK[b];
 }
 /**
  * Must the client sign the full master again, rather than a short addendum?
@@ -75,13 +71,14 @@ export function raiseTierCeiling(master, plan) {
  * Reconstruct a master for an account that predates this feature, from the sites it holds.
  *
  * The ceiling is the highest plan they are already being billed for: they demonstrably signed
- * something that authorised it. Returns null for an account with no sites, which has nothing
+ * something that authorised it. It starts from the lowest plan, `website`, so an account
+ * holding only website sites is not credited with Starter + AI terms it never signed. Returns null for an account with no sites, which has nothing
  * to infer from and genuinely needs a first signature.
  */
 export function legacyMasterFrom(sites) {
     if (sites.length === 0)
         return null;
-    let ceiling = "starter";
+    let ceiling = PLAN_IDS[0];
     let signedAt = Number.POSITIVE_INFINITY;
     for (const s of sites) {
         if (!tierAtLeast(ceiling, s.plan))

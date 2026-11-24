@@ -21,7 +21,15 @@
  */
 import { z } from "zod";
 import { type MasterAgreementRef } from "./agreement.js";
-export type PortalPlan = "starter" | "growth" | "enterprise";
+import { PLAN_IDS } from "./plans.js";
+/**
+ * A plan id. Labels, rank and the receptionist question live in plans.ts; never display the id.
+ *
+ * `website` (v1.45.0) is website only: no number, agent, call log or CRM. `starter` is the same
+ * id it always was and still includes the receptionist, but it is now shown as
+ * "Starter + AI Receptionist", and `website` is the plan shown as "Starter".
+ */
+export type PortalPlan = (typeof PLAN_IDS)[number];
 export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
 /**
  * How the client activated, or refused, the AI receptionist.
@@ -32,10 +40,14 @@ export type PortalSiteStatus = "pending-onboarding" | "building" | "live";
  * different remedies. The first is a nudge; the second is a web-only client who must never be
  * billed for minutes or promised a call log.
  *
- * `declined` is the web-only variant. It is deliberately **not** a fourth `PortalPlan`: the
- * price is identical to Starter, so it is a property of a Starter site rather than a product
- * of its own, and widening the plan union would ripple into every exhaustive switch,
- * `canAddPlan`, `meteringGroups` and the account record.
+ * Since v1.45.0 the web-only product is its own plan, `website`, with its own price. On
+ * `website` the plan decides the receptionist, so the mode is absent or `declined` and never
+ * anything else. On `starter`, `growth` and `enterprise` a new choice is `forwarded` or
+ * `published`.
+ *
+ * `declined` on `starter` is the legacy web-only shape, from before `website` existed, when
+ * web-only cost the same as Starter. It is still read (see `isWebOnly`) so old records keep
+ * their meaning, but nothing new writes it: a new intake that says it is refused.
  */
 export type ReceptionistMode = "forwarded" | "published" | "declined";
 /**
@@ -64,8 +76,8 @@ export interface PortalSite {
      * Retell agent backing this site's voice receptionist. Written by onboard.js at
      * provisioning; absent only on web-only sites, which have no agent.
      *
-     * Every plan tier includes a receptionist as of the 2026-10-12 reprice, so an absent agent
-     * on a non-web-only site is drift to investigate, not an expected state for a tier.
+     * Every plan but `website` includes a receptionist, so an absent agent on a site that is not
+     * web-only (`isWebOnly`) is drift to investigate, not an expected state for a tier.
      *
      * This is the join key between an account and its call records. Retell is the
      * authoritative source for usage — the Airtable call log is lossy (it depends on a
@@ -170,7 +182,7 @@ export interface PortalSite {
     /**
      * Where this client is in A2P 10DLC registration.
      *
-     * `not-applicable` is a real terminal state, not a null: Starter and web-only never register
+     * `not-applicable` is a real terminal state, not a null: `website`, `starter` and web-only never register
      * because they send no customer-facing messages. Without it they sit in `none` forever and any
      * "is registration done?" check reads them as perpetually pending — the same trap as
      * `receptionistMode` being absent versus explicitly `declined`. State it, never infer it.
@@ -254,7 +266,7 @@ export declare const zPortalSite: z.ZodObject<{
     slug: z.ZodString;
     name: z.ZodOptional<z.ZodString>;
     canonical: z.ZodOptional<z.ZodString>;
-    plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    plan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     status: z.ZodEnum<["pending-onboarding", "building", "live"]>;
     airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
     vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -325,7 +337,7 @@ export declare const zPortalSite: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     addedAt: number;
     agreementId?: string | undefined;
     name?: string | undefined;
@@ -367,7 +379,7 @@ export declare const zPortalSite: z.ZodObject<{
 }, {
     status: "pending-onboarding" | "building" | "live";
     slug: string;
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     addedAt: number;
     agreementId?: string | undefined;
     name?: string | undefined;
@@ -414,24 +426,24 @@ export declare const zPortalAccount: z.ZodObject<{
     masterAgreement: z.ZodOptional<z.ZodObject<{
         agreementId: z.ZodNullable<z.ZodString>;
         version: z.ZodString;
-        tierCeiling: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        tierCeiling: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         signedAt: z.ZodNumber;
     }, "strip", z.ZodTypeAny, {
         agreementId: string | null;
         version: string;
-        tierCeiling: "starter" | "growth" | "enterprise";
+        tierCeiling: "website" | "starter" | "growth" | "enterprise";
         signedAt: number;
     }, {
         agreementId: string | null;
         version: string;
-        tierCeiling: "starter" | "growth" | "enterprise";
+        tierCeiling: "website" | "starter" | "growth" | "enterprise";
         signedAt: number;
     }>>;
     sites: z.ZodArray<z.ZodObject<{
         slug: z.ZodString;
         name: z.ZodOptional<z.ZodString>;
         canonical: z.ZodOptional<z.ZodString>;
-        plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        plan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         status: z.ZodEnum<["pending-onboarding", "building", "live"]>;
         airtableBaseId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
         vercelProjectId: z.ZodOptional<z.ZodNullable<z.ZodString>>;
@@ -502,7 +514,7 @@ export declare const zPortalAccount: z.ZodObject<{
     }, "strip", z.ZodTypeAny, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         addedAt: number;
         agreementId?: string | undefined;
         name?: string | undefined;
@@ -544,7 +556,7 @@ export declare const zPortalAccount: z.ZodObject<{
     }, {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         addedAt: number;
         agreementId?: string | undefined;
         name?: string | undefined;
@@ -604,7 +616,7 @@ export declare const zPortalAccount: z.ZodObject<{
     sites: {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         addedAt: number;
         agreementId?: string | undefined;
         name?: string | undefined;
@@ -651,7 +663,7 @@ export declare const zPortalAccount: z.ZodObject<{
     masterAgreement?: {
         agreementId: string | null;
         version: string;
-        tierCeiling: "starter" | "growth" | "enterprise";
+        tierCeiling: "website" | "starter" | "growth" | "enterprise";
         signedAt: number;
     } | undefined;
     profile?: {
@@ -664,7 +676,7 @@ export declare const zPortalAccount: z.ZodObject<{
     sites: {
         status: "pending-onboarding" | "building" | "live";
         slug: string;
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         addedAt: number;
         agreementId?: string | undefined;
         name?: string | undefined;
@@ -711,7 +723,7 @@ export declare const zPortalAccount: z.ZodObject<{
     masterAgreement?: {
         agreementId: string | null;
         version: string;
-        tierCeiling: "starter" | "growth" | "enterprise";
+        tierCeiling: "website" | "starter" | "growth" | "enterprise";
         signedAt: number;
     } | undefined;
     profile?: {
@@ -742,14 +754,19 @@ export declare function createAccount(email: string, now?: number): PortalAccoun
  */
 export declare function upsertSite(account: PortalAccount, site: PortalSiteInput, now?: number): PortalAccount;
 /**
- * A web-only site: Starter, with the receptionist explicitly refused.
+ * A web-only site: no receptionist, no number, no call data, never metered.
  *
- * One predicate, because three separate places need this answer and a fourth copy of
- * `plan === "starter" && mode === "declined"` would eventually disagree: feature gating,
- * minute metering, and provisioning. Undefined mode is **not** web-only, so a client who has
- * not reached the activation step yet keeps the full entitlement they paid for.
+ * Two shapes answer yes:
+ *  - `plan: "website"`, the website-only plan (v1.45.0). The plan decides it.
+ *  - `plan: "starter"` with mode `declined`, the legacy shape from before `website` existed.
+ *    It stays here only so old records keep reading correctly; nothing new writes it.
+ *
+ * One predicate, because feature gating, minute metering and provisioning all need this answer
+ * and separate copies would eventually disagree. Gate on this, not on the plan id, whenever
+ * you hold a site. Undefined mode on `starter` is **not** web-only, so a client who has not
+ * reached the activation step yet keeps the full entitlement they paid for.
  */
-export declare function isWebOnly(site: PortalSite): boolean;
+export declare function isWebOnly(site: Pick<PortalSite, "plan" | "receptionistMode">): boolean;
 /** Whether a site's wizard has been submitted (payment captured + form filled). */
 export declare function isSiteOnboarded(site: PortalSite): boolean;
 /**
@@ -831,8 +848,11 @@ export interface PortalEntrySource {
      * console repair tool) know the answer, so both must say it.
      *
      * This was previously derived from `plan === "starter"`, which was correct only while
-     * Starter had no receptionist. After the 2026-10-12 reprice every tier has one, so deriving
+     * Starter had no receptionist. After the 2026-10-12 reprice `starter` has one, so deriving
      * it from the plan would wipe a Starter agent on every console repair.
+     *
+     * The one exception is `plan: "website"` (v1.45.0), where the plan itself states the answer:
+     * `buildPortalSiteEntries` treats every `website` entry as declined whatever this says.
      */
     receptionistDeclined: boolean;
 }
@@ -846,8 +866,8 @@ export interface PortalEntrySource {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — web-only sites get an explicit `null` (call data cannot exist for
- *    them). Everything else takes the site's own base, falling back to the shared one
+ *  - **Airtable base** — web-only sites (`receptionistDeclined`, or any `website` plan entry)
+ *    get an explicit `null` (call data cannot exist for them). Everything else takes the site's own base, falling back to the shared one
  *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
  *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
  *    which meant a writer that simply couldn't see the base (a console repair on a client

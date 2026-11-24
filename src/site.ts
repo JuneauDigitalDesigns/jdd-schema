@@ -338,7 +338,7 @@ export interface ContentMeta {
    *  (one whose original URL was curated stock) from a localized real client photo on re-export.
    *  Merged (never replaced) across exports so a slot localized earlier keeps its entry. */
   local_images?: Record<string, string>;
-  selectedPlan: "starter" | "growth" | "enterprise";
+  selectedPlan: "website" | "starter" | "growth" | "enterprise";
   siteIndex?: number;       // 1-based; set for Enterprise sites only
   siteCount?: number;       // total cluster size; set for Enterprise sites only
   siblingSlugs?: string[];  // other slug names in the same Enterprise cluster
