@@ -501,6 +501,8 @@ test("siteFeature: a fully provisioned growth site is ready across the board", (
     leads: { state: "ready" },
     crm: { state: "ready" },
     messaging: { state: "ready" },
+    // v1.46.0: a site with its receptionist shows calls under `calls`, never `pastCalls`.
+    pastCalls: { state: "not-on-plan" },
   });
 });
 
@@ -522,6 +524,8 @@ test("siteFeature: a day-one growth site has everything but messaging", () => {
     leads: { state: "ready" },
     crm: { state: "ready" },
     messaging: { state: "connecting" },
+    // v1.46.0: a site with its receptionist shows calls under `calls`, never `pastCalls`.
+    pastCalls: { state: "not-on-plan" },
   });
 });
 

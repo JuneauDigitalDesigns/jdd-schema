@@ -105,13 +105,14 @@ test("calls is unchanged: web-only is excluded, a missing base is connecting", (
   assert.equal(stateOf(site({ plan: "starter" }), "calls"), "ready");
 });
 
-test("siteFeatures returns all six features", () => {
+test("siteFeatures returns all seven features", () => {
   const all = siteFeatures(site());
   assert.deepEqual(Object.keys(all).sort(), [
     "calls",
     "crm",
     "leads",
     "messaging",
+    "pastCalls", // v1.46.0
     "performance",
     "traffic",
   ]);
