@@ -302,7 +302,7 @@ export interface ContentMeta {
   // v2.4: original image URL -> localized "/img/<hash>" base, written by the export image
   // pipeline. Merged across exports, never replaced.
   local_images?: Record<string, string>;
-  selectedPlan: "starter" | "growth" | "enterprise";
+  selectedPlan: "website" | "starter" | "growth" | "enterprise";
   siteIndex?: number;
   siteCount?: number;
   siblingSlugs?: string[];

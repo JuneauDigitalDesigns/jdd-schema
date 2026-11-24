@@ -21,6 +21,7 @@
  */
 import { z } from "zod";
 import { zMasterAgreementRef } from "./agreement.js";
+import { PLAN_IDS } from "./plans.js";
 export const A2P_STATUSES = [
     "not-applicable",
     "none",
@@ -36,7 +37,7 @@ export const zPortalSite = z.object({
     slug: z.string().min(1),
     name: z.string().optional(),
     canonical: z.string().optional(),
-    plan: z.enum(["starter", "growth", "enterprise"]),
+    plan: z.enum(PLAN_IDS),
     status: z.enum(["pending-onboarding", "building", "live"]),
     airtableBaseId: z.string().nullable().optional(),
     vercelProjectId: z.string().nullable().optional(),
@@ -159,15 +160,20 @@ export function upsertSite(account, site, now = Date.now()) {
     return { ...account, sites, updatedAt: now };
 }
 /**
- * A web-only site: Starter, with the receptionist explicitly refused.
+ * A web-only site: no receptionist, no number, no call data, never metered.
  *
- * One predicate, because three separate places need this answer and a fourth copy of
- * `plan === "starter" && mode === "declined"` would eventually disagree: feature gating,
- * minute metering, and provisioning. Undefined mode is **not** web-only, so a client who has
- * not reached the activation step yet keeps the full entitlement they paid for.
+ * Two shapes answer yes:
+ *  - `plan: "website"`, the website-only plan (v1.45.0). The plan decides it.
+ *  - `plan: "starter"` with mode `declined`, the legacy shape from before `website` existed.
+ *    It stays here only so old records keep reading correctly; nothing new writes it.
+ *
+ * One predicate, because feature gating, minute metering and provisioning all need this answer
+ * and separate copies would eventually disagree. Gate on this, not on the plan id, whenever
+ * you hold a site. Undefined mode on `starter` is **not** web-only, so a client who has not
+ * reached the activation step yet keeps the full entitlement they paid for.
  */
 export function isWebOnly(site) {
-    return site.plan === "starter" && site.receptionistMode === "declined";
+    return (site.plan === "website" || (site.plan === "starter" && site.receptionistMode === "declined"));
 }
 /** Whether a site's wizard has been submitted (payment captured + form filled). */
 export function isSiteOnboarded(site) {
@@ -286,8 +292,8 @@ function firstNonEmpty(...values) {
  * one pure, tested implementation so the two writers cannot drift.
  *
  * The rules:
- *  - **Airtable base** — web-only sites get an explicit `null` (call data cannot exist for
- *    them). Everything else takes the site's own base, falling back to the shared one
+ *  - **Airtable base** — web-only sites (`receptionistDeclined`, or any `website` plan entry)
+ *    get an explicit `null` (call data cannot exist for them). Everything else takes the site's own base, falling back to the shared one
  *    enterprise sites inherit — and when *neither* resolves the key is **omitted**, exactly
  *    like `canonical` and `vercelProjectId`. It used to be written as `null` unconditionally,
  *    which meant a writer that simply couldn't see the base (a console repair on a client
@@ -308,7 +314,8 @@ export function buildPortalSiteEntries(input) {
         const canonical = firstNonEmpty(s.canonical, s.fallbackCanonical);
         if (canonical !== undefined)
             entry.canonical = canonical;
-        if (s.receptionistDeclined) {
+        // On `website` the plan states the answer, so a writer's `false` cannot keep an agent alive.
+        if (s.receptionistDeclined || plan === "website") {
             // A web-only site genuinely has no call data — assert that, don't preserve a stale base.
             entry.airtableBaseId = null;
             // Same reasoning: a web-only site has no voice agent at all, so assert the absence
@@ -358,8 +365,8 @@ function hasCrmPlan(site) {
  * truth about what it bought rather than a promise of call data it will never receive.
  */
 export function siteFeature(site, feature) {
-    // 1. Entitlement. Every tier now includes the receptionist, so the plan alone no longer
-    // decides this: only a client who refused one has no call data, and never will.
+    // 1. Entitlement. `isWebOnly` covers both the `website` plan and the legacy declined
+    // Starter: neither has call data, and never will.
     if (feature === "calls" && isWebOnly(site))
         return { state: "not-on-plan" };
     // The CRM and customer messaging are the one genuine tier split. Deliberately NOT gated on

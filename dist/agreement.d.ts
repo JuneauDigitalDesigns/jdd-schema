@@ -42,6 +42,9 @@ export interface MasterAgreementRef {
      * Enterprise site. Buying above the ceiling raises it, and raising it means signing the
      * full terms for the new tier rather than bolting an addendum onto terms that never
      * contemplated it.
+     *
+     * `website` (v1.45.0) is the lowest ceiling: a master signed on website-only terms does not
+     * cover Starter + AI Receptionist, so that upgrade re-signs.
      */
     tierCeiling: PortalPlan;
     /** Epoch ms. */
@@ -50,20 +53,20 @@ export interface MasterAgreementRef {
 export declare const zMasterAgreementRef: z.ZodObject<{
     agreementId: z.ZodNullable<z.ZodString>;
     version: z.ZodString;
-    tierCeiling: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    tierCeiling: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     signedAt: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
     agreementId: string | null;
     version: string;
-    tierCeiling: "starter" | "growth" | "enterprise";
+    tierCeiling: "website" | "starter" | "growth" | "enterprise";
     signedAt: number;
 }, {
     agreementId: string | null;
     version: string;
-    tierCeiling: "starter" | "growth" | "enterprise";
+    tierCeiling: "website" | "starter" | "growth" | "enterprise";
     signedAt: number;
 }>;
-/** Is `a` at least as high a tier as `b`? */
+/** Is `a` at least as high a tier as `b`? Ranked by the shared `PLAN_RANK`. */
 export declare function tierAtLeast(a: PortalPlan, b: PortalPlan): boolean;
 /**
  * Must the client sign the full master again, rather than a short addendum?
@@ -91,7 +94,8 @@ export declare function raiseTierCeiling(master: MasterAgreementRef, plan: Porta
  * Reconstruct a master for an account that predates this feature, from the sites it holds.
  *
  * The ceiling is the highest plan they are already being billed for: they demonstrably signed
- * something that authorised it. Returns null for an account with no sites, which has nothing
+ * something that authorised it. It starts from the lowest plan, `website`, so an account
+ * holding only website sites is not credited with Starter + AI terms it never signed. Returns null for an account with no sites, which has nothing
  * to infer from and genuinely needs a first signature.
  */
 export declare function legacyMasterFrom(sites: Array<{

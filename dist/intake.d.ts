@@ -26,7 +26,7 @@ export interface SmsAlerts {
 }
 /** Mapper output: siteCount is always populated. */
 export interface Intake {
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     /**
      * Whether this client's receptionist is active, and how the business line reaches it.
      *
@@ -39,6 +39,10 @@ export interface Intake {
      * others is a conversation, not a code path.
      *
      * Absent on intakes that predate the activation step. Provisioning refuses to guess.
+     *
+     * On `plan: "website"` the plan states it: absent or `declined`, never anything else. On the
+     * other plans a new intake never says `declined` (that is the legacy web-only shape; sell the
+     * website plan instead). `zIntake` enforces both.
      */
     receptionistMode?: ReceptionistMode;
     siteCount: number;
@@ -48,20 +52,42 @@ export interface Intake {
 /**
  * The lead-capture mode a plan's website forms use, and the ONLY place the mapping lives.
  *
- * `email`  — starter (and web-only starter): the form collects an email and /api/contact
- *            Resends the owner a lead email (LEAD_DELIVERY_MODE=email).
- * `phone`  — growth / enterprise: the form collects a phone and /api/contact calls Retell
- *            create-phone-call so the agent dials the lead back (LEAD_DELIVERY_MODE=callback).
+ * `email`  — website and starter: the form collects an email, and /api/contact records the
+ *            lead in the client's portal inbox (LEAD_DELIVERY_MODE=portal, LEAD_CALLBACK=off).
+ *            No call is placed. "email" names the field the form collects, not the delivery:
+ *            leads stopped going out by email when the portal inbox shipped.
+ * `phone`  — growth / enterprise: the form collects a phone, the lead lands in the portal
+ *            the same way, and the agent also dials the lead back (LEAD_CALLBACK=on).
+ *
+ * Callbacks are an explicit Growth/Enterprise list, never "not starter": a plan this version
+ * does not know, `website` included before v1.45.0, must never get a phone-mode form with a
+ * consent box for an AI call that will never come.
  *
  * Imported by the catalog form components, console/test/lead-mode-invariants.test.mjs, and
  * onboard.js's plan-consistency guard, so the mapping is impossible to drift between them.
- * This is the client-FORM mode; the server route keys off LEAD_DELIVERY_MODE, which onboard.js
- * derives from the same plan — see onboard.js:1358.
+ * This is the client-FORM mode; the server route keys off the env onboard.js derives from the
+ * same plan.
  */
-export declare function leadModeFor(plan: "starter" | "growth" | "enterprise"): "email" | "phone";
+export declare function leadModeFor(plan: "website" | "starter" | "growth" | "enterprise"): "email" | "phone";
+/**
+ * Why this plan and receptionist mode may not go together, or null when they may.
+ *
+ * One rule for every reader, so the onboarding POST, the console import and onboard.js refuse
+ * the same pairs with the same words:
+ *  - `website`: the plan decides the receptionist, so the mode is absent or `declined`.
+ *  - `starter`, `growth`, `enterprise`: a new submission never says `declined`. Web-only is
+ *    sold as the website plan now, at its own price.
+ *
+ * `legacy: true` is for reading stored records only (the intake queue). It also accepts
+ * `starter` + `declined`, the web-only shape from before `website` existed, so a record
+ * written then still reads. Never pass it on a path that accepts a new submission.
+ */
+export declare function receptionistModeProblem(plan: string, mode: ReceptionistMode | undefined | null, opts?: {
+    legacy?: boolean;
+}): string | null;
 /** Loader input (console export.ts): siteCount may be inferred from sites.length. */
 export interface IntakeEnvelope {
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     receptionistMode?: ReceptionistMode;
     siteCount?: number;
     sites: SiteContent[];

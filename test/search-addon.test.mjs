@@ -52,7 +52,9 @@ test("upsertSite writes and keeps the add-on like any other site field", () => {
 });
 
 test("an operator order can carry the add-on, and orders without it still parse", () => {
-  const shape = zOperatorOrder.shape;
+  // v1.45.0: zOperatorOrder is refined (a website order has no receptionistMode), so the
+  // object shape sits one level in.
+  const shape = zOperatorOrder.innerType().shape;
   assert.ok("addons" in shape, "OperatorOrder has addons");
   assert.deepEqual(shape.addons.parse({ search: true }), { search: true });
   assert.equal(shape.addons.parse(undefined), undefined);

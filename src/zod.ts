@@ -1,7 +1,9 @@
 /**
  * Runtime validators for the two trust boundaries:
  *   - zOnboardingSubmission — the agency POST /api/onboarding handler.
- *   - zIntake / zQueuedIntake — the console intake/import handler.
+ *   - zIntake / zQueuedIntake — the console intake/import handler. zIntake is a new intake and
+ *     refuses a plan/receptionist mismatch; zQueuedIntake reads stored records and still
+ *     accepts the legacy web-only Starter.
  *
  * These are intentionally structural (not exhaustive on every copy field) so
  * they reject malformed envelopes without rejecting valid, partially-filled
@@ -10,11 +12,17 @@
 
 import { z } from "zod";
 import { PROFILE_KINDS } from "./profiles.js";
+import { PLAN_IDS } from "./plans.js";
+import { receptionistModeProblem } from "./intake.js";
 
-const plan = z.enum(["starter", "growth", "enterprise"]);
+const plan = z.enum(PLAN_IDS);
 
 /**
- * The onboarding activation choice. `declined` is the web-only variant.
+ * The onboarding activation choice.
+ *
+ * Since v1.45.0 web-only is its own plan, `website`, where the mode is absent or `declined`.
+ * On the other plans a new submission never says `declined`. `receptionistModeProblem` is the
+ * rule, applied below to `zIntake` and `zBrandIntakeSubmission`.
  *
  * Optional rather than required, deliberately: a client who was mid-form when the activation
  * step deployed submits the old shape, and rejecting their submission outright would lose the
@@ -125,13 +133,38 @@ export const zSmsAlerts = z.object({
 
 // NOTE: zIntake has no .passthrough(), so a key absent from this object is silently
 // dropped on parse. smsAlerts has to be declared here or onboard.js would receive an
-// envelope that quietly lost it.
-export const zIntake = z.object({
+// envelope that quietly lost it. receptionistMode was missing until v1.45.0, and was
+// silently dropped for exactly that reason.
+const zIntakeShape = z.object({
   plan,
+  receptionistMode: receptionistMode.optional(),
   siteCount: z.number().int().positive().optional(),
   sites: z.array(zSiteContent).min(1),
   smsAlerts: zSmsAlerts.nullish(),
 });
+
+function planModeRefinement(planKey: "plan" | "selectedPlan", legacy: boolean) {
+  return (val: Record<string, unknown>, ctx: z.RefinementCtx) => {
+    const problem = receptionistModeProblem(
+      String(val[planKey]),
+      val.receptionistMode as z.infer<typeof receptionistMode> | undefined,
+      { legacy },
+    );
+    if (problem) {
+      ctx.addIssue({ code: z.ZodIssueCode.custom, path: ["receptionistMode"], message: problem });
+    }
+  };
+}
+
+/** A new intake: the plan and the receptionist mode must agree (`receptionistModeProblem`). */
+export const zIntake = zIntakeShape.superRefine(planModeRefinement("plan", false));
+
+/**
+ * A stored intake on the queue. Same shape, but it still reads the legacy `starter` +
+ * `declined` web-only shape, so a record queued before v1.45.0 is not stranded. New ones cannot
+ * be made: the onboarding POST parses `zBrandIntakeSubmission`, which refuses the pair.
+ */
+const zStoredIntake = zIntakeShape.superRefine(planModeRefinement("plan", true));
 
 export const zQueuedIntake = z.object({
   id: z.string(),
@@ -141,7 +174,7 @@ export const zQueuedIntake = z.object({
   brandName: z.string(),
   slugGuess: z.string(),
   sessionId: z.string(),
-  intake: zIntake,
+  intake: zStoredIntake,
 });
 
 // ─── v1.1.0 — brand-direction intake ─────────────────────────────────────────
@@ -275,4 +308,5 @@ export const zBrandIntakeSubmission = z
       )
       .optional(),
   })
-  .passthrough();
+  .passthrough()
+  .superRefine(planModeRefinement("selectedPlan", false));

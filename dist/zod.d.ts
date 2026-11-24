@@ -1,7 +1,9 @@
 /**
  * Runtime validators for the two trust boundaries:
  *   - zOnboardingSubmission — the agency POST /api/onboarding handler.
- *   - zIntake / zQueuedIntake — the console intake/import handler.
+ *   - zIntake / zQueuedIntake — the console intake/import handler. zIntake is a new intake and
+ *     refuses a plan/receptionist mismatch; zQueuedIntake reads stored records and still
+ *     accepts the legacy web-only Starter.
  *
  * These are intentionally structural (not exhaustive on every copy field) so
  * they reject malformed envelopes without rejecting valid, partially-filled
@@ -356,7 +358,7 @@ export declare const zAdditionalSiteEntry: z.ZodObject<{
  * nested objects allow unknown keys (passthrough) to stay forward-compatible.
  */
 export declare const zOnboardingSubmission: z.ZodObject<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     contact: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     businessDetails: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     branding: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
@@ -776,7 +778,7 @@ export declare const zOnboardingSubmission: z.ZodObject<{
     scrapeExistingWebsite: z.ZodOptional<z.ZodBoolean>;
     scrapeWebsiteDomain: z.ZodOptional<z.ZodString>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     contact: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     businessDetails: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     branding: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
@@ -1196,7 +1198,7 @@ export declare const zOnboardingSubmission: z.ZodObject<{
     scrapeExistingWebsite: z.ZodOptional<z.ZodBoolean>;
     scrapeWebsiteDomain: z.ZodOptional<z.ZodString>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     contact: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     businessDetails: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
     branding: z.ZodObject<{}, "passthrough", z.ZodTypeAny, z.objectOutputType<{}, z.ZodTypeAny, "passthrough">, z.objectInputType<{}, z.ZodTypeAny, "passthrough">>;
@@ -1628,15 +1630,15 @@ export declare const zSiteContent: z.ZodObject<{
     _meta: z.ZodObject<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
     brand: z.ZodObject<{
@@ -1649,15 +1651,15 @@ export declare const zSiteContent: z.ZodObject<{
     _meta: z.ZodObject<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
     brand: z.ZodObject<{
@@ -1670,15 +1672,15 @@ export declare const zSiteContent: z.ZodObject<{
     _meta: z.ZodObject<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         schema_version: z.ZodString;
         missing_fields: z.ZodArray<z.ZodString, "many">;
-        selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+        selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     }, z.ZodTypeAny, "passthrough">>;
 }, z.ZodTypeAny, "passthrough">>;
 /** v1.11.0 — SMS alert opt-in snapshot carried on the envelope. */
@@ -1695,8 +1697,10 @@ export declare const zSmsAlerts: z.ZodObject<{
     consented: boolean;
     consentedAt: string | null;
 }>;
-export declare const zIntake: z.ZodObject<{
-    plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+/** A new intake: the plan and the receptionist mode must agree (`receptionistModeProblem`). */
+export declare const zIntake: z.ZodEffects<z.ZodObject<{
+    plan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     siteCount: z.ZodOptional<z.ZodNumber>;
     sites: z.ZodArray<z.ZodObject<{
         brand: z.ZodObject<{
@@ -1709,15 +1713,15 @@ export declare const zIntake: z.ZodObject<{
         _meta: z.ZodObject<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
         brand: z.ZodObject<{
@@ -1730,15 +1734,15 @@ export declare const zIntake: z.ZodObject<{
         _meta: z.ZodObject<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
         brand: z.ZodObject<{
@@ -1751,15 +1755,15 @@ export declare const zIntake: z.ZodObject<{
         _meta: z.ZodObject<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">>, "many">;
     smsAlerts: z.ZodOptional<z.ZodNullable<z.ZodObject<{
@@ -1776,7 +1780,7 @@ export declare const zIntake: z.ZodObject<{
         consentedAt: string | null;
     }>>>;
 }, "strip", z.ZodTypeAny, {
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     sites: z.objectOutputType<{
         brand: z.ZodObject<{
             name: z.ZodString;
@@ -1788,17 +1792,18 @@ export declare const zIntake: z.ZodObject<{
         _meta: z.ZodObject<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">[];
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
     siteCount?: number | undefined;
     smsAlerts?: {
         phone: string | null;
@@ -1806,7 +1811,7 @@ export declare const zIntake: z.ZodObject<{
         consentedAt: string | null;
     } | null | undefined;
 }, {
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     sites: z.objectInputType<{
         brand: z.ZodObject<{
             name: z.ZodString;
@@ -1818,17 +1823,80 @@ export declare const zIntake: z.ZodObject<{
         _meta: z.ZodObject<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             schema_version: z.ZodString;
             missing_fields: z.ZodArray<z.ZodString, "many">;
-            selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
         }, z.ZodTypeAny, "passthrough">>;
     }, z.ZodTypeAny, "passthrough">[];
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    siteCount?: number | undefined;
+    smsAlerts?: {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    } | null | undefined;
+}>, {
+    plan: "website" | "starter" | "growth" | "enterprise";
+    sites: z.objectOutputType<{
+        brand: z.ZodObject<{
+            name: z.ZodString;
+        }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+            name: z.ZodString;
+        }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+            name: z.ZodString;
+        }, z.ZodTypeAny, "passthrough">>;
+        _meta: z.ZodObject<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, z.ZodTypeAny, "passthrough">>;
+    }, z.ZodTypeAny, "passthrough">[];
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    siteCount?: number | undefined;
+    smsAlerts?: {
+        phone: string | null;
+        consented: boolean;
+        consentedAt: string | null;
+    } | null | undefined;
+}, {
+    plan: "website" | "starter" | "growth" | "enterprise";
+    sites: z.objectInputType<{
+        brand: z.ZodObject<{
+            name: z.ZodString;
+        }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+            name: z.ZodString;
+        }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+            name: z.ZodString;
+        }, z.ZodTypeAny, "passthrough">>;
+        _meta: z.ZodObject<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+            schema_version: z.ZodString;
+            missing_fields: z.ZodArray<z.ZodString, "many">;
+            selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        }, z.ZodTypeAny, "passthrough">>;
+    }, z.ZodTypeAny, "passthrough">[];
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
     siteCount?: number | undefined;
     smsAlerts?: {
         phone: string | null;
@@ -1844,8 +1912,9 @@ export declare const zQueuedIntake: z.ZodObject<{
     brandName: z.ZodString;
     slugGuess: z.ZodString;
     sessionId: z.ZodString;
-    intake: z.ZodObject<{
-        plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    intake: z.ZodEffects<z.ZodObject<{
+        plan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+        receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
         siteCount: z.ZodOptional<z.ZodNumber>;
         sites: z.ZodArray<z.ZodObject<{
             brand: z.ZodObject<{
@@ -1858,15 +1927,15 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
             brand: z.ZodObject<{
@@ -1879,15 +1948,15 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
             brand: z.ZodObject<{
@@ -1900,15 +1969,15 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">>, "many">;
         smsAlerts: z.ZodOptional<z.ZodNullable<z.ZodObject<{
@@ -1925,7 +1994,7 @@ export declare const zQueuedIntake: z.ZodObject<{
             consentedAt: string | null;
         }>>>;
     }, "strip", z.ZodTypeAny, {
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         sites: z.objectOutputType<{
             brand: z.ZodObject<{
                 name: z.ZodString;
@@ -1937,17 +2006,18 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
         siteCount?: number | undefined;
         smsAlerts?: {
             phone: string | null;
@@ -1955,7 +2025,7 @@ export declare const zQueuedIntake: z.ZodObject<{
             consentedAt: string | null;
         } | null | undefined;
     }, {
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         sites: z.objectInputType<{
             brand: z.ZodObject<{
                 name: z.ZodString;
@@ -1967,17 +2037,80 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
+    }>, {
+        plan: "website" | "starter" | "growth" | "enterprise";
+        sites: z.objectOutputType<{
+            brand: z.ZodObject<{
+                name: z.ZodString;
+            }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+                name: z.ZodString;
+            }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+                name: z.ZodString;
+            }, z.ZodTypeAny, "passthrough">>;
+            _meta: z.ZodObject<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, z.ZodTypeAny, "passthrough">>;
+        }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+        siteCount?: number | undefined;
+        smsAlerts?: {
+            phone: string | null;
+            consented: boolean;
+            consentedAt: string | null;
+        } | null | undefined;
+    }, {
+        plan: "website" | "starter" | "growth" | "enterprise";
+        sites: z.objectInputType<{
+            brand: z.ZodObject<{
+                name: z.ZodString;
+            }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+                name: z.ZodString;
+            }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+                name: z.ZodString;
+            }, z.ZodTypeAny, "passthrough">>;
+            _meta: z.ZodObject<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+                schema_version: z.ZodString;
+                missing_fields: z.ZodArray<z.ZodString, "many">;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+            }, z.ZodTypeAny, "passthrough">>;
+        }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
         siteCount?: number | undefined;
         smsAlerts?: {
             phone: string | null;
@@ -1994,7 +2127,7 @@ export declare const zQueuedIntake: z.ZodObject<{
     receivedAt: number;
     slugGuess: string;
     intake: {
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         sites: z.objectOutputType<{
             brand: z.ZodObject<{
                 name: z.ZodString;
@@ -2006,17 +2139,18 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
         siteCount?: number | undefined;
         smsAlerts?: {
             phone: string | null;
@@ -2033,7 +2167,7 @@ export declare const zQueuedIntake: z.ZodObject<{
     receivedAt: number;
     slugGuess: string;
     intake: {
-        plan: "starter" | "growth" | "enterprise";
+        plan: "website" | "starter" | "growth" | "enterprise";
         sites: z.objectInputType<{
             brand: z.ZodObject<{
                 name: z.ZodString;
@@ -2045,17 +2179,18 @@ export declare const zQueuedIntake: z.ZodObject<{
             _meta: z.ZodObject<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
                 schema_version: z.ZodString;
                 missing_fields: z.ZodArray<z.ZodString, "many">;
-                selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+                selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
             }, z.ZodTypeAny, "passthrough">>;
         }, z.ZodTypeAny, "passthrough">[];
+        receptionistMode?: "forwarded" | "published" | "declined" | undefined;
         siteCount?: number | undefined;
         smsAlerts?: {
             phone: string | null;
@@ -2156,8 +2291,8 @@ export declare const zPalettePick: z.ZodObject<{
         rule?: string | undefined;
     } | undefined;
 }>;
-export declare const zBrandIntakeSubmission: z.ZodObject<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+export declare const zBrandIntakeSubmission: z.ZodEffects<z.ZodObject<{
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;
@@ -3548,7 +3683,7 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;
@@ -4939,7 +5074,2789 @@ export declare const zBrandIntakeSubmission: z.ZodObject<{
         }>;
     }, z.ZodTypeAny, "passthrough">>, "many">>;
 }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
-    selectedPlan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
+    brandName: z.ZodDefault<z.ZodString>;
+    brandShort: z.ZodDefault<z.ZodString>;
+    email: z.ZodDefault<z.ZodString>;
+    phone: z.ZodDefault<z.ZodString>;
+    address: z.ZodDefault<z.ZodString>;
+    license: z.ZodDefault<z.ZodString>;
+    industry: z.ZodDefault<z.ZodString>;
+    established: z.ZodDefault<z.ZodString>;
+    ownerName: z.ZodDefault<z.ZodString>;
+    brandsCarried: z.ZodDefault<z.ZodString>;
+    responseTime: z.ZodDefault<z.ZodString>;
+    notableClients: z.ZodDefault<z.ZodString>;
+    certifications: z.ZodDefault<z.ZodString>;
+    businessHours: z.ZodDefault<z.ZodString>;
+    serviceArea: z.ZodDefault<z.ZodString>;
+    agentName: z.ZodDefault<z.ZodString>;
+    serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        tag: z.ZodDefault<z.ZodString>;
+        included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
+        priceFrom: z.ZodOptional<z.ZodString>;
+        photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            q: z.ZodString;
+            a: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            a: string;
+            q: string;
+        }, {
+            q: string;
+            a?: string | undefined;
+        }>, "many">>;
+        priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    }, "strip", z.ZodTypeAny, {
+        name: string;
+        tag: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        priceFactors?: string[] | undefined;
+        photos?: {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }[] | undefined;
+        questions?: {
+            a: string;
+            q: string;
+        }[] | undefined;
+    }, {
+        name: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        priceFactors?: string[] | undefined;
+        tag?: string | undefined;
+        photos?: {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }[] | undefined;
+        questions?: {
+            q: string;
+            a?: string | undefined;
+        }[] | undefined;
+    }>, "many">>;
+    brandDirection: z.ZodObject<{
+        differentiators: z.ZodDefault<z.ZodString>;
+        targetCustomer: z.ZodDefault<z.ZodString>;
+        vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        references: z.ZodDefault<z.ZodString>;
+        forbidden: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        forbidden: string;
+        differentiators: string;
+        targetCustomer: string;
+        vibe: string[];
+        tone: string[];
+        adjectives: string[];
+        references: string;
+    }, {
+        forbidden?: string | undefined;
+        differentiators?: string | undefined;
+        targetCustomer?: string | undefined;
+        vibe?: string[] | undefined;
+        tone?: string[] | undefined;
+        adjectives?: string[] | undefined;
+        references?: string | undefined;
+    }>;
+    palette: z.ZodObject<{
+        mode: z.ZodEnum<["preset", "custom"]>;
+        presetId: z.ZodOptional<z.ZodString>;
+        baseColor: z.ZodOptional<z.ZodString>;
+        accentColor: z.ZodOptional<z.ZodString>;
+        bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+        overrides: z.ZodOptional<z.ZodObject<{
+            accent: z.ZodOptional<z.ZodString>;
+            accentFg: z.ZodOptional<z.ZodString>;
+            accent2: z.ZodOptional<z.ZodString>;
+            bg: z.ZodOptional<z.ZodString>;
+            bgSoft: z.ZodOptional<z.ZodString>;
+            ink: z.ZodOptional<z.ZodString>;
+            inkSoft: z.ZodOptional<z.ZodString>;
+            rule: z.ZodOptional<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        }, {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
+        mode: "custom" | "preset";
+        presetId?: string | undefined;
+        baseColor?: string | undefined;
+        accentColor?: string | undefined;
+        bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+        overrides?: {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        } | undefined;
+    }, {
+        mode: "custom" | "preset";
+        presetId?: string | undefined;
+        baseColor?: string | undefined;
+        accentColor?: string | undefined;
+        bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+        overrides?: {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        } | undefined;
+    }>;
+    hasLogo: z.ZodDefault<z.ZodBoolean>;
+    images: z.ZodObject<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, z.ZodTypeAny, "passthrough">>;
+    existingWebsiteUrl: z.ZodDefault<z.ZodString>;
+    announcement: z.ZodDefault<z.ZodString>;
+    stats: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        value: z.ZodString;
+        label: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+        key: string;
+    }, {
+        value: string;
+        label: string;
+        key: string;
+    }>, "many">>;
+    reviewAggregate: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        score: z.ZodString;
+        count: z.ZodString;
+        url: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }>>>;
+    servicePrices: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    seasons: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        label: z.ZodString;
+        body: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        label: string;
+        body: string;
+        key: string;
+    }, {
+        label: string;
+        body: string;
+        key: string;
+    }>, "many">>;
+    serviceRadiusMiles: z.ZodOptional<z.ZodString>;
+    offerBadge: z.ZodOptional<z.ZodString>;
+    serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
+    profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other"]>;
+        url: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
+        label?: string | undefined;
+    }, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
+        label?: string | undefined;
+    }>, "many">>;
+    customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        q: z.ZodString;
+        a: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        a: string;
+        q: string;
+    }, {
+        q: string;
+        a?: string | undefined;
+    }>, "many">>;
+    topTowns: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, z.ZodTypeAny, "passthrough">>, "many">>;
+}, z.ZodTypeAny, "passthrough">>, z.objectOutputType<{
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
+    receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
+    brandName: z.ZodDefault<z.ZodString>;
+    brandShort: z.ZodDefault<z.ZodString>;
+    email: z.ZodDefault<z.ZodString>;
+    phone: z.ZodDefault<z.ZodString>;
+    address: z.ZodDefault<z.ZodString>;
+    license: z.ZodDefault<z.ZodString>;
+    industry: z.ZodDefault<z.ZodString>;
+    established: z.ZodDefault<z.ZodString>;
+    ownerName: z.ZodDefault<z.ZodString>;
+    brandsCarried: z.ZodDefault<z.ZodString>;
+    responseTime: z.ZodDefault<z.ZodString>;
+    notableClients: z.ZodDefault<z.ZodString>;
+    certifications: z.ZodDefault<z.ZodString>;
+    businessHours: z.ZodDefault<z.ZodString>;
+    serviceArea: z.ZodDefault<z.ZodString>;
+    agentName: z.ZodDefault<z.ZodString>;
+    serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+        name: z.ZodString;
+        tag: z.ZodDefault<z.ZodString>;
+        included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        duration: z.ZodOptional<z.ZodString>;
+        priceFrom: z.ZodOptional<z.ZodString>;
+        photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            q: z.ZodString;
+            a: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            a: string;
+            q: string;
+        }, {
+            q: string;
+            a?: string | undefined;
+        }>, "many">>;
+        priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    }, "strip", z.ZodTypeAny, {
+        name: string;
+        tag: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        priceFactors?: string[] | undefined;
+        photos?: {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }[] | undefined;
+        questions?: {
+            a: string;
+            q: string;
+        }[] | undefined;
+    }, {
+        name: string;
+        included?: string[] | undefined;
+        typicalJobs?: string[] | undefined;
+        priceFrom?: string | undefined;
+        brands?: string[] | undefined;
+        areas?: string[] | undefined;
+        duration?: string | undefined;
+        priceFactors?: string[] | undefined;
+        tag?: string | undefined;
+        photos?: {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }[] | undefined;
+        questions?: {
+            q: string;
+            a?: string | undefined;
+        }[] | undefined;
+    }>, "many">>;
+    brandDirection: z.ZodObject<{
+        differentiators: z.ZodDefault<z.ZodString>;
+        targetCustomer: z.ZodDefault<z.ZodString>;
+        vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+        references: z.ZodDefault<z.ZodString>;
+        forbidden: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        forbidden: string;
+        differentiators: string;
+        targetCustomer: string;
+        vibe: string[];
+        tone: string[];
+        adjectives: string[];
+        references: string;
+    }, {
+        forbidden?: string | undefined;
+        differentiators?: string | undefined;
+        targetCustomer?: string | undefined;
+        vibe?: string[] | undefined;
+        tone?: string[] | undefined;
+        adjectives?: string[] | undefined;
+        references?: string | undefined;
+    }>;
+    palette: z.ZodObject<{
+        mode: z.ZodEnum<["preset", "custom"]>;
+        presetId: z.ZodOptional<z.ZodString>;
+        baseColor: z.ZodOptional<z.ZodString>;
+        accentColor: z.ZodOptional<z.ZodString>;
+        bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+        overrides: z.ZodOptional<z.ZodObject<{
+            accent: z.ZodOptional<z.ZodString>;
+            accentFg: z.ZodOptional<z.ZodString>;
+            accent2: z.ZodOptional<z.ZodString>;
+            bg: z.ZodOptional<z.ZodString>;
+            bgSoft: z.ZodOptional<z.ZodString>;
+            ink: z.ZodOptional<z.ZodString>;
+            inkSoft: z.ZodOptional<z.ZodString>;
+            rule: z.ZodOptional<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        }, {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        }>>;
+    }, "strip", z.ZodTypeAny, {
+        mode: "custom" | "preset";
+        presetId?: string | undefined;
+        baseColor?: string | undefined;
+        accentColor?: string | undefined;
+        bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+        overrides?: {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        } | undefined;
+    }, {
+        mode: "custom" | "preset";
+        presetId?: string | undefined;
+        baseColor?: string | undefined;
+        accentColor?: string | undefined;
+        bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+        overrides?: {
+            accent?: string | undefined;
+            accentFg?: string | undefined;
+            accent2?: string | undefined;
+            bg?: string | undefined;
+            bgSoft?: string | undefined;
+            ink?: string | undefined;
+            inkSoft?: string | undefined;
+            rule?: string | undefined;
+        } | undefined;
+    }>;
+    hasLogo: z.ZodDefault<z.ZodBoolean>;
+    images: z.ZodObject<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+        logo: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        monogram: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+        heroSlides: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>, "many">>;
+        aboutFeature: z.ZodOptional<z.ZodObject<{
+            url: z.ZodString;
+            filename: z.ZodString;
+            alt: z.ZodString;
+            town: z.ZodOptional<z.ZodString>;
+            before: z.ZodOptional<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }, {
+            url: string;
+            filename: string;
+            alt: string;
+            town?: string | undefined;
+            before?: {
+                url: string;
+                filename: string;
+                alt: string;
+            } | undefined;
+        }>>;
+    }, z.ZodTypeAny, "passthrough">>;
+    existingWebsiteUrl: z.ZodDefault<z.ZodString>;
+    announcement: z.ZodDefault<z.ZodString>;
+    stats: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        value: z.ZodString;
+        label: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        value: string;
+        label: string;
+        key: string;
+    }, {
+        value: string;
+        label: string;
+        key: string;
+    }>, "many">>;
+    reviewAggregate: z.ZodOptional<z.ZodNullable<z.ZodObject<{
+        score: z.ZodString;
+        count: z.ZodString;
+        url: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }, {
+        count: string;
+        score: string;
+        url?: string | undefined;
+    }>>>;
+    servicePrices: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+    seasons: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        key: z.ZodString;
+        label: z.ZodString;
+        body: z.ZodString;
+    }, "strip", z.ZodTypeAny, {
+        label: string;
+        body: string;
+        key: string;
+    }, {
+        label: string;
+        body: string;
+        key: string;
+    }>, "many">>;
+    serviceRadiusMiles: z.ZodOptional<z.ZodString>;
+    offerBadge: z.ZodOptional<z.ZodString>;
+    serviceAreaBusiness: z.ZodOptional<z.ZodBoolean>;
+    profiles: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        kind: z.ZodEnum<["google", "facebook", "yelp", "bbb", "angi", "nextdoor", "instagram", "linkedin", "youtube", "tiktok", "x", "other"]>;
+        url: z.ZodString;
+        label: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
+        label?: string | undefined;
+    }, {
+        url: string;
+        kind: "google" | "facebook" | "yelp" | "bbb" | "angi" | "nextdoor" | "instagram" | "linkedin" | "youtube" | "tiktok" | "x" | "other";
+        label?: string | undefined;
+    }>, "many">>;
+    customerQuestions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        q: z.ZodString;
+        a: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        a: string;
+        q: string;
+    }, {
+        q: string;
+        a?: string | undefined;
+    }>, "many">>;
+    topTowns: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    additionalSites: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, "passthrough", z.ZodTypeAny, z.objectOutputType<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+        brandName: z.ZodString;
+        brandShort: z.ZodDefault<z.ZodString>;
+        email: z.ZodDefault<z.ZodString>;
+        phone: z.ZodDefault<z.ZodString>;
+        address: z.ZodDefault<z.ZodString>;
+        businessHours: z.ZodDefault<z.ZodString>;
+        serviceList: z.ZodDefault<z.ZodArray<z.ZodObject<{
+            name: z.ZodString;
+            tag: z.ZodDefault<z.ZodString>;
+            included: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            typicalJobs: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            areas: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            brands: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+            duration: z.ZodOptional<z.ZodString>;
+            priceFrom: z.ZodOptional<z.ZodString>;
+            photos: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                url: z.ZodString;
+                filename: z.ZodString;
+                alt: z.ZodString;
+                town: z.ZodOptional<z.ZodString>;
+                before: z.ZodOptional<z.ZodObject<{
+                    url: z.ZodString;
+                    filename: z.ZodString;
+                    alt: z.ZodString;
+                }, "strip", z.ZodTypeAny, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }, {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                }>>;
+            }, "strip", z.ZodTypeAny, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }, {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }>, "many">>;
+            questions: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                q: z.ZodString;
+                a: z.ZodDefault<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                a: string;
+                q: string;
+            }, {
+                q: string;
+                a?: string | undefined;
+            }>, "many">>;
+            priceFactors: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+        }, "strip", z.ZodTypeAny, {
+            name: string;
+            tag: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                a: string;
+                q: string;
+            }[] | undefined;
+        }, {
+            name: string;
+            included?: string[] | undefined;
+            typicalJobs?: string[] | undefined;
+            priceFrom?: string | undefined;
+            brands?: string[] | undefined;
+            areas?: string[] | undefined;
+            duration?: string | undefined;
+            priceFactors?: string[] | undefined;
+            tag?: string | undefined;
+            photos?: {
+                url: string;
+                filename: string;
+                alt: string;
+                town?: string | undefined;
+                before?: {
+                    url: string;
+                    filename: string;
+                    alt: string;
+                } | undefined;
+            }[] | undefined;
+            questions?: {
+                q: string;
+                a?: string | undefined;
+            }[] | undefined;
+        }>, "many">>;
+        palette: z.ZodObject<{
+            mode: z.ZodEnum<["preset", "custom"]>;
+            presetId: z.ZodOptional<z.ZodString>;
+            baseColor: z.ZodOptional<z.ZodString>;
+            accentColor: z.ZodOptional<z.ZodString>;
+            bgMood: z.ZodOptional<z.ZodEnum<["white", "warm", "cool", "soft-dark", "deep-dark"]>>;
+            overrides: z.ZodOptional<z.ZodObject<{
+                accent: z.ZodOptional<z.ZodString>;
+                accentFg: z.ZodOptional<z.ZodString>;
+                accent2: z.ZodOptional<z.ZodString>;
+                bg: z.ZodOptional<z.ZodString>;
+                bgSoft: z.ZodOptional<z.ZodString>;
+                ink: z.ZodOptional<z.ZodString>;
+                inkSoft: z.ZodOptional<z.ZodString>;
+                rule: z.ZodOptional<z.ZodString>;
+            }, "strip", z.ZodTypeAny, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }, {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            }>>;
+        }, "strip", z.ZodTypeAny, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }, {
+            mode: "custom" | "preset";
+            presetId?: string | undefined;
+            baseColor?: string | undefined;
+            accentColor?: string | undefined;
+            bgMood?: "white" | "warm" | "cool" | "soft-dark" | "deep-dark" | undefined;
+            overrides?: {
+                accent?: string | undefined;
+                accentFg?: string | undefined;
+                accent2?: string | undefined;
+                bg?: string | undefined;
+                bgSoft?: string | undefined;
+                ink?: string | undefined;
+                inkSoft?: string | undefined;
+                rule?: string | undefined;
+            } | undefined;
+        }>;
+        brandDirection: z.ZodObject<{
+            differentiators: z.ZodDefault<z.ZodString>;
+            targetCustomer: z.ZodDefault<z.ZodString>;
+            vibe: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            tone: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            adjectives: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+            references: z.ZodDefault<z.ZodString>;
+            forbidden: z.ZodDefault<z.ZodString>;
+        }, "strip", z.ZodTypeAny, {
+            forbidden: string;
+            differentiators: string;
+            targetCustomer: string;
+            vibe: string[];
+            tone: string[];
+            adjectives: string[];
+            references: string;
+        }, {
+            forbidden?: string | undefined;
+            differentiators?: string | undefined;
+            targetCustomer?: string | undefined;
+            vibe?: string[] | undefined;
+            tone?: string[] | undefined;
+            adjectives?: string[] | undefined;
+            references?: string | undefined;
+        }>;
+    }, z.ZodTypeAny, "passthrough">>, "many">>;
+}, z.ZodTypeAny, "passthrough">, z.objectInputType<{
+    selectedPlan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     receptionistMode: z.ZodOptional<z.ZodEnum<["forwarded", "published", "declined"]>>;
     brandName: z.ZodDefault<z.ZodString>;
     brandShort: z.ZodDefault<z.ZodString>;

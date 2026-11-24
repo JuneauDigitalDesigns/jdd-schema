@@ -72,8 +72,8 @@ export * from "./ticket.js";
 //           Starter agent, so a console repair wiped one that had been provisioned),
 //           `siteFeature`, and `voiceSitesOf`. Starter also became meterable: `MinuteCaps`
 //           and `VoicePlan` carry it, metered per site like Growth, never pooled.
-//           Web-only ($197, no receptionist) is `plan: "starter"` + mode `declined`, NOT a
-//           fourth plan slug — the price is identical to Starter on purpose.
+//           Web-only was then `plan: "starter"` + mode `declined` at Starter's price. Superseded
+//           in v1.45.0: web-only is its own plan, `website`; the declined shape is read only.
 // v1.30.0 — CRM v2 + web-form lead capture.
 //           `WebLead`: form inquiries captured into the portal, replacing Resend email
 //           delivery. Keyed on `normalizeE164(phone)` so a form submission and a call from
@@ -103,4 +103,18 @@ export * from "./operator-order.js";
 //           publishes to KV per site so the reconcile can find the agent, base and clone hook,
 //           and `callProfileProblems` refuses a master base or the master hook.
 export * from "./call-gate.js";
+// v1.45.0 — the website-only plan (decided 2026-11-24). `website` is a fourth plan id, shown as
+//           "Starter", with no number, agent, call log, CRM or minutes. `starter` keeps its id
+//           and its receptionist and is now shown as "Starter + AI Receptionist" ("Starter + AI"
+//           on tight chips). plans.ts holds the one copy of `PLAN_IDS`, `PLAN_LABELS`,
+//           `PLAN_RANK` (website 0 < starter 1 < growth 2 < enterprise 3, replacing agreement's
+//           `TIER_RANK`) and `planHasReceptionist`; never display a plan id.
+//           `isWebOnly` = `website`, or the legacy `starter` + `declined` (read only, never written).
+//           `leadModeFor` gives phone forms to Growth/Enterprise only, as an explicit list.
+//           `zIntake` now declares `receptionistMode` (it was silently dropped), and
+//           `receptionistModeProblem` refuses `website` + a receptionist mode and a new
+//           `declined` on any other plan; the intake queue and operator orders still read the
+//           legacy declined Starter. `canAddPlan("website")` is unlimited; a `website` site is
+//           never metered; a `website` operator order carries no `receptionistMode`.
+export * from "./plans.js";
 //# sourceMappingURL=index.js.map

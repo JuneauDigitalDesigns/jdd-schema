@@ -28,7 +28,15 @@ export declare const orderByLeadKey: (leadId: string) => string;
 export declare const slugClaimKey: (slug: string) => string;
 export declare const payCodeKey: (code: string) => string;
 export declare const ORDERS_INDEX_KEY = "jdd:orders:index";
-export declare const zOperatorOrder: z.ZodObject<{
+/**
+ * An operator order, as stored and as saved.
+ *
+ * A `website` order (v1.45.0) carries no `receptionistMode` at all: the plan states that there
+ * is no receptionist, and the close wizard has no phone-setup step for it. A `starter` order
+ * with `declined` is the legacy web-only close and still parses, so orders saved before
+ * `website` existed keep reading.
+ */
+export declare const zOperatorOrder: z.ZodEffects<z.ZodObject<{
     id: z.ZodString;
     version: z.ZodLiteral<1>;
     source: z.ZodLiteral<"operator-call">;
@@ -36,7 +44,7 @@ export declare const zOperatorOrder: z.ZodObject<{
     leadId: z.ZodString;
     /** Locked at creation. Every system — portal site, clients/ folder, A2P record — uses it. */
     siteSlug: z.ZodString;
-    plan: z.ZodEnum<["starter", "growth", "enterprise"]>;
+    plan: z.ZodEnum<["website", "starter", "growth", "enterprise"]>;
     /**
      * Every plan is month to month since 2026-11-16, and nothing writes "annual" any more. The
      * value stays accepted so orders saved before then still parse.
@@ -168,7 +176,7 @@ export declare const zOperatorOrder: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     version: 1;
     status: "draft" | "terms-accepted" | "awaiting-payment" | "paid" | "fulfilled" | "expired" | "cancelled";
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
     createdAt: number;
     updatedAt: number;
     client: {
@@ -226,7 +234,123 @@ export declare const zOperatorOrder: z.ZodObject<{
 }, {
     version: 1;
     status: "draft" | "terms-accepted" | "awaiting-payment" | "paid" | "fulfilled" | "expired" | "cancelled";
-    plan: "starter" | "growth" | "enterprise";
+    plan: "website" | "starter" | "growth" | "enterprise";
+    createdAt: number;
+    updatedAt: number;
+    client: {
+        email: string;
+        contactName: string;
+        address: string;
+        phone: string;
+        legalName: string;
+        entityType: string;
+        contactTitle: string;
+        dba?: string | undefined;
+    };
+    id: string;
+    source: "operator-call";
+    siteSlug: string;
+    leadId: string;
+    operator: string;
+    period: "monthly" | "annual";
+    pricing: {
+        kind: "standard";
+    };
+    vertical: string;
+    events: {
+        text: string;
+        at: number;
+        kind: string;
+    }[];
+    agreementId?: string | undefined;
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    addons?: {
+        search?: boolean | undefined;
+    } | undefined;
+    forwardingNumber?: string | undefined;
+    callRef?: string | undefined;
+    agreementKind?: "master" | "addendum" | undefined;
+    payment?: {
+        stripeCustomerId: string;
+        method: "link" | "dashboard-moto";
+        checkoutSessionId?: string | undefined;
+        checkoutUrl?: string | undefined;
+        shortCode?: string | undefined;
+        expiresAt?: number | undefined;
+        subscriptionId?: string | undefined;
+        amountTotal?: number | undefined;
+        paidAt?: number | undefined;
+        tosAcceptedOnStripe?: boolean | undefined;
+    } | undefined;
+    invite?: {
+        kind: "invitation" | "existing-login";
+        sentAt: number;
+        invitationId?: string | undefined;
+    } | undefined;
+    fulfilledAt?: number | undefined;
+    convertedAt?: number | undefined;
+}>, {
+    version: 1;
+    status: "draft" | "terms-accepted" | "awaiting-payment" | "paid" | "fulfilled" | "expired" | "cancelled";
+    plan: "website" | "starter" | "growth" | "enterprise";
+    createdAt: number;
+    updatedAt: number;
+    client: {
+        email: string;
+        contactName: string;
+        address: string;
+        phone: string;
+        legalName: string;
+        entityType: string;
+        contactTitle: string;
+        dba?: string | undefined;
+    };
+    id: string;
+    source: "operator-call";
+    siteSlug: string;
+    leadId: string;
+    operator: string;
+    period: "monthly" | "annual";
+    pricing: {
+        kind: "standard";
+    };
+    vertical: string;
+    events: {
+        text: string;
+        at: number;
+        kind: string;
+    }[];
+    agreementId?: string | undefined;
+    receptionistMode?: "forwarded" | "published" | "declined" | undefined;
+    addons?: {
+        search?: boolean | undefined;
+    } | undefined;
+    forwardingNumber?: string | undefined;
+    callRef?: string | undefined;
+    agreementKind?: "master" | "addendum" | undefined;
+    payment?: {
+        stripeCustomerId: string;
+        method: "link" | "dashboard-moto";
+        checkoutSessionId?: string | undefined;
+        checkoutUrl?: string | undefined;
+        shortCode?: string | undefined;
+        expiresAt?: number | undefined;
+        subscriptionId?: string | undefined;
+        amountTotal?: number | undefined;
+        paidAt?: number | undefined;
+        tosAcceptedOnStripe?: boolean | undefined;
+    } | undefined;
+    invite?: {
+        kind: "invitation" | "existing-login";
+        sentAt: number;
+        invitationId?: string | undefined;
+    } | undefined;
+    fulfilledAt?: number | undefined;
+    convertedAt?: number | undefined;
+}, {
+    version: 1;
+    status: "draft" | "terms-accepted" | "awaiting-payment" | "paid" | "fulfilled" | "expired" | "cancelled";
+    plan: "website" | "starter" | "growth" | "enterprise";
     createdAt: number;
     updatedAt: number;
     client: {
@@ -285,8 +409,8 @@ export declare const zOperatorOrder: z.ZodObject<{
 export type OperatorOrder = z.infer<typeof zOperatorOrder>;
 export type CloseStep = "order" | "terms" | "payment" | "setup" | "sms" | "done";
 /**
- * Plans that register for A2P during the close. Starter and web-only send no customer-facing
- * messages, so they have no SMS step at all.
+ * Plans that register for A2P during the close. Website, Starter and the legacy web-only
+ * Starter send no customer-facing messages, so they have no SMS step at all.
  */
 export declare function closeHasSmsStep(plan: PortalPlan): boolean;
 /**

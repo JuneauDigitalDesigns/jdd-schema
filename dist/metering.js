@@ -41,10 +41,11 @@ export const ENTERPRISE_GROUP_REF = "enterprise";
  * provisioned agent counts, including `building` — the agent is live on the phone number
  * from the moment onboard.js creates it, whether or not the website has finished deploying.
  *
- * The plan check that used to live here is gone: every tier can consume minutes now, so the
- * tier tells you nothing. `isWebOnly` replaces it, and `Boolean(s.retellAgentId)` still
- * carries the "actually provisioned" requirement, which is what keeps the two externally
- * managed Starter sites (no agent, billed off-platform) out of minute accounting.
+ * The plan check that used to live here is gone: `isWebOnly` replaces it, covering the
+ * `website` plan (v1.45.0) and the legacy declined Starter, the two shapes with no minutes.
+ * `Boolean(s.retellAgentId)` still carries the "actually provisioned" requirement, which is
+ * what keeps the two externally managed Starter sites (no agent, billed off-platform) out of
+ * minute accounting.
  */
 export function voiceSitesOf(sites) {
     return sites.filter((s) => !isWebOnly(s) &&
@@ -70,7 +71,9 @@ export function meteringGroups(sites, caps) {
     // plan includes no minutes, which is not the same as "no allowance to track" — it would
     // bill every second as overage — so such a site is skipped rather than grouped at 0.
     for (const site of voice) {
-        if (site.plan === "enterprise")
+        // `website` never reaches here (`voiceSitesOf` drops it); the check narrows the type and
+        // keeps a website site from ever falling through to the Growth cap.
+        if (site.plan === "enterprise" || site.plan === "website")
             continue;
         const cap = site.plan === "starter" ? caps.starter : caps.growth;
         if (!cap)
