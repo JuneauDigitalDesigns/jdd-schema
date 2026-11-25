@@ -107,10 +107,11 @@ test("isWebOnly: a receptionist plan without `declined` is not web-only", () => 
   assert.equal(isWebOnly(site({ plan: "growth" })), false);
 });
 
-test("siteFeature: calls, crm and messaging are all not-on-plan for website; the inbox is ready", () => {
+test("siteFeature: calls, crm, calendar and messaging are all not-on-plan for website; the inbox is ready", () => {
   const s = site({ a2pStatus: "verified" });
   assert.deepEqual(siteFeature(s, "calls"), { state: "not-on-plan" });
   assert.deepEqual(siteFeature(s, "crm"), { state: "not-on-plan" });
+  assert.deepEqual(siteFeature(s, "calendar"), { state: "not-on-plan" });
   assert.deepEqual(siteFeature(s, "messaging"), { state: "not-on-plan" });
   assert.deepEqual(siteFeature(s, "leads"), { state: "ready" });
 });

@@ -25,7 +25,7 @@ import { PLAN_IDS } from "./plans.js";
 /**
  * A plan id. Labels, rank and the receptionist question live in plans.ts; never display the id.
  *
- * `website` (v1.45.0) is website only: no number, agent, call log or CRM. `starter` is the same
+ * `website` (v1.45.0) is website only: no number, agent, call log or Customers board. `starter` is the same
  * id it always was and still includes the receptionist, but it is now shown as
  * "Starter + AI Receptionist", and `website` is the plan shown as "Starter".
  */
@@ -971,9 +971,17 @@ export declare function buildPortalSiteEntries(input: {
 export type PortalFeature = "calls" | "traffic" | "performance"
 /** The Inbox — raw inbound (calls + web-form leads). Every tier, including web-only. */
  | "leads"
-/** The customer CRM. Growth and Enterprise only. */
+/**
+ * The Customers board: customers, notes, jobs, job values, tags, follow-up reminders.
+ * Every plan with a receptionist (Starter + AI, Growth, Enterprise; v1.47.0). Never web-only.
+ */
  | "crm"
-/** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
+/** Bookings and appointments (v1.47.0). Growth and Enterprise only. */
+ | "calendar"
+/**
+ * Customer-facing SMS and review requests. Growth and Enterprise only, and only once the
+ * client's own A2P campaign is verified. Starter + AI has no campaign of its own.
+ */
  | "messaging"
 /**
  * The read-only call log a web-only site kept from before its receptionist ended (v1.46.0).

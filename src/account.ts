@@ -27,7 +27,7 @@ import { PLAN_IDS } from "./plans.js";
 /**
  * A plan id. Labels, rank and the receptionist question live in plans.ts; never display the id.
  *
- * `website` (v1.45.0) is website only: no number, agent, call log or CRM. `starter` is the same
+ * `website` (v1.45.0) is website only: no number, agent, call log or Customers board. `starter` is the same
  * id it always was and still includes the receptionist, but it is now shown as
  * "Starter + AI Receptionist", and `website` is the plan shown as "Starter".
  */
@@ -764,9 +764,17 @@ export type PortalFeature =
   | "performance"
   /** The Inbox — raw inbound (calls + web-form leads). Every tier, including web-only. */
   | "leads"
-  /** The customer CRM. Growth and Enterprise only. */
+  /**
+   * The Customers board: customers, notes, jobs, job values, tags, follow-up reminders.
+   * Every plan with a receptionist (Starter + AI, Growth, Enterprise; v1.47.0). Never web-only.
+   */
   | "crm"
-  /** Customer-facing SMS. Needs `crm` *and* a verified A2P campaign. */
+  /** Bookings and appointments (v1.47.0). Growth and Enterprise only. */
+  | "calendar"
+  /**
+   * Customer-facing SMS and review requests. Growth and Enterprise only, and only once the
+   * client's own A2P campaign is verified. Starter + AI has no campaign of its own.
+   */
   | "messaging"
   /**
    * The read-only call log a web-only site kept from before its receptionist ended (v1.46.0).
@@ -797,9 +805,9 @@ export type FeatureAvailability =
 /**
  * Which stored id each feature needs before it can be queried.
  *
- * **Partial on purpose.** `leads` and `crm` have no required id: the Inbox reads web-form leads
+ * **Partial on purpose.** `leads`, `crm` and `calendar` have no required id: the Inbox reads web-form leads
  * from KV (web-only sites have no Airtable base and never will), and the CRM holds those same
- * leads alongside calls. Inventing a requirement to satisfy a total `Record` is exactly how
+ * leads alongside calls, and the calendar is the agency's own store. Inventing a requirement to satisfy a total `Record` is exactly how
  * `calls` ended up gated on an Airtable id. A missing entry means "nothing to connect" and the
  * check at step 3 is skipped.
  */
@@ -816,8 +824,20 @@ function hasCallHistory(site: PortalSite): boolean {
   return typeof base === "string" && base.trim() !== "";
 }
 
-/** Tiers that include the customer CRM and customer-facing messaging. */
-function hasCrmPlan(site: PortalSite): boolean {
+/**
+ * The Customers board: every plan with a receptionist. Asked through `isWebOnly`, not the plan
+ * alone, because the legacy web-only shape (`starter` + `declined`) is a website client and must
+ * not get the board just because its id is `starter`.
+ */
+function hasCustomersEntitlement(site: PortalSite): boolean {
+  return (
+    (site.plan === "starter" || site.plan === "growth" || site.plan === "enterprise") &&
+    !isWebOnly(site)
+  );
+}
+
+/** The calendar and customer messaging: Growth and Enterprise only, as an explicit list. */
+function hasGrowthEntitlement(site: PortalSite): boolean {
   return site.plan === "growth" || site.plan === "enterprise";
 }
 
@@ -839,10 +859,13 @@ export function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAv
   // Starter: neither has call data, and never will.
   if (feature === "calls" && isWebOnly(site)) return { state: "not-on-plan" };
 
-  // The CRM and customer messaging are the one genuine tier split. Deliberately NOT gated on
-  // `airtableBaseId`: the CRM holds web-form leads too, so a live Growth site whose call base
-  // isn't wired yet would otherwise hide a board the client can already use.
-  if ((feature === "crm" || feature === "messaging") && !hasCrmPlan(site)) {
+  // The tier split (v1.47.0) has two steps. The Customers board comes with the receptionist,
+  // so Starter + AI has it and web-only does not. The calendar and customer messaging are
+  // Growth and Enterprise only. The board is deliberately NOT gated on `airtableBaseId`: it
+  // holds web-form leads too, so a live site whose call base isn't wired yet would otherwise
+  // hide a board the client can already use.
+  if (feature === "crm" && !hasCustomersEntitlement(site)) return { state: "not-on-plan" };
+  if ((feature === "calendar" || feature === "messaging") && !hasGrowthEntitlement(site)) {
     return { state: "not-on-plan" };
   }
 
@@ -858,7 +881,7 @@ export function siteFeature(site: PortalSite, feature: PortalFeature): FeatureAv
   }
 
   // 4. Connection. Live, but the id this feature needs was never recorded. Features with no
-  // requirement (leads, crm) skip this entirely — see FEATURE_REQUIREMENT.
+  // requirement (leads, crm, calendar) skip this entirely — see FEATURE_REQUIREMENT.
   const requiredKey = FEATURE_REQUIREMENT[feature];
   if (requiredKey) {
     const required = site[requiredKey];
@@ -876,6 +899,7 @@ export function siteFeatures(site: PortalSite): Record<PortalFeature, FeatureAva
     performance: siteFeature(site, "performance"),
     leads: siteFeature(site, "leads"),
     crm: siteFeature(site, "crm"),
+    calendar: siteFeature(site, "calendar"),
     messaging: siteFeature(site, "messaging"),
     pastCalls: siteFeature(site, "pastCalls"),
   };

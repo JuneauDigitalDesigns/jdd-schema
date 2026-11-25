@@ -124,3 +124,13 @@ export * from "./plans.js";
 //           copies them to `PortalSite.callHistory` ({ airtableBaseId, retellAgentId, endedAt }),
 //           which `upsertSite` never clears (a null is ignored) and `buildPortalSiteEntries` never
 //           emits. New `PortalFeature` "pastCalls": ready only for a web-only site with history.
+// v1.47.0 — the Customers board moves down to Starter + AI Receptionist (Xander, 2026-11-25).
+//           `crm` (customers, notes, jobs, job values, tags, follow-up reminders) is now every
+//           plan with a receptionist: `starter`, `growth` or `enterprise`, and not `isWebOnly`, so
+//           the legacy `starter` + `declined` shape stays `not-on-plan` like `website`. New
+//           `PortalFeature` "calendar" (bookings and appointments): Growth and Enterprise only,
+//           no required id, the usual entitlement → pending-build → ready order. `messaging`
+//           (customer texting + review requests) is unchanged: Growth and Enterprise, and
+//           `connecting` until the A2P campaign verifies. `hasCrmPlan` became two helpers,
+//           `hasCustomersEntitlement` and `hasGrowthEntitlement`. A consumer with an exhaustive
+//           `Record<PortalFeature, …>` needs a `calendar` entry.
